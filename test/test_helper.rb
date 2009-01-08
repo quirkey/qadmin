@@ -62,7 +62,7 @@ end
 
 class MockController
   class << self
-    def append_view_paths(paths)
+    def append_view_path(paths)
     end
   end
   

@@ -39,10 +39,10 @@ class QadminGenerator < Rails::Generator::NamedBase
       m.directory(File.join('public','images','admin'))
 
       #copy form over too
-      m.template("_form.html.erb",File.join('app','views', controller_class_path, controller_file_name, "_form.html.erb"))
+      m.template("_form.erb",File.join('app','views', controller_class_path, controller_file_name, "_form.erb"))
 
       # Layout and stylesheet.
-      m.template('layout.html.erb', File.join('app','views','layouts', "admin.html.erb"))
+      m.template('layout.erb', File.join('app','views','layouts', "admin.erb"))
       m.template('style.css', 'public/stylesheets/admin.css')
 
       m.template(
