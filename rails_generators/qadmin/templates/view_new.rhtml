@@ -1,0 +1,12 @@
+<h2><%= singular_name.humanize.capitalize %>: New</h2>
+
+<%%= admin_controls :<%= table_name %>, :for => :new %>
+
+<%%= error_messages_for :<%= singular_name %> %>
+
+<%% form_for(@<%= singular_name %>) do |f| %>
+  <%%= render :partial => 'form', :locals => {:f => f, :<%= singular_name %> => @<%= singular_name %>} %>
+  <p><%%= f.submit "Create" %></p>
+<%% end %>
+
+<%%= admin_controls :<%= table_name %>, :for => :new %>

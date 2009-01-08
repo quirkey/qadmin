@@ -29,35 +29,29 @@ class QadminGenerator < Rails::Generator::NamedBase
     record do |m|
       klass # checks for class definition
       # Check for class naming collisions.
-      m.class_collisions(controller_class_path, "#{controller_class_name}Controller", "#{controller_class_name}Helper")
+      m.class_collisions(controller_class_path, "#{controller_class_name}Controller")
 
       # Controller, helper, views, and test directories.
-      m.directory(File.join('app/controllers', controller_class_path))
-      m.directory(File.join('app/helpers', controller_class_path))
-      m.directory(File.join('app/views', controller_class_path, controller_file_name))
-      m.directory(File.join('app/views','shared'))
-      m.directory(File.join('test/functional', controller_class_path))
+      m.directory(File.join('app','controllers', controller_class_path))
+      m.directory(File.join('app', 'helpers', controller_class_path))
+      m.directory(File.join('app', 'views', controller_class_path, controller_file_name))
+      m.directory(File.join('app', 'views', 'layouts'))
+      m.directory(File.join('public', 'stylesheets'))
+      m.directory(File.join('test', 'functional', controller_class_path))
       m.directory(File.join('public','images','admin'))
 
-      for action in scaffold_views
-        m.template(
-        "view_#{action}.rhtml",
-        File.join('app/views', controller_class_path, controller_file_name, "#{action}.html.erb")
-        )
-      end
       #copy form over too
-      m.template("view_form.rhtml",File.join('app/views', controller_class_path, controller_file_name, "_form.html.erb"))
+      m.template("view_form.rhtml",File.join('app','views', controller_class_path, controller_file_name, "_form.html.erb"))
 
       # Layout and stylesheet.
-      m.template('layout.rhtml', File.join('app/views/layouts', "admin.html.erb"))
+      m.template('layout.rhtml', File.join('app','views','layouts', "admin.html.erb"))
       m.template('style.css', 'public/stylesheets/admin.css')
 
       m.template(
-      'controller.rb', File.join('app/controllers', controller_class_path, "#{controller_file_name}_controller.rb")
+      'controller.rb', File.join('app','controllers', controller_class_path, "#{controller_file_name}_controller.rb")
       )
 
-      m.template('shoulda_functional_test.rb', File.join('test/functional', controller_class_path, "#{controller_file_name}_controller_test.rb"))
-      m.template('helper.rb',          File.join('app/helpers', "admin_helper.rb"))
+      m.template('shoulda_functional_test.rb', File.join('test','functional', controller_class_path, "#{controller_file_name}_controller_test.rb"))
 
       m.route_resources controller_file_name
 
@@ -85,7 +79,7 @@ class QadminGenerator < Rails::Generator::NamedBase
 
   def klass
     begin
-      require "#{file_name}"
+      require "#{file_name}" unless defined?(model_name.constantize)
     rescue
       raise "You must define the class #{model_name} before running qscaffold"
     end

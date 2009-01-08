@@ -1,0 +1,7 @@
+<fieldset>
+<% attributes.each do |attribute| -%>
+<% unless ignore_attributes.include?(attribute.name) -%>
+<p><label><%= attribute.human_name %></label><%%= f.text_field :<%= attribute.name %> %></p>
+<% end -%>
+<% end -%>
+</fieldset>

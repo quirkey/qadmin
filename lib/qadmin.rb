@@ -4,3 +4,5 @@ $:.unshift(File.dirname(__FILE__)) unless
 module Qadmin
   VERSION = '0.0.1'
 end
+
+require 'qadmin/helper'
