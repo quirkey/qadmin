@@ -21,10 +21,10 @@ class TestQadminGenerator < Test::Unit::TestCase
   def test_generator_with_model_without_options
     name = 'Item'
     run_generator('qadmin', [name], sources, :destination => APP_ROOT)
-    assert_generated_class('ItemsController') do |body|
+    assert_generated_class('app/controllers/items_controller') do |body|
       assert_match(/include Qadmin\:\:Controller/, body)
     end
-    assert_generated_test_for('ItemsController')
+    assert_generated_test_for('items_controller')
     assert_directory_exists('app/views/items')
     assert_generated_file('app/views/layouts/admin.html.erb')
     assert_directory_exists('public/images/admin/')
@@ -42,7 +42,7 @@ class TestQadminGenerator < Test::Unit::TestCase
   
   def base_files
     [ 
-      'app/views/stylesheets/style.css',
+      'public/stylesheets/style.css',
       'app/views/layouts/main.html.erb',
       'config/routes.rb'
     ]
