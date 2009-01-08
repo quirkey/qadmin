@@ -6,6 +6,18 @@ class TestQadminController < Test::Unit::TestCase
   def crud_actions
     [:index, :show, :new, :create, :edit, :update, :destroy]
   end
+  
+  def assert_defines_actions(*actions)
+    [actions].flatten.each do |action|
+      assert @controller.respond_to?(action), "Should define ##{action}"
+    end
+  end
+  
+  def assert_does_not_define_actions(*actions)
+    [actions].flatten.each do |action|
+      assert !@controller.respond_to?(action), "Should not define ##{action}"
+    end    
+  end
   public
 
   context "QadminController" do
@@ -14,51 +26,84 @@ class TestQadminController < Test::Unit::TestCase
         
         context "with no options" do
           setup do
-            class NoOptionController < MockController
+            class NoOptionsController < MockController
               qadmin
             end
-            @controller = NoOptionController.new
+            @controller = NoOptionsController.new
           end
           
           should "define all CRUD actions" do
-            crud_actions.each do |action|
-              assert @controller.respond_to?(action), "Should define ##{action}"
-            end
+            assert_defines_actions(crud_actions)
           end
           
           should "set model_name from controller name" do
             assert_equal 'NoOption', @controller.send(:model_name)
           end
+          
+          should "set model_instance_name to underscored version" do
+            assert_equal 'no_option', @controller.send(:model_instance_name)
+          end
+          
+          should "set human_name to model.humanize" do
+            assert_equal 'No option', @controller.send(:model_human_name)
+          end
         end
         
         context "with hashed options" do
           context "with :exclude" do
+            setup do
+              class ExcludeController < MockController
+                qadmin :exclude => [:show, :destroy]
+              end
+              @controller = ExcludeController.new
+            end
             
             should "define CRUD actions" do
-              
+              assert_defines_actions(crud_actions - [:show, :destroy])
             end
             
             should "not define actions in exclude" do
-              
+              assert_does_not_define_actions([:show, :destroy])
             end
           end
           
           context "with :only" do
-            
-            should "define CRUD actions listed in hash" do
-              
+            setup do
+              class OnlyController < MockController
+                qadmin :only => [:index, :show]
+              end
+              @controller = OnlyController.new
             end
             
-            should "not define crud actions not listed" do
+            should "define CRUD actions" do
+              assert_defines_actions(:index, :show)
+            end
+            
+            should "not define actions in exclude" do
+              assert_does_not_define_actions(crud_actions - [:index, :show])
+            end
+          end
+          
+          context "with :model_name" do
+            
+            should "set #model_name" do
               
             end
           end
           
-          context "with :name" do
+          context "with :human_name" do
             
-            should "set #name" do
+            should "set the human name" do
               
             end
+            
+            should "not effect the existing model name" do
+              
+            end
+          end
+          
+          context "with two instances in different controllers" do
+            
           end
         end
         
