@@ -22,9 +22,9 @@ class TestQadminGenerator < Test::Unit::TestCase
     name = 'Item'
     run_generator('qadmin', [name], sources, :destination => APP_ROOT)
     assert_generated_class('app/controllers/items_controller') do |body|
-      assert_match(/include Qadmin\:\:Controller/, body)
+      assert_match(/qadmin/, body)
     end
-    assert_generated_test_for('items_controller')
+    assert_generated_class('test/functional/items_controller_test')
     assert_directory_exists('app/views/items')
     assert_generated_file('app/views/layouts/admin.html.erb')
     assert_directory_exists('public/images/admin/')

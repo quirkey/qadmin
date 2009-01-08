@@ -59,3 +59,7 @@ class Item < ActiveRecord::Base
     end
   end
 end
+
+class MockController
+  extend Qadmin::Controller::Macros
+end
