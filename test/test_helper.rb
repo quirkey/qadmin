@@ -61,5 +61,10 @@ class Item < ActiveRecord::Base
 end
 
 class MockController
+  class << self
+    def append_view_paths(paths)
+    end
+  end
+  
   extend Qadmin::Controller::Macros
 end

@@ -12,6 +12,7 @@ module Qadmin
         self.model_instance_name   = model_name.underscore
         self.model_collection_name = model_instance_name.pluralize    
         self.model_human_name      = model_instance_name.humanize
+        self.append_view_paths(File.join(File.dirname(__FILE__), 'views'))
         define_admin_actions(available_actions, options)
       end
 

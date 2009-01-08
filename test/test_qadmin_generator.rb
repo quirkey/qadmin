@@ -26,6 +26,7 @@ class TestQadminGenerator < Test::Unit::TestCase
     end
     assert_generated_class('test/functional/items_controller_test')
     assert_directory_exists('app/views/items')
+    assert_generated_file('app/views/items/_form.html.erb')
     assert_generated_file('app/views/layouts/admin.html.erb')
     assert_directory_exists('public/images/admin/')
   end
