@@ -85,7 +85,6 @@ class TestQadminController < Test::Unit::TestCase
           end
           
           context "with :model_name" do
-            
             should "set #model_name" do
               
             end
@@ -103,7 +102,33 @@ class TestQadminController < Test::Unit::TestCase
           end
           
           context "with two instances in different controllers" do
+            setup do
+              class NewExcludeController < MockController
+                qadmin :exclude => [:show, :new]
+              end
+              @exclude_controller = NewExcludeController.new
+              class NewOnlyController < MockController
+                qadmin :only => [:index, :show]
+              end
+              @only_controller = NewOnlyController.new
+            end
             
+            should "not include actions for :exclude" do
+              @controller = @exclude_controller
+              assert_does_not_define_actions(:show, :new)
+              assert_defines_actions(crud_actions - [:show, :new])
+            end
+            
+            should "include actions for :only" do
+              @controller = @only_controller
+              assert_does_not_define_actions(crud_actions - [:index, :show])
+              assert_defines_actions([:index, :show])
+            end
+            
+            should "set model name independently" do
+              assert_equal 'NewOnly', @only_controller.send(:model_name)
+              assert_equal 'NewExclude', @exclude_controller.send(:model_name)
+            end
           end
         end
         
