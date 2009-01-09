@@ -3,29 +3,7 @@
 <%= admin_controls model_collection_name, :for => :index %>
 
 <%= will_paginate(@model_collection) %>
-<table>
-	<tr>
-	<% attributes.each_with_index do |attribute, i| -%>
-	<th<% if i == 0 -%> class="first_col"<% end -%>><%= sorterable_link :<%= attribute.name -%> %></th>
-		<% end -%>
-		<th>View</th>
-		<th>Edit</th>
-		<th>Delete</th>
-	</tr>
-
-	<%  @model_collection.each do |instance| %>
-	<tr id="<%= dom_id(instance) %>" <%= alt_rows %>>
-	<% attributes.each_with_index do |attribute, i| -%>
-	<% if i == 0 -%><td class="first_col"><%= link_to <%= singular_name %>.<%= attribute.name %>, <%= table_name.singularize %>_path(<%= singular_name %>)  %></td><%- else -%>
-	<td><%= h <%= singular_name %>.<%= attribute.name %> %></td>
-	<%- end -%>
-	<% end -%>
-	<td><%= link_to image_tag('admin/icon_show.png'), <%= table_name.singularize %>_path(<%= singular_name %>) %></td>
-	<td><%= link_to image_tag('admin/icon_edit.png'), edit_<%= table_name.singularize %>_path(<%= singular_name %>) %></td>
-	<td><%= link_to image_tag('admin/icon_destroy.png'), <%= table_name.singularize %>_path(<%= singular_name %>), :confirm => 'Are you sure?', :method => :delete %></td>
-</tr>
-<% end %>
-</table>
+<%= admin_table(@model_collection) %>
 <%= will_paginate(@model_collection) %>
 
 <%= admin_controls model_collection_name, :for => :index %>

@@ -1,13 +1,13 @@
 module Qadmin
   module Helper
-    
+
     def fieldset(legend = nil, options = {}, &block)
       concat(content_tag_for(:fieldset, options) do
         content_tag(:legend, legend) if legend
         capture(&block)
       end)
     end
-    
+
     def admin_controls(name, options = {}, &block)
       return if respond_to?(:overlay?) && overlay?
       controller     = options[:controller] || name.to_s.tableize
@@ -49,6 +49,37 @@ module Qadmin
         html << %{</ul>}
         html
       end
+    end
+
+    def admin_table(collection, options = {})
+      html << '<table>'
+      html <<	'<tr>'
+      attributes.each_with_index do |attribute, i|
+        html << (i == 0) ? '<th class="first_col">' : '<th>'
+        html << sorterable_link(attribute.name)
+        html << '</th>'
+      end
+      html << %{
+        <th>View</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        </tr>
+      }
+      collection.each do |instance|
+        html << %{<tr id="#{dom_id(instance)}" #{alt_rows}>}
+        attributes.each_with_index do |attribute, i|
+          if i == 0
+            html << %{<td class="first_col">#{link_to instance.send(attribute.name), send("#{model_instance_name}_path", instance}</td>}
+          else
+            html << <td><%= h <%= singular_name %>.<%= attribute.name %> %></td>
+          end
+        end
+        <td><%= link_to image_tag('admin/icon_show.png'), <%= table_name.singularize %>_path(<%= singular_name %>) %></td>
+        <td><%= link_to image_tag('admin/icon_edit.png'), edit_<%= table_name.singularize %>_path(<%= singular_name %>) %></td>
+        <td><%= link_to image_tag('admin/icon_destroy.png'), <%= table_name.singularize %>_path(<%= singular_name %>), :confirm => 'Are you sure?', :method => :delete %></td>
+        </tr>
+      end
+      html << '</table>'
     end
 
     def alt_rows
