@@ -1,32 +1,48 @@
 = qadmin
 
-* FIX (url)
+http://github.com/quirkey/qadmin
 
 == DESCRIPTION:
 
-FIX (describe your package)
+An [almost] one command solution for adding admin interfaces/resources to a Rails app. 
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+Qadmin is a partial extraction of 2+ years of building Rails admin systems. A lot of the code comes from a Rails plugin I wrote (private) called quirkey_tools. 
+
+The system consists currently of two parts: a generator, and a set of macros.
+
+The generator is =~ the Rails resource generator, but instead of plopping all the code for the different standard resource actions into the controller and templates, it uses the #qadmin macro to include the standard resource actions.
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+(Coming soon)
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+Right now, a rails app, but the eventual goal is to make it framework agnostic (work with Sinatra, etc, too)..
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+Qadmin can be installed as a gem or a plugin.
+
+=== As a gem
+
+  sudo gem install qadmin --source=http://gems.github.com
+
+Then in your config/environment.rb
+
+  config.gem 'qadmin'
+  
+=== As a plugin
+
+  ./script/plugin install git://github.com/quirkey/qadmin.git  
 
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2009 FIXME full name
+Copyright (c) 2009 Aaron Quint, Quirkey NYC, LLC
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
