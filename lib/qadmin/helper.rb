@@ -2,12 +2,12 @@ module Qadmin
   module Helper
     
     def fieldset(legend = nil, options = {}, &block)
-      content_tag(:fieldset, options) do
+      concat(content_tag_for(:fieldset, options) do
         content_tag(:legend, legend) if legend
-        yield
-      end
+        capture(&block)
+      end)
     end
-
+    
     def admin_controls(name, options = {}, &block)
       return if respond_to?(:overlay?) && overlay?
       controller     = options[:controller] || name.to_s.tableize
