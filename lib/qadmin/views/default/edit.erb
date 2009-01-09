@@ -1,0 +1,12 @@
+<h2>Editing <%= model_human_name %></h2>
+
+<%= admin_controls model_collection_name, :for => :edit %>
+
+<%= error_messages_for model_instance_name %>
+
+<% form_for(@model_instance) do |f| %>
+  <%= render :partial => 'form', :locals => {:f => f, model_instance_name.to_sym => @model_instance} %>
+  <p><%= f.submit "Update" %></p>
+<% end %>
+
+<%= admin_controls model_collection_name, :for => :edit %>

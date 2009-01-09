@@ -13,6 +13,7 @@ module Qadmin
         self.model_collection_name = model_instance_name.pluralize    
         self.model_human_name      = model_instance_name.humanize
         self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
+        include Qadmin::Templates
         define_admin_actions(available_actions, options)
       end
 
@@ -21,16 +22,16 @@ module Qadmin
         action_method_code = {
           :index => %{
           def index
-            @#{model_collection_name} = #{model_name}.paginate(:page => (params[:page] || 1))
+            @model_collection = @#{model_collection_name} = #{model_name}.paginate(:page => (params[:page] || 1))
             respond_to do |format|
-              format.html
+              format.html { render_template_for_section }
               format.xml
             end
           end
           },
           :show => %{
           def show
-            @#{model_instance_name} = #{model_name}.find(params[:id])
+            @model_instance = @#{model_instance_name} = #{model_name}.find(params[:id])
             respond_to do |format|
               format.html
               format.xml
@@ -39,8 +40,7 @@ module Qadmin
           },
           :new => %{
           def new
-            @#{model_instance_name} = #{model_name}.new
-
+            @model_instance = @#{model_instance_name} = #{model_name}.new
             respond_to do |format|
               format.html # new.html.erb
               format.xml  { render :xml => @#{model_instance_name} }
@@ -49,7 +49,7 @@ module Qadmin
           },
           :create => %{
           def create
-            @#{model_instance_name} = #{model_name}.new(params[:#{model_instance_name}])
+            @model_instance = @#{model_instance_name} = #{model_name}.new(params[:#{model_instance_name}])
             respond_to do |format|
               if @#{model_instance_name}.save
                 flash[:message] = '#{model_human_name} was successfully created.'
@@ -64,12 +64,12 @@ module Qadmin
           },
           :edit => %{
           def edit
-            @#{model_instance_name} = #{model_name}.find(params[:id])
+            @model_instance = @#{model_instance_name} = #{model_name}.find(params[:id])
           end
           },
           :update => %{
           def update
-            @#{model_instance_name} = #{model_name}.find(params[:id])
+            @model_instance = @#{model_instance_name} = #{model_name}.find(params[:id])
 
             respond_to do |format|
               if @#{model_instance_name}.update_attributes(params[:#{model_instance_name}])
@@ -85,7 +85,7 @@ module Qadmin
           },
           :destroy => %{
           def destroy
-            @#{model_instance_name} = #{model_name}.find(params[:id])
+            @model_instance =  @#{model_instance_name} = #{model_name}.find(params[:id])
             @#{model_instance_name}.destroy
             flash[:message] = "#{model_human_name} \#{@#{model_instance_name}} was deleted"
             respond_to do |format|
@@ -96,26 +96,13 @@ module Qadmin
           }
         }
         action_code = actions.collect {|a| action_method_code[a.to_sym] }.join("\n")
+        helper_methods = %{
+          helper_method :model_name, :model_instance_name, :model_collection_name
+        }
+        action_code = helper_methods << action_code
         self.class_eval(action_code)
       end
     end
-
-
-    # GET /<%= controller_file_path %>/new
-    # GET /<%= controller_file_path %>/new.xml
-    
-    # GET /<%= controller_file_path %>/1/edit
-    
-    # POST /<%= controller_file_path %>
-    # POST /<%= controller_file_path %>.xml
-    
-    # PUT /<%= controller_file_path %>/1
-    # PUT /<%= controller_file_path %>/1.xml
-
-    
-    # DELETE /<%= controller_file_path %>/1
-    # DELETE /<%= controller_file_path %>/1.xml
-
 
   end
 end

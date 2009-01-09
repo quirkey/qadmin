@@ -9,5 +9,9 @@ module Qadmin
   VERSION = '0.1.0'
 end
 
-require 'qadmin/helper'
-require 'qadmin/controller'
+%w{
+  helper
+  overlay
+  templates
+  controller
+}.each {|lib| require "qadmin/#{lib}" }
