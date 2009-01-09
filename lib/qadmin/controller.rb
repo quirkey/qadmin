@@ -14,6 +14,7 @@ module Qadmin
         self.model_human_name      = model_instance_name.humanize
         self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
         include Qadmin::Templates
+        include Qadmin::Overlay
         define_admin_actions(available_actions, options)
       end
 

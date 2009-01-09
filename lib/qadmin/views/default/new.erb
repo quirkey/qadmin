@@ -1,12 +1,12 @@
-<h2><%= singular_name.humanize.capitalize %>: New</h2>
+<h2><%= model_human_name %>: New</h2>
 
-<%%= admin_controls :<%= table_name %>, :for => :new %>
+<%= admin_controls model_collection_name, :for => :new %>
 
-<%%= error_messages_for :<%= singular_name %> %>
+<%= error_messages_for model_instance_name %>
 
-<%% form_for(@<%= singular_name %>) do |f| %>
-  <%%= render :partial => 'form', :locals => {:f => f, :<%= singular_name %> => @<%= singular_name %>} %>
-  <p><%%= f.submit "Create" %></p>
-<%% end %>
+<% form_for(@model_instance) do |f| %>
+  <%= render :partial => 'form', :locals => {:f => f, model_instance_name.to_sym => @model_instance} %>
+  <p><%= f.submit "Create" %></p>
+<% end %>
 
-<%%= admin_controls :<%= table_name %>, :for => :new %>
+<%= admin_controls model_collection_name, :for => :new %>
