@@ -10,6 +10,7 @@ module Qadmin
 end
 
 %w{
+  options
   helper
   overlay
   templates

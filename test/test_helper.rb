@@ -66,6 +66,9 @@ class MockController
   class << self
     def append_view_path(paths)
     end
+    
+    def helper_method(*args)
+    end
   end
   
   extend Qadmin::Controller::Macros

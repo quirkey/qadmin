@@ -1,6 +1,7 @@
-module Qadmin
-  module Helper
-
+module Qadmin  
+  module Helper    
+    include ::Qadmin::Options
+    
     def fieldset(legend = nil, options = {}, &block)
       concat(content_tag_for(:fieldset, options) do
         content_tag(:legend, legend) if legend
@@ -51,9 +52,10 @@ module Qadmin
       end
     end
     
-    def sortable_column_header(attribute_name)
-      attribute.to_s.humanize
+    def sortable_column_header(attribute_name, options = {})
+      
     end
+        
 
     def admin_table(collection, options = {})
       html = '<table>'
