@@ -52,11 +52,12 @@ module Qadmin
     end
 
     def admin_table(collection, options = {})
-      html << '<table>'
+      html = '<table>'
       html <<	'<tr>'
+      attributes = options[:attributes] || model_klass.columns
       attributes.each_with_index do |attribute, i|
-        html << (i == 0) ? '<th class="first_col">' : '<th>'
-        html << sorterable_link(attribute.name)
+        html << (i == 0 ? '<th class="first_col">' : '<th>')
+        html << attribute.name #sorterable_link(attribute.name)
         html << '</th>'
       end
       html << %{
@@ -69,15 +70,15 @@ module Qadmin
         html << %{<tr id="#{dom_id(instance)}" #{alt_rows}>}
         attributes.each_with_index do |attribute, i|
           if i == 0
-            html << %{<td class="first_col">#{link_to instance.send(attribute.name), send("#{model_instance_name}_path", instance}</td>}
+            html << %{<td class="first_col">#{link_to(instance.send(attribute.name), send("#{model_instance_name}_path", instance))}</td>}
           else
-            html << <td><%= h <%= singular_name %>.<%= attribute.name %> %></td>
+            html << %{<td>#{h(instance.send(attribute.name))}</td>}
           end
         end
-        <td><%= link_to image_tag('admin/icon_show.png'), <%= table_name.singularize %>_path(<%= singular_name %>) %></td>
-        <td><%= link_to image_tag('admin/icon_edit.png'), edit_<%= table_name.singularize %>_path(<%= singular_name %>) %></td>
-        <td><%= link_to image_tag('admin/icon_destroy.png'), <%= table_name.singularize %>_path(<%= singular_name %>), :confirm => 'Are you sure?', :method => :delete %></td>
-        </tr>
+        html << %{<td>#{link_to(image_tag('admin/icon_show.png'), send("#{model_instance_name}_path", instance))}</td>}
+        html << %{<td>#{link_to(image_tag('admin/icon_edit.png'), send("edit_#{model_instance_name}_path", instance))}</td>}
+        html << %{<td>#{link_to(image_tag('admin/icon_destroy.png'), send("#{model_instance_name}_path", instance), :confirm => 'Are you sure?', :method => :delete)}</td>}
+        html << '</tr>'
       end
       html << '</table>'
     end

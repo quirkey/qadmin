@@ -4,14 +4,15 @@ module Qadmin
     module Macros
       
       def qadmin(options = {})
-        self.cattr_accessor :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
+        self.cattr_accessor :model_name, :model_instance_name, :model_collection_name, :model_human_name, :model_klass, :available_actions
         self.available_actions     = [:index, :show, :new, :create, :edit, :update, :destroy]
         self.available_actions     = [options[:only]].flatten    if options[:only]
         self.available_actions    -= [options[:exclude]].flatten if options[:exclude]
-        self.model_name            = self.to_s.demodulize.gsub(/Controller/,'').singularize
-        self.model_instance_name   = model_name.underscore
-        self.model_collection_name = model_instance_name.pluralize    
-        self.model_human_name      = model_instance_name.humanize
+        self.model_name            = options[:model_name] || self.to_s.demodulize.gsub(/Controller/,'').singularize
+        self.model_klass           = options[:model_klass] || model_name.constantize
+        self.model_instance_name   = options[:model_instance_name] || model_name.underscore
+        self.model_collection_name = options[:model_collection_name] || model_instance_name.pluralize    
+        self.model_human_name      = options[:model_human_name] || model_instance_name.humanize
         self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
         include Qadmin::Templates
         include Qadmin::Overlay
@@ -98,7 +99,7 @@ module Qadmin
         }
         action_code = actions.collect {|a| action_method_code[a.to_sym] }.join("\n")
         helper_methods = %{
-          helper_method :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
+          helper_method :model_name, :model_instance_name, :model_collection_name, :model_human_name, :model_klass, :available_actions
         }
         action_code = helper_methods << action_code
         self.class_eval(action_code)
