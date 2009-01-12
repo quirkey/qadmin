@@ -98,7 +98,7 @@ module Qadmin
         }
         action_code = actions.collect {|a| action_method_code[a.to_sym] }.join("\n")
         helper_methods = %{
-          helper_method :model_name, :model_instance_name, :model_collection_name, :model_human_name, :model_klass, :available_actions
+          helper_method :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
         }
         action_code = helper_methods << action_code
         self.class_eval(action_code)

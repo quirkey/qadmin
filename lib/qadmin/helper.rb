@@ -53,7 +53,7 @@ module Qadmin
     end
     
     def sortable_column_header(attribute_name, options = {})
-      
+      attribute_name.humanize
     end
         
 

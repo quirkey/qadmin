@@ -1,14 +1,10 @@
-<h2><%= plural_name.humanize.capitalize %>: <%%= @<%= singular_name %>.to_s %></h2>
+<h2><%= model_human_name.pluralize %>: <%= @model_instance.to_s %></h2>
 
-<%%= admin_controls :<%= table_name %>, :for => :show, :object => @<%= singular_name %> %>
+<%= admin_controls model_collection_name, :for => :show, :object => @model_instance %>
 
-<div id="<%%= dom_id(@<%= singular_name %>) %>">
+<div id="<%= dom_id(@model_instance) %>">
 	<div class="fields_group">
-	<% attributes.each do |attribute| -%>
-	<h5><%= attribute.human_name %>:</h5>
-	<%%=h @<%= singular_name %>.<%= attribute.name %> %>
-	<% end -%>
 	</div>
 </div>
 
-<%%= admin_controls :<%= table_name %>, :for => :show, :object => @<%= singular_name %> %>
+<%= admin_controls model_collection_name, :for => :show, :object => @model_instance %>
