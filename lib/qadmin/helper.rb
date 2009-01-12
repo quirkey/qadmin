@@ -50,14 +50,18 @@ module Qadmin
         html
       end
     end
+    
+    def sortable_column_header(attribute_name)
+      attribute.to_s.humanize
+    end
 
     def admin_table(collection, options = {})
       html = '<table>'
       html <<	'<tr>'
-      attributes = options[:attributes] || model_klass.columns
+      attributes = options[:attributes] || model_klass.column_names
       attributes.each_with_index do |attribute, i|
         html << (i == 0 ? '<th class="first_col">' : '<th>')
-        html << attribute.name #sorterable_link(attribute.name)
+        html << sortable_column_header(attribute)
         html << '</th>'
       end
       html << %{
@@ -70,9 +74,9 @@ module Qadmin
         html << %{<tr id="#{dom_id(instance)}" #{alt_rows}>}
         attributes.each_with_index do |attribute, i|
           if i == 0
-            html << %{<td class="first_col">#{link_to(instance.send(attribute.name), send("#{model_instance_name}_path", instance))}</td>}
+            html << %{<td class="first_col">#{link_to(instance.send(attribute), send("#{model_instance_name}_path", instance))}</td>}
           else
-            html << %{<td>#{h(instance.send(attribute.name))}</td>}
+            html << %{<td>#{h(instance.send(attribute))}</td>}
           end
         end
         html << %{<td>#{link_to(image_tag('admin/icon_show.png'), send("#{model_instance_name}_path", instance))}</td>}

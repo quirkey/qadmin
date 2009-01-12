@@ -9,7 +9,8 @@ $hoe = Hoe.new('qadmin', Qadmin::VERSION) do |p|
   p.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
   p.rubyforge_name       = 'quirkey'
   p.extra_deps         = [
-    ['activesupport','>= 2.2.0']
+    ['activesupport','>= 2.2.0'],
+    ['restful_query','>= 0.1.0']
   ]
   p.extra_dev_deps = [
     ['newgem', ">= #{::Newgem::VERSION}"]
