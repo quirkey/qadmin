@@ -23,7 +23,9 @@ module Qadmin
         action_method_code = {
           :index => %{
           def index
-            @model_collection = @#{model_collection_name} = #{model_name}.paginate(:page => (params[:page] || 1))
+            scope = #{model_name}.can_query? ? #{model_name}.restful_query(params[:query]) : #{model_name}
+            @model_collection = @#{model_collection_name} = scope.paginate(:page => (params[:page] || 1))
+            logger.warn 'controller params:' + params.inspect
             respond_to do |format|
               format.html { render_template_for_section }
               format.xml

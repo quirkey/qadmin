@@ -52,11 +52,25 @@ module Qadmin
       end
     end
     
-    def sortable_column_header(attribute_name, options = {})
-      attribute_name.humanize
+    def sortable_column_header(attribute_name, text = nil, options = {})
+      link_text = text || attribute_name.to_s.humanize
+      return link_text unless model_klass.can_query?
+      query_parser = model_restful_query_parser(options)
+      query_param = options[:query_param] || :query
+      logger.warn 'params:' +  self.params[query_param].inspect
+      logger.warn 'parser:' + query_parser.inspect
+      sorting_this = query_parser.sort(attribute_name)
+      logger.warn "sorting #{attribute_name}:" + sorting_this.inspect
+      query_parser.set_sort(attribute_name, sorting_this ? sorting_this.reverse_direction : 'desc')
+      link_text << " #{image_tag("admin/icon_#{sorting_this.direction.downcase}.gif")}" if sorting_this
+      link_to link_text, self.params.dup.merge(query_param => query_parser.to_query_hash), :class => 'sortable_column_header'
+    end
+    
+    def model_restful_query_parser(options = {})
+      query_param = options[:query_param] || :query
+      model_klass.restful_query_parser(params[query_param], options)
     end
         
-
     def admin_table(collection, options = {})
       html = '<table>'
       html <<	'<tr>'
