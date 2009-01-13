@@ -16,7 +16,7 @@ class TestQadminController < Test::Unit::TestCase
   def assert_does_not_define_actions(*actions)
     [actions].flatten.each do |action|
       assert !@controller.respond_to?(action), "Should not define ##{action}"
-    end    
+    end
   end
   public
 

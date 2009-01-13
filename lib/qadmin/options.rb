@@ -11,5 +11,6 @@ module Qadmin
     def model_klass
       self.model_name.constantize
     end
+  
   end
 end

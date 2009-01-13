@@ -7,9 +7,7 @@ module Qadmin
       def qadmin(options = {})
         extend ::Qadmin::Options
         self.cattr_accessor :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
-        self.available_actions     = [:index, :show, :new, :create, :edit, :update, :destroy]
-        self.available_actions     = [options[:only]].flatten    if options[:only]
-        self.available_actions    -= [options[:exclude]].flatten if options[:exclude]
+        self.available_actions = Qadmin::OptionSet.new([:index, :show, :new, :create, :edit, :update, :destroy], :only => options[:only], :exclude => options[:exclude])
         self.extract_model_from_options(options)
         self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
         include Qadmin::Templates

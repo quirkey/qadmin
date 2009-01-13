@@ -61,8 +61,8 @@ module Qadmin
       logger.warn 'parser:' + query_parser.inspect
       sorting_this = query_parser.sort(attribute_name)
       logger.warn "sorting #{attribute_name}:" + sorting_this.inspect
-      query_parser.set_sort(attribute_name, sorting_this ? sorting_this.reverse_direction : 'desc')
       link_text << " #{image_tag("admin/icon_#{sorting_this.direction.downcase}.gif")}" if sorting_this
+      query_parser.set_sort(attribute_name, sorting_this ? sorting_this.next_direction : 'desc')
       link_to link_text, self.params.dup.merge(query_param => query_parser.to_query_hash), :class => 'sortable_column_header'
     end
     
