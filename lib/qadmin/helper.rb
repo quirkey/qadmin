@@ -1,6 +1,5 @@
 module Qadmin  
   module Helper    
-    include ::Qadmin::Options
     
     def fieldset(legend = nil, options = {}, &block)
       concat(content_tag_for(:fieldset, options) do
@@ -54,7 +53,7 @@ module Qadmin
     
     def sortable_column_header(attribute_name, text = nil, options = {})
       link_text = text || attribute_name.to_s.humanize
-      return link_text unless model_klass.can_query?
+      return link_text unless qadmin_configuration.model_klass.can_query?
       query_parser = model_restful_query_parser(options)
       query_param = options[:query_param] || :query
       logger.warn 'params:' +  self.params[query_param].inspect
@@ -68,13 +67,13 @@ module Qadmin
     
     def model_restful_query_parser(options = {})
       query_param = options[:query_param] || :query
-      model_klass.restful_query_parser(params[query_param], options)
+      qadmin_configuration.model_klass.restful_query_parser(params[query_param], options)
     end
         
     def admin_table(collection, options = {})
       html = '<table>'
       html <<	'<tr>'
-      attributes = options[:attributes] || self.display_columns
+      attributes = options[:attributes] || self.qadmin_configuration.display_columns
       attributes.each_with_index do |attribute, i|
         html << (i == 0 ? '<th class="first_col">' : '<th>')
         html << sortable_column_header(attribute)

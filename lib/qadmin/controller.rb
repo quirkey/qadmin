@@ -5,7 +5,6 @@ module Qadmin
       
       
       def qadmin(options = {})
-        extend ::Qadmin::Options
         self.cattr_accessor :qadmin_configuration
         self.qadmin_configuration = Qadmin::Configuration.new({:controller_klass => self}.merge(options))
         self.delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => lambda { self.class.qadmin_configuration }
@@ -101,7 +100,7 @@ module Qadmin
         action_code = actions.collect {|a| action_method_code[a.to_sym] }.join("\n")
         helper_methods = %{
           delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => :qadmin_configuration
-          helper_method :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
+          helper_method :qadmin_configuration, :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
         }
         action_code = helper_methods << action_code
         self.class_eval(action_code)
