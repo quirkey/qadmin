@@ -17,6 +17,10 @@ module ActiveRecord
         []
       end
       
+      def column_names
+        ['id'] #content_columns.collect {|c| c.name }
+      end
+      
     end
     self.pluralize_table_names = true
   end
@@ -58,6 +62,10 @@ class Item < ActiveRecord::Base
       columns.collect do |name, type|
         MockColumn.new(name, type)
       end
+    end
+    
+    def column_names
+      [] #content_columns.collect {|c| c.name }
     end
   end
 end

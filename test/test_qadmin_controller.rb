@@ -26,6 +26,7 @@ class TestQadminController < Test::Unit::TestCase
         
         context "with no options" do
           setup do
+            class ::NoOption < ActiveRecord::Base; end
             class NoOptionsController < MockController
               qadmin
             end
@@ -34,6 +35,10 @@ class TestQadminController < Test::Unit::TestCase
           
           should "define all CRUD actions" do
             assert_defines_actions(crud_actions)
+          end
+          
+          should "set qadmin configuration" do
+            assert @controller.send(:qadmin_configuration).is_a?(Qadmin::Configuration)
           end
           
           should "set model_name from controller name" do
@@ -52,6 +57,7 @@ class TestQadminController < Test::Unit::TestCase
         context "with hashed options" do
           context "with :exclude" do
             setup do
+              class ::Exclude < ActiveRecord::Base; end
               class ExcludeController < MockController
                 qadmin :exclude => [:show, :destroy]
               end
@@ -69,6 +75,7 @@ class TestQadminController < Test::Unit::TestCase
           
           context "with :only" do
             setup do
+              class ::Only < ActiveRecord::Base; end
               class OnlyController < MockController
                 qadmin :only => [:index, :show]
               end
@@ -104,11 +111,11 @@ class TestQadminController < Test::Unit::TestCase
           context "with two instances in different controllers" do
             setup do
               class NewExcludeController < MockController
-                qadmin :exclude => [:show, :new]
+                qadmin :model_name => 'Item', :exclude => [:show, :new]
               end
               @exclude_controller = NewExcludeController.new
               class NewOnlyController < MockController
-                qadmin :only => [:index, :show]
+                qadmin :model_name => 'Item', :only => [:index, :show]
               end
               @only_controller = NewOnlyController.new
             end

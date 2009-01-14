@@ -11,6 +11,7 @@ end
 
 %w{
   option_set
+  configuration
   options
   helper
   overlay

@@ -74,7 +74,7 @@ module Qadmin
     def admin_table(collection, options = {})
       html = '<table>'
       html <<	'<tr>'
-      attributes = options[:attributes] || model_klass.column_names
+      attributes = options[:attributes] || self.display_columns
       attributes.each_with_index do |attribute, i|
         html << (i == 0 ? '<th class="first_col">' : '<th>')
         html << sortable_column_header(attribute)

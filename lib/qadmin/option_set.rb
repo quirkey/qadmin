@@ -33,7 +33,6 @@ module Qadmin
       EOT
     end
 
-    
     protected
     def reset_current
       new_current = if !only.empty?

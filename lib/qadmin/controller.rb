@@ -6,13 +6,13 @@ module Qadmin
       
       def qadmin(options = {})
         extend ::Qadmin::Options
-        self.cattr_accessor :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
-        self.available_actions = Qadmin::OptionSet.new([:index, :show, :new, :create, :edit, :update, :destroy], :only => options[:only], :exclude => options[:exclude])
-        self.extract_model_from_options(options)
-        self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
+        self.cattr_accessor :qadmin_configuration
+        self.qadmin_configuration = Qadmin::Configuration.new({:controller_klass => self}.merge(options))
+        delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => lambda { self.class.qadmin_configuration }
         include Qadmin::Templates
         include Qadmin::Overlay
-        define_admin_actions(available_actions, options)
+        self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
+        define_admin_actions(qadmin_configuration.available_actions, options)
       end
       
       private
@@ -22,7 +22,7 @@ module Qadmin
           :index => %{
           def index
             scope = #{model_name}.can_query? ? #{model_name}.restful_query(params[:query]) : #{model_name}
-            @model_collection = @#{model_collection_name} = scope.paginate(:page => (params[:page] || 1))
+            @model_collection = @#{model_collection_name} = scope.paginate(:page => (params[:page] || 1), :per_page => (params[:per_page] || 25))
             logger.warn 'controller params:' + params.inspect
             respond_to do |format|
               format.html { render_template_for_section }
