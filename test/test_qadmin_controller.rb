@@ -59,7 +59,7 @@ class TestQadminController < Test::Unit::TestCase
             setup do
               class ::Exclude < ActiveRecord::Base; end
               class ExcludeController < MockController
-                qadmin :exclude => [:show, :destroy]
+                qadmin :available_actions => {:exclude => [:show, :destroy]}
               end
               @controller = ExcludeController.new
             end
@@ -77,7 +77,7 @@ class TestQadminController < Test::Unit::TestCase
             setup do
               class ::Only < ActiveRecord::Base; end
               class OnlyController < MockController
-                qadmin :only => [:index, :show]
+                qadmin :available_actions => {:only => [:index, :show]}
               end
               @controller = OnlyController.new
             end
@@ -110,12 +110,15 @@ class TestQadminController < Test::Unit::TestCase
           
           context "with two instances in different controllers" do
             setup do
+              class ::NewExclude < ActiveRecord::Base; end
               class NewExcludeController < MockController
-                qadmin :model_name => 'Item', :exclude => [:show, :new]
+                qadmin do |config|
+                  config.available_actions.exclude = [:show, :new]
+                end
               end
               @exclude_controller = NewExcludeController.new
               class NewOnlyController < MockController
-                qadmin :model_name => 'Item', :only => [:index, :show]
+                qadmin :model_name => 'Item', :available_actions => {:only => [:index, :show]}
               end
               @only_controller = NewOnlyController.new
             end
@@ -133,7 +136,7 @@ class TestQadminController < Test::Unit::TestCase
             end
             
             should "set model name independently" do
-              assert_equal 'NewOnly', @only_controller.send(:model_name)
+              assert_equal 'Item', @only_controller.send(:model_name)
               assert_equal 'NewExclude', @exclude_controller.send(:model_name)
             end
           end

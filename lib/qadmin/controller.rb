@@ -8,7 +8,8 @@ module Qadmin
         extend ::Qadmin::Options
         self.cattr_accessor :qadmin_configuration
         self.qadmin_configuration = Qadmin::Configuration.new({:controller_klass => self}.merge(options))
-        delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => lambda { self.class.qadmin_configuration }
+        self.delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => lambda { self.class.qadmin_configuration }
+        yield(self.qadmin_configuration) if block_given?
         include Qadmin::Templates
         include Qadmin::Overlay
         self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
@@ -18,11 +19,12 @@ module Qadmin
       private
       
       def define_admin_actions(actions, options = {})
+        config = self.qadmin_configuration
         action_method_code = {
           :index => %{
           def index
-            scope = #{model_name}.can_query? ? #{model_name}.restful_query(params[:query]) : #{model_name}
-            @model_collection = @#{model_collection_name} = scope.paginate(:page => (params[:page] || 1), :per_page => (params[:per_page] || 25))
+            scope = #{config.model_name}.can_query? ? #{config.model_name}.restful_query(params[:query]) : #{config.model_name}
+            @model_collection = @#{config.model_collection_name} = scope.paginate(:page => (params[:page] || 1), :per_page => (params[:per_page] || 25))
             logger.warn 'controller params:' + params.inspect
             respond_to do |format|
               format.html { render_template_for_section }
@@ -32,7 +34,7 @@ module Qadmin
           },
           :show => %{
           def show
-            @model_instance = @#{model_instance_name} = #{model_name}.find(params[:id])
+            @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
             respond_to do |format|
               format.html
               format.xml
@@ -41,56 +43,56 @@ module Qadmin
           },
           :new => %{
           def new
-            @model_instance = @#{model_instance_name} = #{model_name}.new
+            @model_instance = @#{config.model_instance_name} = #{config.model_name}.new
             respond_to do |format|
               format.html # new.html.erb
-              format.xml  { render :xml => @#{model_instance_name} }
+              format.xml  { render :xml => @#{config.model_instance_name} }
             end
           end
           },
           :create => %{
           def create
-            @model_instance = @#{model_instance_name} = #{model_name}.new(params[:#{model_instance_name}])
+            @model_instance = @#{config.model_instance_name} = #{config.model_name}.new(params[:#{config.model_instance_name}])
             respond_to do |format|
-              if @#{model_instance_name}.save
-                flash[:message] = '#{model_human_name} was successfully created.'
-                format.html { redirect_to(#{model_instance_name}_path(@#{model_instance_name})) }
-                format.xml  { render :xml => @#{model_instance_name}, :status => :created, :location => @#{model_instance_name} }
+              if @#{config.model_instance_name}.save
+                flash[:message] = '#{config.model_human_name} was successfully created.'
+                format.html { redirect_to(#{config.model_instance_name}_path(@#{config.model_instance_name})) }
+                format.xml  { render :xml => @#{config.model_instance_name}, :status => :created, :location => @#{config.model_instance_name} }
               else
                 format.html { render :action => "new" }
-                format.xml  { render :xml => @#{model_instance_name}.errors }
+                format.xml  { render :xml => @#{config.model_instance_name}.errors }
               end
             end
           end
           },
           :edit => %{
           def edit
-            @model_instance = @#{model_instance_name} = #{model_name}.find(params[:id])
+            @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
           end
           },
           :update => %{
           def update
-            @model_instance = @#{model_instance_name} = #{model_name}.find(params[:id])
+            @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
 
             respond_to do |format|
-              if @#{model_instance_name}.update_attributes(params[:#{model_instance_name}])
-                flash[:message] = '#{model_human_name} was successfully updated.'
-                format.html { redirect_to(#{model_instance_name}_path(@#{model_instance_name})) }
+              if @#{config.model_instance_name}.update_attributes(params[:#{config.model_instance_name}])
+                flash[:message] = '#{config.model_human_name} was successfully updated.'
+                format.html { redirect_to(#{config.model_instance_name}_path(@#{config.model_instance_name})) }
                 format.xml  { head :ok }
               else
                 format.html { render :action => "edit" }
-                format.xml  { render :xml => @#{model_instance_name}.errors }
+                format.xml  { render :xml => @#{config.model_instance_name}.errors }
               end
             end
           end
           },
           :destroy => %{
           def destroy
-            @model_instance =  @#{model_instance_name} = #{model_name}.find(params[:id])
-            @#{model_instance_name}.destroy
-            flash[:message] = "#{model_human_name} \#{@#{model_instance_name}} was deleted"
+            @model_instance =  @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
+            @#{config.model_instance_name}.destroy
+            flash[:message] = "#{config.model_human_name} \#{@#{config.model_instance_name}} was deleted"
             respond_to do |format|
-              format.html { redirect_to(#{model_collection_name}_path) }
+              format.html { redirect_to(#{config.model_collection_name}_path) }
               format.xml  { head :ok }
             end
           end
@@ -98,6 +100,7 @@ module Qadmin
         }
         action_code = actions.collect {|a| action_method_code[a.to_sym] }.join("\n")
         helper_methods = %{
+          delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => :qadmin_configuration
           helper_method :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
         }
         action_code = helper_methods << action_code

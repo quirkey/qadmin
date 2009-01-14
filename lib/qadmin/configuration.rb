@@ -11,8 +11,8 @@ module Qadmin
                   
     def initialize(options = {})
       extract_model_from_options(options)
-      self.available_actions = Qadmin::OptionSet.new([:index, :show, :new, :create, :edit, :update, :destroy])
-      self.display_columns   = Qadmin::OptionSet.new(model_klass.column_names)
+      self.available_actions = Qadmin::OptionSet.new([:index, :show, :new, :create, :edit, :update, :destroy], options[:available_actions] || {})
+      self.display_columns   = Qadmin::OptionSet.new(model_klass.column_names, options[:display_columns] || {})
     end
     
     def model_klass
