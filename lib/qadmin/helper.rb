@@ -2,7 +2,7 @@ module Qadmin
   module Helper    
     
     def fieldset(legend = nil, options = {}, &block)
-      concat(content_tag_for(:fieldset, options) do
+      concat(content_tag(:fieldset, options) do
         content_tag(:legend, legend) if legend
         capture(&block)
       end)
