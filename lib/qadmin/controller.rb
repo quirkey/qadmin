@@ -22,6 +22,7 @@ module Qadmin
         action_method_code = {
           :index => %{
           def index
+            logger.info 'Qadmin: Default /index'
             scope = #{config.model_name}.can_query? ? #{config.model_name}.restful_query(params[:query]) : #{config.model_name}
             @model_collection = @#{config.model_collection_name} = scope.paginate(:page => (params[:page] || 1), :per_page => (params[:per_page] || 25))
             logger.warn 'controller params:' + params.inspect
@@ -33,24 +34,27 @@ module Qadmin
           },
           :show => %{
           def show
+            logger.info 'Qadmin: Default /show'
             @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
             respond_to do |format|
-              format.html
+              format.html { render_template_for_section }
               format.xml
             end
           end
           },
           :new => %{
           def new
+            logger.info 'Qadmin: Default /new'
             @model_instance = @#{config.model_instance_name} = #{config.model_name}.new
             respond_to do |format|
-              format.html # new.html.erb
+              format.html { render_template_for_section }
               format.xml  { render :xml => @#{config.model_instance_name} }
             end
           end
           },
           :create => %{
           def create
+            logger.info 'Qadmin: Default /create'
             @model_instance = @#{config.model_instance_name} = #{config.model_name}.new(params[:#{config.model_instance_name}])
             respond_to do |format|
               if @#{config.model_instance_name}.save
@@ -58,7 +62,7 @@ module Qadmin
                 format.html { redirect_to(#{config.model_instance_name}_path(@#{config.model_instance_name})) }
                 format.xml  { render :xml => @#{config.model_instance_name}, :status => :created, :location => @#{config.model_instance_name} }
               else
-                format.html { render :action => "new" }
+                format.html { render_template_for_section('new') }
                 format.xml  { render :xml => @#{config.model_instance_name}.errors }
               end
             end
@@ -66,11 +70,17 @@ module Qadmin
           },
           :edit => %{
           def edit
+            logger.info 'Qadmin: Default /edit'
             @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
+            respond_to do |format|
+              format.html { render_template_for_section }
+              format.xml  { redirect_to #{config.model_instance_name}_path(@#{config.model_instance_name}) }
+            end
           end
           },
           :update => %{
           def update
+            logger.info 'Qadmin: Default /update'
             @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
 
             respond_to do |format|
@@ -79,7 +89,7 @@ module Qadmin
                 format.html { redirect_to(#{config.model_instance_name}_path(@#{config.model_instance_name})) }
                 format.xml  { head :ok }
               else
-                format.html { render :action => "edit" }
+                format.html { render_template_for_section("edit") }
                 format.xml  { render :xml => @#{config.model_instance_name}.errors }
               end
             end
@@ -87,6 +97,7 @@ module Qadmin
           },
           :destroy => %{
           def destroy
+            logger.info 'Qadmin: Default /destroy'
             @model_instance =  @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
             @#{config.model_instance_name}.destroy
             flash[:message] = "#{config.model_human_name} \#{@#{config.model_instance_name}} was deleted"

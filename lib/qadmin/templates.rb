@@ -17,7 +17,7 @@ module Qadmin
 
     def template_for_section(template_name, file_name = nil, options = {})
       file_name ||= template_name
-      section_specific_template?(file_name, options) ? section_specific_template(template_name, options) : default_template(template_name, options)
+      section_specific_template?(file_name, options) ? section_specific_template(template_name, options) : default_section_template(template_name, options)
     end
 
     def partial_for_section(partial_name, options = {})
@@ -32,7 +32,7 @@ module Qadmin
       "#{current_section_name(options)}/#{template_name}"
     end
 
-    def default_template(template_name, options = {})
+    def default_section_template(template_name, options = {})
       "default/#{template_name}"
     end
 
@@ -41,8 +41,10 @@ module Qadmin
     end
     
     def template_exists?(template_path)
+      logger.info "Checking for template: #{template_path}"
       ActionView::Template.new(template_path, self.view_paths)
     rescue ActionView::MissingTemplate
+      logger.info "Template not found: #{template_path}"
       false
     end
 
