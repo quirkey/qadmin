@@ -4,7 +4,7 @@ class <%= controller_class_name %>ControllerTest < ActionController::TestCase
   
   context "<%= controller_class_name %>" do
     setup do
-      @<%= file_name %> = <%= table_name %>(:aaron)
+      @<%= file_name %> = <%= table_name %>(!!FIXTURE_NAME)
       @<%= file_name %>_params = {
 <%= attributes.collect { |a| ":#{a.name} => #{a.default}" }.join(",\n\t") %>
       }
@@ -24,7 +24,7 @@ class <%= controller_class_name %>ControllerTest < ActionController::TestCase
         end
 
         should "display <%= file_name %>" do
-          assert_select "#<%= file_name %>_\#{@<%= file_name %>.id}"
+          assert_select "#<%= file_name %>_#{@<%= file_name %>.id}"
         end
       end
 
@@ -41,7 +41,7 @@ class <%= controller_class_name %>ControllerTest < ActionController::TestCase
         end
 
         should "display <%= file_name %>" do
-          assert_select "#<%= file_name %>_\#{@<%= file_name %>.id}"
+          assert_select "#<%= file_name %>_#{@<%= file_name %>.id}"
         end
       end
 

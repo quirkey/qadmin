@@ -3,8 +3,10 @@ module Qadmin
     
     def fieldset(legend = nil, options = {}, &block)
       concat(content_tag(:fieldset, options) do
-        content_tag(:legend, legend) if legend
-        capture(&block)
+        html = ''
+        html << content_tag(:legend, legend) if legend
+        html << capture(&block)
+        html
       end)
     end
 
