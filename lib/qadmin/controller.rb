@@ -23,7 +23,9 @@ module Qadmin
           :index => %{
           def index
             logger.info 'Qadmin: Default /index'
-            scope = #{config.model_name}.can_query? ? #{config.model_name}.restful_query(params[:query]) : #{config.model_name}
+            scope = qadmin_configuration.model_klass
+            scope = scope.send(qadmin_configuration.default_scope) if qadmin_configuration.default_scope
+            scope =  scope.restful_query(params[:query]) if #{config.model_name}.can_query?
             @model_collection = @#{config.model_collection_name} = scope.paginate(:page => (params[:page] || 1), :per_page => (params[:per_page] || 25))
             logger.warn 'controller params:' + params.inspect
             respond_to do |format|
@@ -122,7 +124,7 @@ module Qadmin
             respond_to do |format|
               format.js {
                 render :update do |page|
-                  page.insert_html :bottom, @origin_div, :partial => "content_forms/#{obj}_form", :locals => {obj => nil, :index => @num, :content_type => @content_type}
+                  page.insert_html :bottom, @origin_div, :partial => "content_forms/\#{obj}_form", :locals => {obj => nil, :index => @num, :content_type => @content_type}
                 end
               }
             end

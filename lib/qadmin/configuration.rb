@@ -8,11 +8,15 @@ module Qadmin
                   :model_human_name, 
                   :available_actions, 
                   :display_columns
-                  
+    attr_accessor_with_default :multipart_forms, false
+    attr_accessor_with_default :default_scope, false
+    
     def initialize(options = {})
       extract_model_from_options(options)
       self.available_actions = Qadmin::OptionSet.new([:index, :show, :new, :create, :edit, :update, :destroy], options[:available_actions] || {})
       self.display_columns   = Qadmin::OptionSet.new(model_klass.column_names, options[:display_columns] || {})
+      self.multipart_forms   = options[:multipart_forms] || false
+      self.default_scope     = options[:default_scope]   || false
     end
     
     def model_klass
