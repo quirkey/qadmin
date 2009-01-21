@@ -113,7 +113,22 @@ module Qadmin
           delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => :qadmin_configuration
           helper_method :qadmin_configuration, :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
         }
-        action_code = helper_methods << action_code
+        additional_methods = %{
+          def add_form
+            @origin_div = params[:from]
+            @num = params[:num]
+            @content_type = params[:content_type] || model_instance_name
+            obj = @origin_div.to_s.singularize
+            respond_to do |format|
+              format.js {
+                render :update do |page|
+                  page.insert_html :bottom, @origin_div, :partial => "content_forms/#{obj}_form", :locals => {obj => nil, :index => @num, :content_type => @content_type}
+                end
+              }
+            end
+          end
+        }
+        action_code = helper_methods << action_code << additional_methods
         self.class_eval(action_code)
       end
     end
