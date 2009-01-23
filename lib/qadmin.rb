@@ -15,5 +15,7 @@ end
   helper
   overlay
   templates
+  assets/form_builder
+  form_builder
   controller
 }.each {|lib| require "qadmin/#{lib}" }

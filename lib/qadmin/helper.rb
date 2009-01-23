@@ -76,6 +76,11 @@ module Qadmin
       html = '<table>'
       html <<	'<tr>'
       attributes = options[:attributes] || self.qadmin_configuration.display_columns
+      model_column_types = SuperHash.new
+      attributes.each do |attribute_name|
+        column = Look.columns.detect {|c| c.name == attribute_name.to_s }
+        model_column_types[attribute_name] = column.type if column
+      end
       attributes.each_with_index do |attribute, i|
         html << (i == 0 ? '<th class="first_col">' : '<th>')
         html << sortable_column_header(attribute)
@@ -90,10 +95,17 @@ module Qadmin
       collection.each do |instance|
         html << %{<tr id="#{dom_id(instance)}" #{alt_rows}>}
         attributes.each_with_index do |attribute, i|
-          if i == 0
-            html << %{<td class="first_col">#{link_to(instance.send(attribute), send("#{model_instance_name}_path", instance))}</td>}
+          raw_value = instance.send(attribute)
+          value = case model_column_types[attribute]
+          when :boolean
+            yes?(raw_value)
           else
-            html << %{<td>#{h(instance.send(attribute))}</td>}
+            raw_value
+          end
+          if i == 0
+            html << %{<td class="first_col">#{link_to(value, send("#{model_instance_name}_path", instance))}</td>}
+          else
+            html << %{<td>#{h(value)}</td>}
           end
         end
         html << %{<td>#{link_to(image_tag('admin/icon_show.png'), send("#{model_instance_name}_path", instance))}</td>}

@@ -1,8 +1,8 @@
 module Qadmin
-  module Files
+  module Assets
     module FormBuilder
       
-      def file_selector(method, options = {})
+      def asset_selector(method, options = {})
   
         id = "#{object_name}_#{method}"
         form_name = "#{object_name}[#{method}]"
@@ -18,10 +18,10 @@ module Qadmin
           :resize_type => object_name.tableize,
           :multiple => true
         })
-        @template.render(:partial => 'shared/file_selector', :locals => options)
+        @template.render(:partial => 'assets/asset_selector', :locals => options)
       end
 
-      def file_browser(id, options = {})
+      def asset_browser(id, options = {})
         options.reverse_merge!({
           :id => id,
           :label => false,
