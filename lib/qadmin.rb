@@ -14,6 +14,7 @@ end
   configuration
   helper
   overlay
+  page_titles
   templates
   assets/form_builder
   form_builder
