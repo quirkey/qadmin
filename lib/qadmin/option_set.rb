@@ -32,7 +32,9 @@ module Qadmin
       end
       EOT
     end
-
+    alias_method :except, :exclude
+    alias_method :except=, :exclude=
+    
     protected
     def reset_current
       new_current = if !only.empty?
