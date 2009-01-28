@@ -1,0 +1,8 @@
+<div id="<%%= dom_id(@<%= file_name %>) %>">
+	<div class="fields_group">
+	  <% attributes.each do |attribute| -%>
+  	<h5><%= attribute.human_name %>:</h5>
+  	<%%= h @<%= singular_name %>.<%= attribute.name %> %>
+  	<% end -%>
+	</div>
+</div>

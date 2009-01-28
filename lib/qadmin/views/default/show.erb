@@ -2,9 +2,6 @@
 
 <%= admin_controls model_collection_name, :for => :show, :object => @model_instance %>
 
-<div id="<%= dom_id(@model_instance) %>">
-	<div class="fields_group">
-	</div>
-</div>
+<%= render :partial => model_instance_name, :object => @model_instance %>
 
 <%= admin_controls model_collection_name, :for => :show, :object => @model_instance %>
