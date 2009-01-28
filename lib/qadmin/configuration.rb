@@ -15,7 +15,7 @@ module Qadmin
     def initialize(options = {})
       extract_model_from_options(options)
       self.available_actions = Qadmin::OptionSet.new([:index, :show, :new, :create, :edit, :update, :destroy], options[:available_actions] || {})
-      self.display_columns   = Qadmin::OptionSet.new(model_klass.column_names, options[:display_columns] || {})
+      self.display_columns   = Qadmin::OptionSet.new(column_names, options[:display_columns] || {})
       self.multipart_forms   = options[:multipart_forms] || false
       self.default_scope     = options[:default_scope]   || false
       self.column_headers    = SuperHash.new(options[:column_headers] || {})
@@ -32,6 +32,12 @@ module Qadmin
       self.model_instance_name   = options[:model_instance_name] || model_name.underscore
       self.model_collection_name = options[:model_collection_name] || model_instance_name.pluralize    
       self.model_human_name      = options[:model_human_name] || model_instance_name.humanize
+    end
+    
+    def model_column_names
+      model_klass.column_names
+    rescue
+      []
     end
     
   end
