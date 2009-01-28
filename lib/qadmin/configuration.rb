@@ -15,7 +15,7 @@ module Qadmin
     def initialize(options = {})
       extract_model_from_options(options)
       self.available_actions = Qadmin::OptionSet.new([:index, :show, :new, :create, :edit, :update, :destroy], options[:available_actions] || {})
-      self.display_columns   = Qadmin::OptionSet.new(column_names, options[:display_columns] || {})
+      self.display_columns   = Qadmin::OptionSet.new(model_column_names, options[:display_columns] || {})
       self.multipart_forms   = options[:multipart_forms] || false
       self.default_scope     = options[:default_scope]   || false
       self.column_headers    = SuperHash.new(options[:column_headers] || {})
