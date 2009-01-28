@@ -6,7 +6,7 @@ class <%= controller_class_name %>ControllerTest < ActionController::TestCase
     setup do
       @<%= file_name %> = <%= table_name %>(!!FIXTURE_NAME)
       @<%= file_name %>_params = {
-<%= attributes.collect { |a| ":#{a.name} => #{a.default}" }.join(",\n\t") %>
+<%= attributes.collect { |a| ":#{a.name} => '#{a.default}'" }.join(",\n\t") %>
       }
     end
 
