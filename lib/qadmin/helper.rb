@@ -53,8 +53,8 @@ module Qadmin
       end
     end
     
-    def sortable_column_header(attribute_name, text = nil, options = {})
-      link_text = text || attribute_name.to_s.humanize
+    def sortable_column_header(attribute, text = nil, options = {})
+      link_text = text || self.qadmin_configuration.column_headers[attribute] || attribute.to_s.humanize
       return link_text unless qadmin_configuration.model_klass.can_query?
       query_parser = model_restful_query_parser(options)
       query_param = options[:query_param] || :query
@@ -78,7 +78,7 @@ module Qadmin
       attributes = options[:attributes] || self.qadmin_configuration.display_columns
       model_column_types = SuperHash.new
       attributes.each do |attribute_name|
-        column = Look.columns.detect {|c| c.name == attribute_name.to_s }
+        column = self.qadmin_configuration.model_klass.columns.detect {|c| c.name == attribute_name.to_s }
         model_column_types[attribute_name] = column.type if column
       end
       attributes.each_with_index do |attribute, i|
