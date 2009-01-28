@@ -99,13 +99,15 @@ module Qadmin
           value = case model_column_types[attribute]
           when :boolean
             yes?(raw_value)
+          when :text
+            truncate_words(raw_value, 10, ". . . #{link_to('More', send("#{model_instance_name}_path", instance))}")
           else
-            raw_value
+            h(raw_value)
           end
           if i == 0
             html << %{<td class="first_col">#{link_to(value, send("#{model_instance_name}_path", instance))}</td>}
           else
-            html << %{<td>#{h(value)}</td>}
+            html << %{<td>#{value}</td>}
           end
         end
         html << %{<td>#{link_to(image_tag('admin/icon_show.png'), send("#{model_instance_name}_path", instance))}</td>}
