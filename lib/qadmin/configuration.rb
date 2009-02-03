@@ -18,7 +18,7 @@ module Qadmin
       self.display_columns   = Qadmin::OptionSet.new(model_column_names, options[:display_columns] || {})
       self.multipart_forms   = options[:multipart_forms] || false
       self.default_scope     = options[:default_scope]   || false
-      self.column_headers    = SuperHash.new(options[:column_headers] || {})
+      self.column_headers    = HashWithIndifferentAccess.new(options[:column_headers] || {})
     end
     
     def model_klass

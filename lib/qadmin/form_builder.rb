@@ -1,5 +1,5 @@
 module Qadmin
-  class FormBuilder < ActionView::Helpers::FormBuilder
+  class FormBuilder < ::ActionView::Helpers::FormBuilder
     include Qadmin::Assets::FormBuilder
     
     def content_form(form_name, options = {})

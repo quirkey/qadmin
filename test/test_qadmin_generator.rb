@@ -30,6 +30,16 @@ class TestQadminGenerator < Test::Unit::TestCase
     assert_generated_file('app/views/layouts/admin.erb')
     assert_directory_exists('public/images/admin/')
   end
+  
+  def test_generator_with_after_scaffold_should_only_generate_test_and_erbs
+    name = 'Item'
+    run_generator('qadmin', [name, '--after-scaffold'], sources, :destination => APP_ROOT)
+    assert_file_does_not_exist('app/controllers/items_controller.rb')
+    assert_generated_class('test/functional/items_controller_test')
+    assert_generated_file('app/views/items/_form.erb')
+    assert_generated_file('app/views/items/_item.erb')    
+    assert_file_does_not_exist('app/views/layouts/admin.erb')
+  end
 
   private
   def sources
@@ -39,6 +49,11 @@ class TestQadminGenerator < Test::Unit::TestCase
 
   def generator_path
     "rails_generators"
+  end
+  
+  def assert_file_does_not_exist(path)
+      assert !File.exist?("#{APP_ROOT}/#{path}"),
+        "The file '#{APP_ROOT}/#{path}' should not exist"
   end
   
   def base_files
