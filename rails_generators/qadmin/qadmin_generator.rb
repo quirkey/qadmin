@@ -45,8 +45,8 @@ class QadminGenerator < Rails::Generator::NamedBase
       m.directory(File.join('test', 'functional', controller_class_path))
 
       #copy form over too
-      m.template("_form.erb",File.join('app','views', controller_class_path, controller_file_name, "_form.erb"))
-      m.template("_instance.erb", File.join('app','views', controller_class_path, controller_file_name, "_#{file_name}.erb"))
+      m.template("_form.erb",File.join('app','views', controller_class_path, controller_file_name, "_form.html.erb"))
+      m.template("_instance.erb", File.join('app','views', controller_class_path, controller_file_name, "_#{file_name}.html.erb"))
 
       if !after_scaffold
         # Layout and stylesheet.
