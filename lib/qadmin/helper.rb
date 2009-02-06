@@ -26,7 +26,8 @@ module Qadmin
         :edit       => link_to(image_tag('admin/icon_edit.png') + " Edit", general_link_attributes.merge(:action => 'edit', :id => obj)),
         :show       => link_to(image_tag('admin/icon_show.png') + " View", general_link_attributes.merge(:action => 'show', :id => obj)),
         :destroy    => link_to(image_tag('admin/icon_destroy.png') + " Delete", general_link_attributes.merge(:action => 'destroy', :id => obj), :confirm => 'Are you sure?', :method => :delete),
-        :ports      => link_to(image_tag('admin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports'))
+        :ports      => link_to(image_tag('admin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports')),
+        :export      => link_to(image_tag('admin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export'))
       }
 
       control_sets = {
@@ -35,10 +36,11 @@ module Qadmin
         :edit  => [:index,:new,:show,:destroy],
         :show  => [:index,:new,:edit,:destroy]
       }
-
-      control_set = (options[:for] ? control_sets[options[:for]] : options[:controls])
+      
+      control_set = options[:controls] || []
+      control_set.unshift(control_sets[options[:for]]) if options[:for]
       control_set << :ports if options[:ports]
-      controls = Array(control_set).collect {|c| control_links[c] }.compact
+      controls = Array(control_set).flatten.collect {|c| control_links[c] }.compact
 
       html = ""
       html << %{<ul class="admin_controls">}
