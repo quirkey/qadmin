@@ -37,7 +37,7 @@ module Qadmin
         :show  => [:index,:new,:edit,:destroy]
       }
       
-      control_set = options[:controls] || []
+      control_set = options[:controls].dup || []
       control_set.unshift(control_sets[options[:for]]) if options[:for]
       control_set << :ports if options[:ports]
       controls = [control_set].flatten.collect {|c| control_links[c] }.compact
