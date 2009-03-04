@@ -40,7 +40,7 @@ module Qadmin
       control_set = options[:controls] || []
       control_set.unshift(control_sets[options[:for]]) if options[:for]
       control_set << :ports if options[:ports]
-      controls = Array(control_set).flatten.collect {|c| control_links[c] }.compact
+      controls = [control_set].flatten.collect {|c| control_links[c] }.compact
 
       html = ""
       html << %{<ul class="admin_controls">}
