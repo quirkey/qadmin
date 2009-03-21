@@ -48,7 +48,7 @@ module Qadmin
       if block_given?
         html << capture(&block)
         html << %{</ul>}
-        concat(html,block.binding)
+        concat(html)
       else
         html << %{</ul>}
         html
