@@ -1,14 +1,5 @@
 module Qadmin  
   module Helper    
-    
-    def fieldset(legend = nil, options = {}, &block)
-      concat(content_tag(:fieldset, options) do
-        html = ''
-        html << content_tag(:legend, legend) if legend
-        html << capture(&block)
-        html
-      end)
-    end
 
     def admin_controls(name, options = {}, &block)
       return if respond_to?(:overlay?) && overlay?
@@ -127,6 +118,42 @@ module Qadmin
     def yes?(boolean)
       boolean ? 'Yes' : 'No'
     end
+    
+    def li(content, *args)
+      content_tag :li, content, args
+    end
 
+    def simple_admin_menu(*controllers)
+      html = %{<div id="menu">
+    		<ul>}
+    		simple_menu(*controllers) do |name,controller|
+  			  li(link_to(name, :controller => controller))
+  			end
+    	html <<	%{</ul>
+    		<div class="clear"></div>
+    	</div>}
+    end
+
+    def simple_menu(*controllers, &block)
+      returning("") do |html|
+        controllers.each do |controller_pair|
+          if controller_pair.is_a? Array
+            name, controller = controller_pair[0], controller_pair[1]
+          else
+            name, controller = controller_pair, controller_pair
+          end
+          html << yield(name,controller)
+        end
+      end
+    end
+    
+    def fieldset(legend = nil, options = {}, &block)
+      concat(content_tag(:fieldset, options) do
+        html = ''
+        html << content_tag(:legend, legend) if legend
+        html << capture(&block)
+        html
+      end)
+    end
   end
 end
