@@ -1,8 +1,9 @@
 ---
 layout: quirkey_code
-title: Qcontent
-github_name: qcontent
-current_version: 0.1.0
+title: Qadmin
+github_name: qadmin
+current_version: 0.2.1
+plugin: true
 nav:
   - name: What
     link: "#what"
@@ -18,117 +19,150 @@ h2(project_name). {{ page.title }}
 
 h3(#what). What
 
-Qcontent is a growing collection of ruby modules and mix-ins for extending ActiveRecord. The mix-ins address a variety of common problems/features needed in Content Management Systems (CMS). 
+Qadmin is a set of helpers/macros and a generator to ease the development of admin/Content Management Systems in Rails.
 
 h3(#why). Why
 
-Over the past number of years of developing Ecommerce and CMS apps I found there was a lot of code that I was sharing between apps. The goal here was to extract the ActiveRecord extensions into shared modules, mix-ins, and macros so that they can be managed and maintained in a single place. These modules also go hand-in-hand with the ActionController/View extensions found in "Qadmin.":http://code.quirkey.com/qadmin
+Qadmin is an extraction and refinement of the generator and templates I've been using to build Content Management Systems for various clients over the past number of years. The components are currently pretty basic, but tried and true to provide an instantly polished and user friendly Admin resources for non-developers. 
+
+Scaffolding is a great way to quickly build Rails apps, but the default templates an behaviors are not only limited but pretty ugly and not neccisarily user friendly. Qadmin is really a layer ontop of a basic RESTful resource that provides what I see as an ideal 'most-of-the-way' solution for a useable and relatively nice looking admin 'panel'. 
+
+If the style doesnt suite you or this is not the setup you really want, theres a couple of options:
+
+* The CSS is pretty simple, adjust it.
+* Each HTML template is overridable, DIY.
+* Just use qadmin as a model to build you're own generator. Really! Its not that hard!
 
 h3(#usage). Usage
 
-Each module and mix-in has a different use which I'll describe below, but the general idea is once installed in your Rails app, Qcontent modules can be included like:
+Qadmin is a couple different pieces. A generator, a controller macro, and a set of helpers.
+
+h4. Generator
+
+The generator accepts an already defined ActiveRecord model and generates a resource, a functional test suite, some required templates, a css file, and some icons.
+
+Assuming you have an ActiveRecord model Book:
+
+{% highlight bash %}
+./script/generate qadmin Book
+{% endhighlight %}
+
+Will generate a @books_controller@ and a @books_controller_test@ along with other files.
+
+_Note_: The test suite is written using "Shoulda.":http://github.com/thoughtbot/shoulda Support for different testing platforms is a possibility - If you'd like to contribute, please see "Contact.":#contact
+
+The @books_controller@ will be pretty sparse:
 
 {% highlight ruby %}
-class Article < ActiveRecord::Base
-  include Qcontent::Published
-  include Qcontent::Assets
+class BooksController < ApplicationController
+  layout 'admin'
   
-  #...
+  qadmin
+
 end
 {% endhighlight %}
 
-h4. Qcontent::Published
+By default it envokes the @qadmin@ macro without any configuration. Details on configuration are below, under *Macro*. 
 
-The Published module gives a number of common methods for determining the published state of content in a CMS.
+From here, all thats need to get a fully functioning admin is to customize the @app/views/books/_form.html.erb@ to use the correct form elements for your fields and the @app/views/books/_book.html.erb@ to display the Book the way you want it.
 
-If you have a @published_at@ column on your ActiveRecord class you automatically get:
-
-{% highlight ruby %}
-# Article has a published_at :datetime column
-
-Article.published 
-# scope that only returns articles where published at is in the past
-
-Article.recent(3) 
-# returns the 3 most recent records ordered by published date
-
-Article.published? 
-# published at is in the past
-
-Article.published_only { #... } 
-# with_scope
-{% endhighlight %}
-
-Event without a published_at column this can still be used. You just have to define a class method @active_conditions@. For example:
+Using "Restful Query":http://code.quirkey.com/restful_query it's also really easy to add sorting to your index. If @restful_query@ is installed in your app, just add the @can_query@ macro to your model:
 
 {% highlight ruby %}
-class Item < ActiveRecord::Base
-  include Qcontent::Published
-  # Item has no published_at but does have a boolean @active@ column
-  
-  def self.active_conditions
-    {:active => true}
-  end
+class Book < ActiveRecord::Base
+  # ...
+  can_query
+  # ...
 end
-
-# Published gives you:
-Item.active_only 
-# named scope that uses the active conditions
-
-Item.only_active {#...}
-# with_scope that can be used in a @around_filter@ in ActionController
 {% endhighlight %}
 
-h4. Qcontent::Dimension
+@qadmin@ will automagically make all of your index column heads into links that are sortable by clicking.
 
-Dimension is a common class for extracting image/asset dimensions.
+h4. Macro
 
-It can take a variety of inputs.
+The controller macro @qadmin@ is highly configurable. It automatically includes the default CRUD/RESTful resource actions:
+
+* index
+* new
+* show
+* create
+* edit
+* update
+* destroy
+
+Its worth noting that overriding these is as easy as just defining and new @index@ action below the @qadmin@ macro.
+
+Configuration can be done in one of two ways, though a block or a hash. 
+
+Block:
 {% highlight ruby %}
-# these all return equivilent Dimension instances
-Qcontent::Dimension.new('100x100')
-Qcontent::Dimension.new([100, 100])
-Qcontent::Dimension.new({:width => 100, :height => 100})
-{% endhighlight %}
-
-h4. Qcontent::Pricing
-
-Pricing extract the pattern of having Money objects stored on a model as an integer.
-
-{% highlight ruby %}
-class Item < ActiveRecord::Base
-  include Qcontent::Pricing
-  
-  # has column @retail_price_cents@ :integer
-  has_price :retail_price, :default => nil
-  
-  # has column @wholesale@ :integer
-  has_price :wholesale_price, :attribute => :wholesale
+qadmin do |q|
+  q.available_actions.exclude = [:destroy]
+  q.display_columns.only = [:id, :name]
 end
-
-# this gives you automatic price conversions 
-item = Item.first
-#=> <Item>
-item.retail_price = "$40"
-item.retail_price
-#=> <Money @cents=4000>
-
-item.retail_price = 40
-item.retail_price
-#=> <Money @cents=40>
-
-item.retail_price = '40.23'
-item.retail_price
-#=> <Money @cents=4023>
 {% endhighlight %}
 
-h4. More
+Hash:
+{% highlight ruby %}
+qadmin :available_actions => {:exclude => [:destroy]},
+       :display_columns => {:only = [:id, :name]}
+{% endhighlight %}
 
-There a bunch more mix-ins coming soon. Stay tuned! Watch the project on github for the latest updates.
+I would suggest using the block version if you are doing more then one options worth of configuration as it looks nicer.
+
+The available configuration options for @qadmin@:
+|_.Option Name|_.Type|_.Behavior|_.In Example|
+|@controller_klass@|Class|Overrides the assumed controller that qadmin is included in|BooksController
+|@model_name@|String|@qadmin@ assumes the name of the model from the name of the controller/resource use this to override.|Book|
+|@model_instance_name@|String|The singular instance variable name|book|
+|@model_collection_name@|String|The plural instance variable name|books|
+|@model_human_name@|String|The humanized name for display|Book|
+|@available_actions@|OptionSet|The set of actions defined for the controller.|exclude, only, or assign the actions|
+|@display_columns@|OptionSet|The set of column names to be displayed on the index||
+|@column_headers@|OptionSet|The set of human names to give the column heads in the index||
+|@multipart_forms@|Boolean|Set to true if you want to default forms to be multipart enabled for uploads||
+|@default_scope@|String|Use an additional named scope or set of named scopes before the call to paginate on the index||
+
+Unless a view template is placed in the @app/views/books@ folder for index, new, edit, or show the default templates are loaded from the gem.
+
+h4. Helpers
+
+The default views use the helpers that are outlined below, but you can override with your own custom templates and still use these helpers. You can also use these helpers outside of a qadmin enabled controller.
+
+@admin_controls@ generates the nice little bar of links at the top and bottom of the document.
+
+It takes either a list of :controls or a :for which has default sets for different actions:
+
+In @app/views/books/index.html.erb@
+{% highlight erb %}
+<%= admin_controls :book, :for => :index %>
+{% endhighlight %}
+
+In @app/views/books/some_other_action.html.erb@
+{% highlight erb %}
+<%= admin_controls :book, :controls => [:index, :new] %>
+{% endhighlight %}
+
+You can also add your own custom links to the list by invoking @admin_controls@ as a block:
+In @app/views/books/index.html.erb@
+{% highlight erb %}
+<% admin_controls :book, :for => :index do %>
+  <li><%= link_to(image_tag('admin/icon_search.png') + " Search", :action => 'search') %></li>
+<% end %>
+{% endhighlight %}
+
+@admin_table@ generates the nice sortable table seen in the default index view.
+
+It takes a collection and options as a hash:
+{% highlight erb %}
+<%= admin_table @books, :attributes => [:id, :name, :author] %>
+{% endhighlight %}
+
+@:attributes@ takes an array of the attributes you want to display by default.
 
 h3(#dependencies). Dependencies
 
 * rubygems >= 1.3.1
-* activesupport >= 2.2.0
-* activerecord >= 2.2.0
-* money >= 2.0
+* activesupport >= 2.3.2
+* restful_query >= 0.2.0
+* mislav-will_paginate >= 2.3.7

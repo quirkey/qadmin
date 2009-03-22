@@ -59,6 +59,11 @@
         <p>Or directly from github:</p>
         <div class="highlight"><pre>sudo gem install quirkey-{{ page.github_name }} -s http://gems.github.com
         </pre></div>
+        {% if page.plugin %}
+        <p>You can also install it as a rails plugin:</p>
+        <div class="highlight"><pre>./script/plugin install git://github.com/quirkey/{{ page.github_name }}.git
+        </pre></div>
+        {% endif %}
         <p>Github in thier infinite awesomeness also lets you download the source in multiple formats.</p>
         <div class="download">
           <a href="http://github.com/quirkey/{{ page.github_name }}/zipball/master">
