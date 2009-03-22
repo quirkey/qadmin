@@ -1,0 +1,134 @@
+---
+layout: quirkey_code
+title: Qcontent
+github_name: qcontent
+current_version: 0.1.0
+nav:
+  - name: What
+    link: "#what"
+  - name: Why
+    link: "#why"
+  - name: Usage
+    link: "#usage"
+  - name: Dependencies
+    link: "#dependencies"
+---
+
+h2(project_name). {{ page.title }}
+
+h3(#what). What
+
+Qcontent is a growing collection of ruby modules and mix-ins for extending ActiveRecord. The mix-ins address a variety of common problems/features needed in Content Management Systems (CMS). 
+
+h3(#why). Why
+
+Over the past number of years of developing Ecommerce and CMS apps I found there was a lot of code that I was sharing between apps. The goal here was to extract the ActiveRecord extensions into shared modules, mix-ins, and macros so that they can be managed and maintained in a single place. These modules also go hand-in-hand with the ActionController/View extensions found in "Qadmin.":http://code.quirkey.com/qadmin
+
+h3(#usage). Usage
+
+Each module and mix-in has a different use which I'll describe below, but the general idea is once installed in your Rails app, Qcontent modules can be included like:
+
+{% highlight ruby %}
+class Article < ActiveRecord::Base
+  include Qcontent::Published
+  include Qcontent::Assets
+  
+  #...
+end
+{% endhighlight %}
+
+h4. Qcontent::Published
+
+The Published module gives a number of common methods for determining the published state of content in a CMS.
+
+If you have a @published_at@ column on your ActiveRecord class you automatically get:
+
+{% highlight ruby %}
+# Article has a published_at :datetime column
+
+Article.published 
+# scope that only returns articles where published at is in the past
+
+Article.recent(3) 
+# returns the 3 most recent records ordered by published date
+
+Article.published? 
+# published at is in the past
+
+Article.published_only { #... } 
+# with_scope
+{% endhighlight %}
+
+Event without a published_at column this can still be used. You just have to define a class method @active_conditions@. For example:
+
+{% highlight ruby %}
+class Item < ActiveRecord::Base
+  include Qcontent::Published
+  # Item has no published_at but does have a boolean @active@ column
+  
+  def self.active_conditions
+    {:active => true}
+  end
+end
+
+# Published gives you:
+Item.active_only 
+# named scope that uses the active conditions
+
+Item.only_active {#...}
+# with_scope that can be used in a @around_filter@ in ActionController
+{% endhighlight %}
+
+h4. Qcontent::Dimension
+
+Dimension is a common class for extracting image/asset dimensions.
+
+It can take a variety of inputs.
+{% highlight ruby %}
+# these all return equivilent Dimension instances
+Qcontent::Dimension.new('100x100')
+Qcontent::Dimension.new([100, 100])
+Qcontent::Dimension.new({:width => 100, :height => 100})
+{% endhighlight %}
+
+h4. Qcontent::Pricing
+
+Pricing extract the pattern of having Money objects stored on a model as an integer.
+
+{% highlight ruby %}
+class Item < ActiveRecord::Base
+  include Qcontent::Pricing
+  
+  # has column @retail_price_cents@ :integer
+  has_price :retail_price, :default => nil
+  
+  # has column @wholesale@ :integer
+  has_price :wholesale_price, :attribute => :wholesale
+end
+
+# this gives you automatic price conversions 
+item = Item.first
+#=> <Item>
+item.retail_price = "$40"
+item.retail_price
+#=> <Money @cents=4000>
+
+item.retail_price = 40
+item.retail_price
+#=> <Money @cents=40>
+
+item.retail_price = '40.23'
+item.retail_price
+#=> <Money @cents=4023>
+{% endhighlight %}
+
+h4. More
+
+There a bunch more mix-ins coming soon. Stay tuned! Watch the project on github for the latest updates.
+
+h3(#dependencies). Dependencies
+
+* rubygems >= 1.3.1
+* activesupport >= 2.2.0
+* activerecord >= 2.2.0
+* money >= 2.0
