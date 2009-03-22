@@ -11,6 +11,7 @@ $hoe = Hoe.new('qadmin', Qadmin::VERSION) do |p|
   p.summary = p.description = "An [almost] one command solution for adding admin interfaces/resources to a Rails app."
   p.extra_deps         = [
     ['activesupport','>= 2.3.2'],
+    ['mislav-will_paginate','>= 2.3.7'],
     ['restful_query','>= 0.2.0']
   ]
   p.extra_dev_deps = [

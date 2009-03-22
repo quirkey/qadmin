@@ -102,7 +102,7 @@ module Qadmin
           when :boolean
             yes?(raw_value)
           when :text
-            truncate_words(raw_value, 10, ". . . #{link_to('More', send("#{model_instance_name}_path", instance))}")
+            truncate(raw_value, :length => 30, :omission => ". . . #{link_to('More', send("#{model_instance_name}_path", instance))}")
           else
             h(raw_value)
           end
@@ -122,6 +122,10 @@ module Qadmin
 
     def alt_rows
       %{class="#{cycle('alt', '')}"}
+    end
+    
+    def yes?(boolean)
+      boolean ? 'Yes' : 'No'
     end
 
   end
