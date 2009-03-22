@@ -1,1 +1,1 @@
-For more information on qadmin, see http://github.com/quirkey/qadmin
+For more information on qadmin, see http://code.quirkey.com/qadmin

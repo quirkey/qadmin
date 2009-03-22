@@ -8,12 +8,14 @@ $hoe = Hoe.new('qadmin', Qadmin::VERSION) do |p|
   p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
   p.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
   p.rubyforge_name       = 'quirkey'
+  p.summary = p.description = "An [almost] one command solution for adding admin interfaces/resources to a Rails app."
   p.extra_deps         = [
     ['activesupport','>= 2.3.2'],
     ['restful_query','>= 0.2.0']
   ]
   p.extra_dev_deps = [
-    ['newgem', ">= #{::Newgem::VERSION}"]
+    ['newgem', ">= #{::Newgem::VERSION}"],
+    ['Shoulda', ">= 1.2.0"]
   ]
   
   p.clean_globs |= %w[**/.DS_Store tmp *.log]
