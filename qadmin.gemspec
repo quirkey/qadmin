@@ -1,4 +1,3 @@
-(in /Users/aaronquint/Sites/__active/indagare/vendor/plugins/qadmin)
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
