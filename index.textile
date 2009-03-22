@@ -111,17 +111,20 @@ qadmin :available_actions => {:exclude => [:destroy]},
 I would suggest using the block version if you are doing more then one options worth of configuration as it looks nicer.
 
 The available configuration options for @qadmin@:
-|_.Option Name|_.Type|_.Behavior|_.In Example|
-|@controller_klass@|Class|Overrides the assumed controller that qadmin is included in|BooksController
-|@model_name@|String|@qadmin@ assumes the name of the model from the name of the controller/resource use this to override.|Book|
-|@model_instance_name@|String|The singular instance variable name|book|
-|@model_collection_name@|String|The plural instance variable name|books|
-|@model_human_name@|String|The humanized name for display|Book|
-|@available_actions@|OptionSet|The set of actions defined for the controller.|exclude, only, or assign the actions|
-|@display_columns@|OptionSet|The set of column names to be displayed on the index||
-|@column_headers@|OptionSet|The set of human names to give the column heads in the index||
-|@multipart_forms@|Boolean|Set to true if you want to default forms to be multipart enabled for uploads||
-|@default_scope@|String|Use an additional named scope or set of named scopes before the call to paginate on the index||
+
+|_.Option Name|_.Type|_.Behavior|_.Example|
+| @controller_klass@ |Class|Overrides the assumed controller that qadmin is included in|BooksController|
+| @model_name@ |String|@qadmin@ assumes the name of the model from the name of the controller/resource use this to override.|Book|
+| @model_instance_name@ |String|The singular instance variable name|book|
+| @model_collection_name@ |String|The plural instance variable name|books|
+| @model_human_name@ |String|The humanized name for display|Book|
+| @available_actions@ |OptionSet|The set of actions defined for the controller|exclude, only, or assign the actions|
+| @display_columns@ |OptionSet|The set of column names to be displayed on the index|
+| @column_headers@ |OptionSet|The set of human names to give the column heads in the index|
+| @multipart_forms@ |Boolean|Set to true if you want to default forms to be multipart enabled for uploads|
+| @default_scope@ |String|Use an additional named scope or set of named scopes before the call to paginate on the index|
+
+An OptionSet is a special class that acts like an Array but also has @exclude@ and @only@ methods that let you adjust the defaults without having to pass a fully modified array.
 
 Unless a view template is placed in the @app/views/books@ folder for index, new, edit, or show the default templates are loaded from the gem.
 
