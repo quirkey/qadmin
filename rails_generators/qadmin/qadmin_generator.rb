@@ -50,7 +50,7 @@ class QadminGenerator < Rails::Generator::NamedBase
 
       if !after_scaffold
         # Layout and stylesheet.
-        m.template('layout.html.erb', File.join('app','views','layouts', "admin.erb"))
+        m.template('layout.html.erb', File.join('app','views','layouts', "admin.html.erb"))
         m.template('style.css', 'public/stylesheets/admin.css')
 
         m.template('controller.rb', File.join('app','controllers', controller_class_path, "#{controller_file_name}_controller.rb"))
