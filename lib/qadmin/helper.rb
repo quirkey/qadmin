@@ -135,16 +135,17 @@ module Qadmin
     end
 
     def simple_menu(*controllers, &block)
-      returning("") do |html|
-        controllers.each do |controller_pair|
-          if controller_pair.is_a? Array
-            name, controller = controller_pair[0], controller_pair[1]
-          else
-            name, controller = controller_pair, controller_pair
-          end
-          html << yield(name,controller)
+      return unless controllers
+      html = ""
+      controllers.each do |controller_pair|
+        if controller_pair.is_a? Array
+          name, controller = controller_pair[0], controller_pair[1]
+        else
+          name, controller = controller_pair, controller_pair
         end
+        html << yield(name,controller)
       end
+      html
     end
     
     def fieldset(legend = nil, options = {}, &block)
