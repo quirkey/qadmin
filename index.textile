@@ -21,6 +21,11 @@ h3(#what). What
 
 Qadmin is a set of helpers/macros and a generator to ease the development of admin/Content Management Systems in Rails.
 
+The default style looks something like:
+
+!qadmin.jpg!
+
+
 h3(#why). Why
 
 Qadmin is an extraction and refinement of the generator and templates I've been using to build Content Management Systems for various clients over the past number of years. The components are currently pretty basic, but tried and true to provide an instantly polished and user friendly Admin resources for non-developers. 
@@ -36,6 +41,10 @@ If the style doesnt suite you or this is not the setup you really want, theres a
 h3(#usage). Usage
 
 Qadmin is a couple different pieces. A generator, a controller macro, and a set of helpers.
+
+I've created a really basic rails app (that does nothing) but provides and great example of using qadmin:
+
+"http://github.com/quirkey/qadmin-demo":http://github.com/quirkey/qadmin-demo
 
 h4. Generator
 
