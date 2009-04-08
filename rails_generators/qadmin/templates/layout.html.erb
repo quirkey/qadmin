@@ -16,7 +16,7 @@
 		<div id="loginbox"><%% if logged_in? %>Welcome, <%%= current_user %> / <%%= link_to "Logout", '/logout' %><%% else %><%%= link_to "Login", '/login' %><%% end %></div>
 	</div>
 	<div id="main">
-	  <% if logged_in? %>
+	  <%% if logged_in? %>
 		<div id="left_menu">
 			<h3>Panels</h3>
 			<ul class="menu">
@@ -28,7 +28,7 @@
 			<ul class="menu">
 			</ul>
 		</div>
-		<% end %>
+		<%% end %>
 		<div id="content">
 			<%% if flash[:message] %>
 			<div id="message_main" class="message">
