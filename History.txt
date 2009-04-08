@@ -1,3 +1,7 @@
+== 0.2.3 2009-04-07
+
+* Minor fix to template that was breaking some cases of generation
+
 == 0.2.2 2009-03-22
 
 * 2 minor enhancements:
