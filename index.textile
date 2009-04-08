@@ -2,7 +2,7 @@
 layout: quirkey_code
 title: Qadmin
 github_name: qadmin
-current_version: 0.2.2
+current_version: 0.2.3
 plugin: true
 nav:
   - name: What
