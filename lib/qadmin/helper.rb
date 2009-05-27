@@ -18,7 +18,8 @@ module Qadmin
         :show       => link_to(image_tag('admin/icon_show.png') + " View", general_link_attributes.merge(:action => 'show', :id => obj)),
         :destroy    => link_to(image_tag('admin/icon_destroy.png') + " Delete", general_link_attributes.merge(:action => 'destroy', :id => obj), :confirm => 'Are you sure?', :method => :delete),
         :ports      => link_to(image_tag('admin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports')),
-        :export      => link_to(image_tag('admin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export'))
+        :export     => link_to(image_tag('admin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export')),
+        :preview    => link_to(image_tag('admin/icon_find.png') + " Preview", general_link_attributes.merge(:action => 'preview', :id => obj))
       }
 
       control_sets = {
@@ -78,7 +79,6 @@ module Qadmin
         end
         model_column_types[attribute_name] = column if column
       end
-      logger.info "== model_column_types: " + model_column_types.inspect
       attributes.each_with_index do |attribute, i|
         html << (i == 0 ? '<th class="first_col">' : '<th>')
         html << sortable_column_header(attribute)

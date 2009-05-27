@@ -29,7 +29,7 @@ module Qadmin
             @model_collection = @#{config.model_collection_name} = scope.paginate(:page => (params[:page] || 1), :per_page => (params[:per_page] || 25))
             logger.warn 'controller params:' + params.inspect
             respond_to do |format|
-              format.html { render_template_for_section }
+              format.html { render_template_for_section('index.html') }
               format.xml
             end
           end
@@ -39,7 +39,7 @@ module Qadmin
             logger.info 'Qadmin: Default /show'
             @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
             respond_to do |format|
-              format.html { render_template_for_section }
+              format.html { render_template_for_section('show.html') }
               format.xml
             end
           end
@@ -49,7 +49,7 @@ module Qadmin
             logger.info 'Qadmin: Default /new'
             @model_instance = @#{config.model_instance_name} = #{config.model_name}.new
             respond_to do |format|
-              format.html { render_template_for_section }
+              format.html { render_template_for_section('new.html') }
               format.xml  { render :xml => @#{config.model_instance_name} }
             end
           end
@@ -64,7 +64,7 @@ module Qadmin
                 format.html { redirect_to(#{config.model_instance_name}_path(@#{config.model_instance_name})) }
                 format.xml  { render :xml => @#{config.model_instance_name}, :status => :created, :location => @#{config.model_instance_name} }
               else
-                format.html { render_template_for_section('new') }
+                format.html { render_template_for_section('new.html') }
                 format.xml  { render :xml => @#{config.model_instance_name}.errors }
               end
             end
@@ -75,7 +75,7 @@ module Qadmin
             logger.info 'Qadmin: Default /edit'
             @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
             respond_to do |format|
-              format.html { render_template_for_section }
+              format.html { render_template_for_section('edit.html') }
               format.xml  { redirect_to #{config.model_instance_name}_path(@#{config.model_instance_name}) }
             end
           end
@@ -91,7 +91,7 @@ module Qadmin
                 format.html { redirect_to(#{config.model_instance_name}_path(@#{config.model_instance_name})) }
                 format.xml  { head :ok }
               else
-                format.html { render_template_for_section("edit") }
+                format.html { render_template_for_section('edit.html') }
                 format.xml  { render :xml => @#{config.model_instance_name}.errors }
               end
             end
