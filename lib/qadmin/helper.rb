@@ -71,9 +71,14 @@ module Qadmin
       attributes = options[:attributes] || self.qadmin_configuration.display_columns
       model_column_types = SuperHash.new
       attributes.each do |attribute_name|
-        column = self.qadmin_configuration.model_klass.columns.detect {|c| c.name == attribute_name.to_s }
-        model_column_types[attribute_name] = column.type if column
+        if column = self.qadmin_configuration.model_klass.columns.detect {|c| c.name == attribute_name.to_s }
+          column = column.type
+        elsif !column && reflection = self.qadmin_configuration.model_klass.reflections[attribute_name]
+          column = :reflection
+        end
+        model_column_types[attribute_name] = column if column
       end
+      logger.info "== model_column_types: " + model_column_types.inspect
       attributes.each_with_index do |attribute, i|
         html << (i == 0 ? '<th class="first_col">' : '<th>')
         html << sortable_column_header(attribute)
@@ -94,6 +99,8 @@ module Qadmin
             yes?(raw_value)
           when :text
             truncate(raw_value, :length => 30, :omission => ". . . #{link_to('More', send("#{model_instance_name}_path", instance))}")
+          when :reflection # association
+            link_to(raw_value.to_s, raw_value)
           else
             h(raw_value)
           end
