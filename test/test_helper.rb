@@ -81,3 +81,4 @@ class MockController
   
   extend Qadmin::Controller::Macros
 end
+

@@ -3,6 +3,10 @@ module Qadmin
     
     class Base < ::HashWithIndifferentAccess
       
+      def with_indifferent_access
+        self
+      end
+      
       def self.hash_accessor(name, options = {})
         options[:default] ||= nil 
         coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
@@ -29,7 +33,7 @@ module Qadmin
       hash_accessor :default_scope, :default => false
       
       def initialize(options = {})
-        super(options)
+        super
         extract_model_from_options(options)
       end
 
@@ -51,32 +55,6 @@ module Qadmin
       rescue
         []
       end
-    end
-
-    class Resource < Base
-      
-      hash_accessor :available_actions
-      hash_accessor :ports, :default => false
-      
-      hash_accessor :multipart_forms, :default => false
-      hash_accessor :controls, :default => []
-      
-      hash_accessor :on_index
-      hash_accessor :on_show
-      hash_accessor :on_new
-      hash_accessor :on_create
-      hash_accessor :on_edit
-      hash_accessor :on_update
-      hash_accessor :on_destroy
-      
-      def initialize(options = {})
-        super(options)
-        self.available_actions = Qadmin::OptionSet.new([:index, :show, :new, :create, :edit, :update, :destroy], available_actions || {})
-        self.available_actions.each do |action|
-          self["on_#{action}"] = "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.dup)
-        end
-      end
-      
     end
 
     module Actions
@@ -115,5 +93,34 @@ module Qadmin
       end
       
     end
+
+    class Resource < Base
+      
+      ACTIONS = [:index, :show, :new, :create, :edit, :update, :destroy].freeze
+      
+      hash_accessor :available_actions
+      hash_accessor :ports, :default => false
+      
+      hash_accessor :multipart_forms, :default => false
+      hash_accessor :controls, :default => []
+      
+      hash_accessor :on_index
+      hash_accessor :on_show
+      hash_accessor :on_new
+      hash_accessor :on_create
+      hash_accessor :on_edit
+      hash_accessor :on_update
+      hash_accessor :on_destroy
+      
+      def initialize(options = {})
+        super
+        ACTIONS.each do |action|
+          self["on_#{action}"] = "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.dup)
+        end
+        self.available_actions = Qadmin::OptionSet.new(ACTIONS.dup, available_actions || {})
+      end
+      
+    end
+
   end
 end
