@@ -71,7 +71,7 @@ module Qadmin
       html = "<table id=\"#{options[:id] || self.qadmin_configuration.model_collection_name}\">"
       html <<	'<tr>'
       attributes = options[:attributes] || self.qadmin_configuration.display_columns
-      model_column_types = SuperHash.new
+      model_column_types = HashWithIndifferentAccess.new
       attributes.each do |attribute_name|
         if column = self.qadmin_configuration.model_klass.columns.detect {|c| c.name == attribute_name.to_s }
           column = column.type

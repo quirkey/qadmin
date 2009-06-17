@@ -6,7 +6,7 @@ module Qadmin
       
       def qadmin(options = {})
         self.cattr_accessor :qadmin_configuration
-        self.qadmin_configuration = Qadmin::Configuration.new({:controller_klass => self}.merge(options))
+        self.qadmin_configuration = Qadmin::Configuration::Resource.new({:controller_klass => self}.merge(options))
         self.delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => lambda { self.class.qadmin_configuration }
         yield(self.qadmin_configuration) if block_given?
         include Qadmin::Templates
@@ -23,10 +23,10 @@ module Qadmin
           :index => %{
           def index
             logger.info 'Qadmin: Default /index'
-            scope = qadmin_configuration.model_klass
-            scope = scope.send(qadmin_configuration.default_scope) if qadmin_configuration.default_scope
+            scope = qadmin_configuration.on_index.model_klass
+            scope = scope.send(qadmin_configuration.on_index.default_scope) if qadmin_configuration.on_index.default_scope
             scope =  scope.restful_query(params[:query]) if #{config.model_name}.can_query?
-            @model_collection = @#{config.model_collection_name} = scope.paginate(:page => (params[:page] || 1), :per_page => (params[:per_page] || 25))
+            @model_collection = @#{config.on_index.model_collection_name} = scope.paginate(:page => (params[:page] || 1), :per_page => (params[:per_page] || 25))
             logger.warn 'controller params:' + params.inspect
             respond_to do |format|
               format.html { render_template_for_section('index.html') }
@@ -37,7 +37,7 @@ module Qadmin
           :show => %{
           def show
             logger.info 'Qadmin: Default /show'
-            @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
+            @model_instance = @#{config.on_show.model_instance_name} = #{config.on_show.model_name}.find(params[:id])
             respond_to do |format|
               format.html { render_template_for_section('show.html') }
               format.xml
