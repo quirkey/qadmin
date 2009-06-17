@@ -65,7 +65,14 @@ module Qadmin
       end
       
       class Index < Action
-        hash_accessor :columns => []
+        hash_accessor :columns, :default => []
+        hash_accessor :column_headers, :default => {}
+        hash_accessor :column_css, :default => {}
+        
+        def initialize(options = {})
+          super
+          self.columns ||= model_column_names
+        end
       end
 
       class Show < Action

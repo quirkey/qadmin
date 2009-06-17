@@ -48,7 +48,7 @@ module Qadmin
     end
     
     def sortable_column_header(attribute_name, text = nil, options = {})
-      link_text = text || self.qadmin_configuration.column_headers[attribute_name] || attribute_name.to_s.humanize
+      link_text = text || self.qadmin_configuration.on_index.column_headers[attribute_name] || attribute_name.to_s.humanize
       return link_text unless qadmin_configuration.model_klass.can_query?
       query_parser = model_restful_query_parser(options)
       query_param = options[:query_param] || :query
@@ -68,20 +68,23 @@ module Qadmin
     end
         
     def admin_table(collection, options = {})
-      html = "<table id=\"#{options[:id] || self.qadmin_configuration.model_collection_name}\">"
+      config = self.qadmin_configuration.on_index
+      logger.info "== config: #{config.inspect}"
+      html = "<table id=\"#{options[:id] || config.model_collection_name}\">"
       html <<	'<tr>'
-      attributes = options[:attributes] || self.qadmin_configuration.display_columns
+      attributes = options[:attributes] || config.columns
       model_column_types = HashWithIndifferentAccess.new
       attributes.each do |attribute_name|
-        if column = self.qadmin_configuration.model_klass.columns.detect {|c| c.name == attribute_name.to_s }
+        if column = config.model_klass.columns.detect {|c| c.name == attribute_name.to_s }
           column = column.type
-        elsif !column && reflection = self.qadmin_configuration.model_klass.reflections[attribute_name]
+        elsif !column && reflection = config.model_klass.reflections[attribute_name] && respond_to?("#{attribute_name}_path")
           column = :reflection
         end
         model_column_types[attribute_name] = column if column
       end
       attributes.each_with_index do |attribute, i|
-        html << (i == 0 ? '<th class="first_col">' : '<th>')
+        css = (config.column_css[attribute] ? config.column_css[attribute] : (i == 0 ? 'first_col' : ''))
+        html << %{<th class="#{css}">}
         html << sortable_column_header(attribute)
         html << '</th>'
       end
@@ -105,11 +108,8 @@ module Qadmin
           else
             h(raw_value)
           end
-          if i == 0
-            html << %{<td class="first_col">#{link_to(value, send("#{model_instance_name}_path", instance))}</td>}
-          else
-            html << %{<td>#{value}</td>}
-          end
+          css = (config.column_css[attribute] ? config.column_css[attribute] : (i == 0 ? 'first_col' : ''))
+          html << %{<td class="#{css}">#{value}</td>}
         end
         html << %{<td>#{link_to(image_tag('admin/icon_show.png'), send("#{model_instance_name}_path", instance))}</td>}
         html << %{<td>#{link_to(image_tag('admin/icon_edit.png'), send("edit_#{model_instance_name}_path", instance))}</td>}

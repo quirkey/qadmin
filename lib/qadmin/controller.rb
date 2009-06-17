@@ -47,25 +47,25 @@ module Qadmin
           :new => %{
           def new
             logger.info 'Qadmin: Default /new'
-            @model_instance = @#{config.model_instance_name} = #{config.model_name}.new
+            @model_instance = @#{config.on_new.model_instance_name} = #{config.on_new.model_name}.new
             respond_to do |format|
               format.html { render_template_for_section('new.html') }
-              format.xml  { render :xml => @#{config.model_instance_name} }
+              format.xml  { render :xml => @#{config.on_new.model_instance_name} }
             end
           end
           },
           :create => %{
           def create
             logger.info 'Qadmin: Default /create'
-            @model_instance = @#{config.model_instance_name} = #{config.model_name}.new(params[:#{config.model_instance_name}])
+            @model_instance = @#{config.on_create.model_instance_name} = #{config.on_create.model_name}.new(params[:#{config.on_create.model_instance_name}])
             respond_to do |format|
-              if @#{config.model_instance_name}.save
-                flash[:message] = '#{config.model_human_name} was successfully created.'
-                format.html { redirect_to(#{config.model_instance_name}_path(@#{config.model_instance_name})) }
-                format.xml  { render :xml => @#{config.model_instance_name}, :status => :created, :location => @#{config.model_instance_name} }
+              if @#{config.on_create.model_instance_name}.save
+                flash[:message] = '#{config.on_create.model_human_name} was successfully created.'
+                format.html { redirect_to(#{config.on_create.model_instance_name}_path(@#{config.on_create.model_instance_name})) }
+                format.xml  { render :xml => @#{config.on_create.model_instance_name}, :status => :created, :location => @#{config.on_create.model_instance_name} }
               else
                 format.html { render_template_for_section('new.html') }
-                format.xml  { render :xml => @#{config.model_instance_name}.errors }
+                format.xml  { render :xml => @#{config.on_create.model_instance_name}.errors }
               end
             end
           end
@@ -73,26 +73,26 @@ module Qadmin
           :edit => %{
           def edit
             logger.info 'Qadmin: Default /edit'
-            @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
+            @model_instance = @#{config.on_edit.model_instance_name} = #{config.on_edit.model_name}.find(params[:id])
             respond_to do |format|
               format.html { render_template_for_section('edit.html') }
-              format.xml  { redirect_to #{config.model_instance_name}_path(@#{config.model_instance_name}) }
+              format.xml  { redirect_to #{config.on_edit.model_instance_name}_path(@#{config.on_edit.model_instance_name}) }
             end
           end
           },
           :update => %{
           def update
             logger.info 'Qadmin: Default /update'
-            @model_instance = @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
+            @model_instance = @#{config.on_update.model_instance_name} = #{config.on_update.model_name}.find(params[:id])
 
             respond_to do |format|
-              if @#{config.model_instance_name}.update_attributes(params[:#{config.model_instance_name}])
-                flash[:message] = '#{config.model_human_name} was successfully updated.'
-                format.html { redirect_to(#{config.model_instance_name}_path(@#{config.model_instance_name})) }
+              if @#{config.on_update.model_instance_name}.update_attributes(params[:#{config.on_update.model_instance_name}])
+                flash[:message] = '#{config.on_update.model_human_name} was successfully updated.'
+                format.html { redirect_to(#{config.on_update.model_instance_name}_path(@#{config.on_update.model_instance_name})) }
                 format.xml  { head :ok }
               else
                 format.html { render_template_for_section('edit.html') }
-                format.xml  { render :xml => @#{config.model_instance_name}.errors }
+                format.xml  { render :xml => @#{config.on_update.model_instance_name}.errors }
               end
             end
           end
@@ -100,11 +100,11 @@ module Qadmin
           :destroy => %{
           def destroy
             logger.info 'Qadmin: Default /destroy'
-            @model_instance =  @#{config.model_instance_name} = #{config.model_name}.find(params[:id])
+            @model_instance =  @#{config.on_destroy.model_instance_name} = #{config.on_destroy.model_name}.find(params[:id])
             @#{config.model_instance_name}.destroy
-            flash[:message] = "#{config.model_human_name} \#{@#{config.model_instance_name}} was deleted"
+            flash[:message] = "#{config.on_destroy.model_human_name} \#{@#{config.on_destroy.model_instance_name}} was deleted"
             respond_to do |format|
-              format.html { redirect_to(#{config.model_collection_name}_path) }
+              format.html { redirect_to(#{config.on_destroy.model_collection_name}_path) }
               format.xml  { head :ok }
             end
           end
