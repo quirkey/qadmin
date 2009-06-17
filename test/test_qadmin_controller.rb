@@ -38,7 +38,7 @@ class TestQadminController < Test::Unit::TestCase
           end
           
           should "set qadmin configuration" do
-            assert @controller.send(:qadmin_configuration).is_a?(Qadmin::Configuration)
+            assert @controller.send(:qadmin_configuration).is_a?(Qadmin::Configuration::Resource)
           end
           
           should "set model_name from controller name" do
@@ -55,70 +55,18 @@ class TestQadminController < Test::Unit::TestCase
         end
         
         context "with hashed options" do
-          context "with :exclude" do
-            setup do
-              class ::Exclude < ActiveRecord::Base; end
-              class ExcludeController < MockController
-                qadmin :available_actions => {:exclude => [:show, :destroy]}
-              end
-              @controller = ExcludeController.new
-            end
-            
-            should "define CRUD actions" do
-              assert_defines_actions(crud_actions - [:show, :destroy])
-            end
-            
-            should "not define actions in exclude" do
-              assert_does_not_define_actions([:show, :destroy])
-            end
-          end
-          
-          context "with :only" do
-            setup do
-              class ::Only < ActiveRecord::Base; end
-              class OnlyController < MockController
-                qadmin :available_actions => {:only => [:index, :show]}
-              end
-              @controller = OnlyController.new
-            end
-            
-            should "define CRUD actions" do
-              assert_defines_actions(:index, :show)
-            end
-            
-            should "not define actions in exclude" do
-              assert_does_not_define_actions(crud_actions - [:index, :show])
-            end
-          end
-          
-          context "with :model_name" do
-            should "set #model_name" do
-              
-            end
-          end
-          
-          context "with :human_name" do
-            
-            should "set the human name" do
-              
-            end
-            
-            should "not effect the existing model name" do
-              
-            end
-          end
           
           context "with two instances in different controllers" do
             setup do
               class ::NewExclude < ActiveRecord::Base; end
               class NewExcludeController < MockController
                 qadmin do |config|
-                  config.available_actions.exclude = [:show, :new]
+                  config.available_actions = config.available_actions - [:show, :new]
                 end
               end
               @exclude_controller = NewExcludeController.new
               class NewOnlyController < MockController
-                qadmin :model_name => 'Item', :available_actions => {:only => [:index, :show]}
+                qadmin :model_name => 'Item', :available_actions => [:index, :show]
               end
               @only_controller = NewOnlyController.new
             end

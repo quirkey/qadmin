@@ -98,7 +98,7 @@ module Qadmin
       
       ACTIONS = [:index, :show, :new, :create, :edit, :update, :destroy].freeze
       
-      hash_accessor :available_actions
+      hash_accessor :available_actions, :default => ACTIONS
       hash_accessor :ports, :default => false
       
       hash_accessor :multipart_forms, :default => false
@@ -117,7 +117,6 @@ module Qadmin
         ACTIONS.each do |action|
           self["on_#{action}"] = "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.dup)
         end
-        self.available_actions = Qadmin::OptionSet.new(ACTIONS.dup, available_actions || {})
       end
       
     end
