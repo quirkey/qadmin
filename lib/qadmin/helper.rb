@@ -69,10 +69,8 @@ module Qadmin
         
     def admin_table(collection, options = {})
       config = self.qadmin_configuration.on_index
-      logger.info "== config: #{config.inspect}"
-      html = "<table id=\"#{options[:id] || config.model_collection_name}\">"
-      html <<	'<tr>'
-      attributes = options[:attributes] || config.columns
+      attributes  = options[:attributes]  || config.columns 
+      row_actions = options[:row_actions] || config.row_actions
       model_column_types = HashWithIndifferentAccess.new
       attributes.each do |attribute_name|
         if column = config.model_klass.columns.detect {|c| c.name == attribute_name.to_s }
@@ -82,18 +80,17 @@ module Qadmin
         end
         model_column_types[attribute_name] = column if column
       end
+      html = "<table id=\"#{options[:id] || config.model_collection_name}\">"
+      html <<	'<tr>'
       attributes.each_with_index do |attribute, i|
         css = (config.column_css[attribute] ? config.column_css[attribute] : (i == 0 ? 'first_col' : ''))
         html << %{<th class="#{css}">}
         html << sortable_column_header(attribute)
         html << '</th>'
       end
-      html << %{
-        <th>View</th>
-        <th>Edit</th>
-        <th>Delete</th>
-        </tr>
-      }
+      row_actions.each do |action|
+        html << %{<th>#{action.to_s.humanize}</th>}
+      end
       collection.each do |instance|
         html << %{<tr id="#{dom_id(instance)}" #{alt_rows}>}
         attributes.each_with_index do |attribute, i|
@@ -106,14 +103,18 @@ module Qadmin
           when :reflection # association
             link_to(raw_value.to_s, raw_value)
           else
-            h(raw_value)
+            if i == 0
+              link_to(raw_value, send("#{model_instance_name}_path", instance))
+            else
+              h(raw_value)
+            end
           end
           css = (config.column_css[attribute] ? config.column_css[attribute] : (i == 0 ? 'first_col' : ''))
           html << %{<td class="#{css}">#{value}</td>}
         end
-        html << %{<td>#{link_to(image_tag('admin/icon_show.png'), send("#{model_instance_name}_path", instance))}</td>}
-        html << %{<td>#{link_to(image_tag('admin/icon_edit.png'), send("edit_#{model_instance_name}_path", instance))}</td>}
-        html << %{<td>#{link_to(image_tag('admin/icon_destroy.png'), send("#{model_instance_name}_path", instance), :confirm => 'Are you sure?', :method => :delete)}</td>}
+        row_actions.each do |action|
+          html << %{<td>#{link_to(image_tag("admin/icon_#{action}.png"), :action => action, :id => instance.id)}</td>}
+        end
         html << '</tr>'
       end
       html << '</table>'

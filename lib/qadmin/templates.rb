@@ -12,11 +12,12 @@ module Qadmin
     protected        
     def render_template_for_section(action = nil, options = {})
       action ||= action_name
-      render({:template => template_for_section(action)}.merge(options))
+      render template_for_section(action), options
     end
 
     def template_for_section(template_name, file_name = nil, options = {})
       file_name ||= template_name
+      file_name += ".html" if file_name !~ /\.[a-z]+$/
       section_specific_template?(file_name, options) ? section_specific_template(template_name, options) : default_section_template(template_name, options)
     end
 

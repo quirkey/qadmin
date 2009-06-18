@@ -68,10 +68,11 @@ module Qadmin
         hash_accessor :columns, :default => []
         hash_accessor :column_headers, :default => {}
         hash_accessor :column_css, :default => {}
+        hash_accessor :row_actions, :default => [:show, :edit, :destroy]
         
         def initialize(options = {})
+          self.columns = model_column_names
           super
-          self.columns ||= model_column_names
         end
       end
 
