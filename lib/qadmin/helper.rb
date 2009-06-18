@@ -73,7 +73,7 @@ module Qadmin
       row_actions = options[:row_actions] || config.row_actions
       model_column_types = HashWithIndifferentAccess.new
       attributes.each do |attribute_name|
-        if column = config.model_klass.columns.detect {|c| c.name == attribute_name.to_s }
+        if column = config.model_klass.columns.detect {|c| c.name.to_s == attribute_name.to_s }
           column = column.type
         elsif !column && reflection = config.model_klass.reflections[attribute_name] && respond_to?("#{attribute_name}_path")
           column = :reflection
@@ -99,7 +99,7 @@ module Qadmin
           when :boolean
             yes?(raw_value)
           when :text
-            truncate(raw_value, :length => 30, :omission => ". . . #{link_to('More', send("#{model_instance_name}_path", instance))}")
+            truncate(raw_value, :length => 30, :omission => "... #{link_to('More', send("#{model_instance_name}_path", instance))}")
           when :reflection # association
             link_to(raw_value.to_s, raw_value)
           else
