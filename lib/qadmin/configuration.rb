@@ -71,8 +71,8 @@ module Qadmin
         hash_accessor :row_actions, :default => [:show, :edit, :destroy]
         
         def initialize(options = {})
-          self.columns = model_column_names
           super
+          self.columns = model_column_names
         end
       end
 
