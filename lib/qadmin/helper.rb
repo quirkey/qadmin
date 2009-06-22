@@ -13,14 +13,14 @@ module Qadmin
       general_link_attributes = {:controller => controller}.merge(parent_link_attributes)
 
       control_links = {
-        :index      => link_to(image_tag('admin/icon_list.png') + " Back to List", general_link_attributes.merge(:action => 'index')),
-        :new        => link_to(image_tag('admin/icon_new.png') + " New", general_link_attributes.merge(:action => 'new')),
-        :edit       => link_to(image_tag('admin/icon_edit.png') + " Edit", general_link_attributes.merge({:action => 'edit', :id => obj.id})),
-        :show       => link_to(image_tag('admin/icon_show.png') + " View", general_link_attributes.merge({:action => 'show', :id => obj.id})),
-        :destroy    => link_to(image_tag('admin/icon_destroy.png') + " Delete", general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete),
-        :ports      => link_to(image_tag('admin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports')),
-        :export     => link_to(image_tag('admin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export')),
-        :preview    => link_to(image_tag('admin/icon_find.png') + " Preview", general_link_attributes.merge({:action => 'preview', :id => obj.id}))
+        :index      => lambda { link_to(image_tag('admin/icon_list.png') + " Back to List", general_link_attributes.merge(:action => 'index')) },
+        :new        => lambda { link_to(image_tag('admin/icon_new.png') + " New", general_link_attributes.merge(:action => 'new')) },
+        :edit       => lambda { link_to(image_tag('admin/icon_edit.png') + " Edit", general_link_attributes.merge({:action => 'edit', :id => obj.id})) },
+        :show       => lambda { link_to(image_tag('admin/icon_show.png') + " View", general_link_attributes.merge({:action => 'show', :id => obj.id})) },
+        :destroy    => lambda { link_to(image_tag('admin/icon_destroy.png') + " Delete", general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete) },
+        :ports      => lambda { link_to(image_tag('admin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports')) },
+        :export     => lambda { link_to(image_tag('admin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export')) },
+        :preview    => lambda { link_to(image_tag('admin/icon_find.png') + " Preview", general_link_attributes.merge({:action => 'preview', :id => obj.id})) }
       }
 
       control_sets = {
@@ -37,7 +37,10 @@ module Qadmin
 
       html = ""
       html << %{<ul class="admin_controls">}
-      controls.each {|control| html << li(control) }
+      controls.each do |control| 
+        control_html = control.respond_to?(:call) ? control.call : control
+        html << li(control_html) 
+      end
       if block_given?
         html << capture(&block)
         html << %{</ul>}
