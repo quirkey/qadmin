@@ -64,7 +64,7 @@ class <%= controller_class_name %>ControllerTest < ActionController::TestCase
         end
 
         should_change '<%= model_name %>.count', :by => 1
-        should_redirect_to "<%= file_name %>_path(@<%= file_name %>)"
+        should_redirect_to "<%= file_name %>_path(@<%= file_name %>)" { <%= file_name %>_path(@<%= file_name %>) }
         should_assign_to :<%= file_name %>
       end
 
@@ -91,7 +91,7 @@ class <%= controller_class_name %>ControllerTest < ActionController::TestCase
         end
 
         should_not_change '<%= model_name %>.count'
-        should_redirect_to "<%= file_name %>_path(@<%= file_name %>)"
+        should_redirect_to "<%= file_name %>_path(@<%= file_name %>)" { <%= file_name %>_path(@<%= file_name %>) }
         should_assign_to :<%= file_name %>
 
         should "load <%= file_name %>" do
@@ -105,7 +105,7 @@ class <%= controller_class_name %>ControllerTest < ActionController::TestCase
         end
 
         should_change '<%= model_name %>.count', :by => -1
-        should_redirect_to "<%= table_name %>_path"
+        should_redirect_to "<%= table_name %>_path" { <%= table_name %>_path }
         should_assign_to :<%= file_name %>
       end
     end
