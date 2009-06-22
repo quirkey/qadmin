@@ -1,6 +1,6 @@
 <h2><%= model_human_name %>: Edit</h2>
 
-<%= admin_controls model_collection_name, :for => :edit %>
+<%= admin_controls model_instance_name, :for => :edit %>
 
 <%= error_messages_for model_instance_name %>
 
@@ -9,4 +9,4 @@
   <p><%= f.submit "Update" %></p>
 <% end %>
 
-<%= admin_controls model_collection_name, :for => :edit %>
+<%= admin_controls model_instance_name, :for => :edit %>

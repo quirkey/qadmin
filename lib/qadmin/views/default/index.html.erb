@@ -1,9 +1,9 @@
 <h2><%= model_human_name.pluralize %></h2>
 
-<%= admin_controls model_collection_name, :for => :index, :ports => qadmin_configuration.ports, :controls => qadmin_configuration.on_index.controls  %>
+<%= admin_controls model_instance_name, :for => :index, :ports => qadmin_configuration.ports, :controls => qadmin_configuration.on_index.controls  %>
 
 <%= will_paginate(@model_collection) %>
 <%= admin_table(@model_collection) %>
 <%= will_paginate(@model_collection) %>
 
-<%= admin_controls model_collection_name, :for => :index, :ports => qadmin_configuration.ports, :controls => qadmin_configuration.on_index.controls %>
+<%= admin_controls model_instance_name, :for => :index, :ports => qadmin_configuration.ports, :controls => qadmin_configuration.on_index.controls %>

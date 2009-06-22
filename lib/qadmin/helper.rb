@@ -5,6 +5,7 @@ module Qadmin
       return if respond_to?(:overlay?) && overlay?
       controller     = options[:controller] || name.to_s.tableize
       assumed_object = self.instance_variable_get "@#{name}"
+      logger.debug "= admin_controls: name : #{name}, assumed_object: #{assumed_object.inspect}"
       obj            = options[:object] || assumed_object || nil
       parent         = options[:parent] || false
 
@@ -14,12 +15,12 @@ module Qadmin
       control_links = {
         :index      => link_to(image_tag('admin/icon_list.png') + " Back to List", general_link_attributes.merge(:action => 'index')),
         :new        => link_to(image_tag('admin/icon_new.png') + " New", general_link_attributes.merge(:action => 'new')),
-        :edit       => link_to(image_tag('admin/icon_edit.png') + " Edit", general_link_attributes.merge(:action => 'edit', :id => obj)),
-        :show       => link_to(image_tag('admin/icon_show.png') + " View", general_link_attributes.merge(:action => 'show', :id => obj)),
-        :destroy    => link_to(image_tag('admin/icon_destroy.png') + " Delete", general_link_attributes.merge(:action => 'destroy', :id => obj), :confirm => 'Are you sure?', :method => :delete),
+        :edit       => link_to(image_tag('admin/icon_edit.png') + " Edit", general_link_attributes.merge({:action => 'edit', :id => obj.id})),
+        :show       => link_to(image_tag('admin/icon_show.png') + " View", general_link_attributes.merge({:action => 'show', :id => obj.id})),
+        :destroy    => link_to(image_tag('admin/icon_destroy.png') + " Delete", general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete),
         :ports      => link_to(image_tag('admin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports')),
         :export     => link_to(image_tag('admin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export')),
-        :preview    => link_to(image_tag('admin/icon_find.png') + " Preview", general_link_attributes.merge(:action => 'preview', :id => obj))
+        :preview    => link_to(image_tag('admin/icon_find.png') + " Preview", general_link_attributes.merge({:action => 'preview', :id => obj.id}))
       }
 
       control_sets = {
