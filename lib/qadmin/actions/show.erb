@@ -1,0 +1,8 @@
+def show
+  logger.debug 'Qadmin: Default /show'
+  @model_instance = @<%= config.on_show.model_instance_name %> = <%= config.on_show.model_name %>.find(params[:id])
+  respond_to do |format|
+    format.html { render_template_for_section('show.html') }
+    format.xml
+  end
+end

@@ -1,0 +1,8 @@
+def new
+  logger.debug 'Qadmin: Default /new'
+  @model_instance = @<%= config.on_new.model_instance_name %> = <%= config.on_new.model_name %>.new
+  respond_to do |format|
+    format.html { render_template_for_section('new.html') }
+    format.xml  { render :xml => @<%= config.on_new.model_instance_name %> }
+  end
+end

@@ -30,6 +30,7 @@ module Qadmin
       hash_accessor :model_instance_name
       hash_accessor :model_collection_name
       hash_accessor :model_human_name
+      hash_accessor :parent, :default => false
       hash_accessor :default_scope, :default => false
       
       def initialize(options = {})

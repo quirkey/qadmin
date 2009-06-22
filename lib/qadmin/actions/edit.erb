@@ -1,0 +1,8 @@
+def edit
+  logger.debug 'Qadmin: Default /edit'
+  @model_instance = @<%= config.on_edit.model_instance_name %> = <%= config.on_edit.model_name %>.find(params[:id])
+  respond_to do |format|
+    format.html { render_template_for_section('edit.html') }
+    format.xml  { redirect_to <%= config.on_edit.model_instance_name %>_path(@<%= config.on_edit.model_instance_name %>) }
+  end
+end

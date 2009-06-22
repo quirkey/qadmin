@@ -1,0 +1,19 @@
+def index
+  logger.debug 'Qadmin: Default /index'
+  <% if config.on_index.parent %>
+  scope = @<%= config.on_index.parent %>.<%= config.on_index.model_collection_name %>
+  <% else %>
+  scope = <%= config.on_index.model_name %>
+  <% end %>
+  <% if config.on_index.default_scope %>
+  scope = scope.<%= config.on_index.default_scope %>
+  <% end %>
+  scope = scope.restful_query(params[:query]) if <%= config.model_name %>.can_query?
+  @model_collection = @<%= config.on_index.model_collection_name %> = scope.paginate(:page => (params[:page] || 1), :per_page => (params[:per_page] || 25))
+  logger.debug 'controller params:' + params.inspect
+  respond_to do |format|
+    format.html { render_template_for_section('index.html') }
+    format.xml
+    format.js
+  end
+end
