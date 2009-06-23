@@ -2,7 +2,7 @@ def destroy
   logger.debug 'Qadmin: Default /destroy'
   @model_instance =  @<%= config.on_destroy.model_instance_name %> = <%= config.on_destroy.model_name %>.find(params[:id])
   @<%= config.on_destroy.model_instance_name %>.destroy
-  flash[:message] = "<%= config.on_destroy.model_instance_name %> #{@<%= config.on_destroy.model_instance_name %>} was deleted"
+  flash[:message] = "<%= config.on_destroy.model_human_name %> #{@<%= config.on_destroy.model_instance_name %>} was deleted"
   respond_to do |format|
     format.html { redirect_to(<%= config.on_destroy.model_collection_name %>_path) }
     format.xml  { head :ok }

@@ -124,7 +124,8 @@ module Qadmin
           html << %{<td class="#{css}">#{value}</td>}
         end
         row_actions.each do |action|
-          html << %{<td>#{link_to(image_tag("admin/icon_#{action}.png"), :controller => controller, :action => action, :id => instance.id)}</td>}
+          http_method = (action.to_sym == :destroy) ? :delete : :get
+          html << %{<td>#{link_to(image_tag("admin/icon_#{action}.png"), {:controller => controller, :action => action, :id => instance.id}, :method => http_method)}</td>}
         end
         html << '</tr>'
       end
