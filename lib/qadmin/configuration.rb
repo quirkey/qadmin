@@ -26,6 +26,7 @@ module Qadmin
       end
       
       hash_accessor :controller_klass
+      hash_accessor :controller_name
       hash_accessor :model_name
       hash_accessor :model_instance_name
       hash_accessor :model_collection_name
@@ -45,6 +46,7 @@ module Qadmin
       protected
       def extract_model_from_options(options = {})
         self.controller_klass      = options[:controller_klass]
+        self.controller_name       = options[:controller_name] || controller_klass.to_s.demodulize.gsub(/Controller/,'').underscore
         self.model_name            = options[:model_name] || controller_klass.to_s.demodulize.gsub(/Controller/,'').singularize
         self.model_instance_name   = options[:model_instance_name] || model_name.underscore
         self.model_collection_name = options[:model_collection_name] || model_instance_name.pluralize    

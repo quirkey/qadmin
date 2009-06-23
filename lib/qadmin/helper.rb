@@ -73,6 +73,7 @@ module Qadmin
         
     def admin_table(collection, options = {})
       config = self.qadmin_configuration.on_index
+      controller  = options[:controller]  || config.controller_name
       attributes  = options[:attributes]  || config.columns 
       row_actions = options[:row_actions] || config.row_actions
       model_column_types = HashWithIndifferentAccess.new
@@ -123,7 +124,7 @@ module Qadmin
           html << %{<td class="#{css}">#{value}</td>}
         end
         row_actions.each do |action|
-          html << %{<td>#{link_to(image_tag("admin/icon_#{action}.png"), :action => action, :id => instance.id)}</td>}
+          html << %{<td>#{link_to(image_tag("admin/icon_#{action}.png"), :controller => controller, :action => action, :id => instance.id)}</td>}
         end
         html << '</tr>'
       end
