@@ -90,7 +90,7 @@ module Qadmin
         model_column_types[attribute_name] = column if column
       end
       html = "<table id=\"#{options[:id] || config.model_collection_name}\">"
-      html <<	'<tr>'
+      html <<	'<thead><tr>'
       attributes.each_with_index do |attribute, i|
         css = (config.column_css[attribute] ? config.column_css[attribute] : (i == 0 ? 'first_col' : ''))
         html << %{<th class="#{css}">}
@@ -100,6 +100,7 @@ module Qadmin
       row_actions.each do |action|
         html << %{<th>#{action.to_s.humanize}</th>}
       end
+      html << '</tr></thead><tbody>'
       collection.each do |instance|
         html << %{<tr id="#{dom_id(instance)}" #{alt_rows}>}
         attributes.each_with_index do |attribute, i|
@@ -129,7 +130,7 @@ module Qadmin
         end
         html << '</tr>'
       end
-      html << '</table>'
+      html << '</tbody></table>'
     end
 
     def alt_rows
