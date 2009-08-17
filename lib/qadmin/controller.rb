@@ -6,8 +6,9 @@ module Qadmin
       def qadmin(options = {})
         self.cattr_accessor :qadmin_configuration
         self.qadmin_configuration = Qadmin::Configuration::Resource.new({:controller_klass => self}.merge(options))
-        self.delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => lambda { self.class.qadmin_configuration }
+        self.delegate(:model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => :qadmin_configuration)
         yield(self.qadmin_configuration) if block_given?
+        include Qadmin::Controller::Helpers
         include Qadmin::Templates
         include Qadmin::Overlay
         self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
@@ -46,6 +47,14 @@ module Qadmin
       def config
         self.qadmin_configuration
       end
+    end
+
+    module Helpers
+      
+      def qadmin_configuration
+        self.class.qadmin_configuration
+      end
+      
     end
 
   end
