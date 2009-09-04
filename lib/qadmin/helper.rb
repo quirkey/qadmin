@@ -76,7 +76,23 @@ module Qadmin
       controller  = options[:controller]  || config.controller_name
       attributes  = options[:attributes]  || config.columns 
       row_actions = options[:row_actions] || config.row_actions
+      
+      attribute_handlers = HashWithIndifferentAccess.new({
+        :string  =>  lambda {|h, v, i, c| 
+          auto_link(h(v))
+        },
+        :boolean =>  lambda {|h, v, i, c| yes?(v) },
+        :text    =>  lambda {|h, v, i, c| 
+          h.truncate(v, :length => 30, :omission => "... #{h.link_to('More', h.send("#{c.model_instance_name}_path", i))}") 
+         },
+        :reflection => lambda {|h, v, i, c| h.link_to(v.to_s, v) },
+        :hash => lambda {|h, v, i, c| v.inspect }, 
+        :array => lambda {|h, v, i, c| v.inspect } 
+      })     
+      attribute_handlers.merge!(options[:attribute_handlers] || config.attribute_handlers)
+      logger.info "attribute_handlers #{attribute_handlers.inspect}"
       model_column_types = HashWithIndifferentAccess.new
+      
       attributes.each do |attribute_name|
         if column = config.model_klass.columns.detect {|c| c.name.to_s == attribute_name.to_s }
           if serialized_klass = config.model_klass.serialized_attributes[attribute_name]
@@ -89,6 +105,7 @@ module Qadmin
         end
         model_column_types[attribute_name] = column if column
       end
+      
       html = "<table id=\"#{options[:id] || config.model_collection_name}\">"
       html <<	'<thead><tr>'
       attributes.each_with_index do |attribute, i|
@@ -105,15 +122,10 @@ module Qadmin
         html << %{<tr id="#{dom_id(instance)}" #{alt_rows}>}
         attributes.each_with_index do |attribute, i|
           raw_value = instance.send(attribute)
-          value = case model_column_types[attribute]
-          when :boolean
-            yes?(raw_value)
-          when :text
-            truncate(raw_value, :length => 30, :omission => "... #{link_to('More', send("#{model_instance_name}_path", instance))}")
-          when :reflection # association
-            link_to(raw_value.to_s, raw_value)
-          when :hash, :array
-            raw_value.inspect
+          handler   = attribute_handlers[model_column_types[attribute] || raw_value.class.to_s.demodulize.underscore]
+          logger.info "#{attribute} #{handler.inspect}"
+          value = if handler
+            handler.call(self, raw_value, instance, config)
           else
             if i == 0
               link_to(raw_value, send("#{model_instance_name}_path", instance))
