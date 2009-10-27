@@ -56,10 +56,10 @@ module Qadmin
       return link_text unless qadmin_configuration.model_klass.can_query?
       query_parser = model_restful_query_parser(options)
       query_param = options[:query_param] || :query
-      logger.warn 'params:' +  self.params[query_param].inspect
-      logger.warn 'parser:' + query_parser.inspect
+      logger.debug 'params:' +  self.params[query_param].inspect
+      logger.debug 'parser:' + query_parser.inspect
       sorting_this = query_parser.sort(attribute_name)
-      logger.warn "sorting #{attribute_name}:" + sorting_this.inspect
+      logger.debug "sorting #{attribute_name}:" + sorting_this.inspect
       link_text << " #{image_tag("admin/icon_#{sorting_this.direction.downcase}.gif")}" if sorting_this
       query_parser.clear_default_sort!
       query_parser.set_sort(attribute_name, sorting_this ? sorting_this.next_direction : 'desc')
@@ -90,7 +90,7 @@ module Qadmin
         :array => lambda {|h, v, i, c| v.inspect } 
       })     
       attribute_handlers.merge!(options[:attribute_handlers] || config.attribute_handlers)
-      logger.info "attribute_handlers #{attribute_handlers.inspect}"
+      logger.debug "attribute_handlers #{attribute_handlers.inspect}"
       model_column_types = HashWithIndifferentAccess.new
       
       attributes.each do |attribute_name|
@@ -123,7 +123,6 @@ module Qadmin
         attributes.each_with_index do |attribute, i|
           raw_value = instance.send(attribute)
           handler   = attribute_handlers[model_column_types[attribute] || raw_value.class.to_s.demodulize.underscore]
-          logger.info "#{attribute} #{handler.inspect}"
           value = if handler
             handler.call(self, raw_value, instance, config)
           else
