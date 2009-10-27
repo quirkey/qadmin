@@ -1,3 +1,7 @@
+== WARNING
+
+The documentation is currently out of date as of 10/27/09 - A major rewrite has just been merged into master and is going to be documented and released once stable
+
 = qadmin
 
 http://github.com/quirkey/qadmin
