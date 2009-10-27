@@ -24,6 +24,4 @@ class TestQadminConfiguration < Test::Unit::TestCase
     end    
   end
 
-
-
 end
