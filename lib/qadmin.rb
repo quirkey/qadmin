@@ -12,7 +12,6 @@ module Qadmin
 end
 
 %w{
-  option_set
   configuration
   helper
   overlay
