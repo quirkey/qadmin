@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), "test_generator_helper.rb")
 
-require 'rails_generator'
+require 'rails/generator'
 
 class TestQadminGenerator < Test::Unit::TestCase
   include RubiGen::GeneratorTestHelper
