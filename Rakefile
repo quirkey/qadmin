@@ -1,4 +1,4 @@
-%w[rubygems rake rake/clean fileutils].each { |f| require f }
+%w[rubygems rake rake/clean rake/testtask fileutils].each { |f| require f }
 require File.dirname(__FILE__) + '/lib/qadmin'
 
 begin
@@ -22,6 +22,12 @@ begin
   Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+end
+
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  t.test_files = FileList['test/test*.rb']
+  t.verbose = true
 end
 
 Dir['tasks/**/*.rake'].each { |t| load t }
