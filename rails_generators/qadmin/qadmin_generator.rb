@@ -38,7 +38,7 @@ class QadminGenerator < Rails::Generator::NamedBase
       if !after_scaffold
         m.directory(File.join('app','controllers', controller_class_path))
         m.directory(File.join('app', 'helpers', controller_class_path))
-        m.directory(File.join('public','images','admin'))
+        m.directory(File.join('public','images','qadmin'))
       end
 
       m.directory(File.join('app', 'views', controller_class_path, controller_file_name))
@@ -50,8 +50,8 @@ class QadminGenerator < Rails::Generator::NamedBase
 
       if !after_scaffold
         # Layout and stylesheet.
-        m.template('layout.html.erb', File.join('app','views','layouts', "admin.html.erb"))
-        m.template('style.css', 'public/stylesheets/admin.css')
+        m.template('layout.html.erb', File.join('app','views','layouts', "qadmin.html.erb"))
+        m.template('style.css', 'public/stylesheets/qadmin.css')
 
         m.template('controller.rb', File.join('app','controllers', controller_class_path, "#{controller_file_name}_controller.rb"))
       end
@@ -63,7 +63,7 @@ class QadminGenerator < Rails::Generator::NamedBase
 
         # Copy Icons
         Dir[File.join(File.dirname(__FILE__),'templates','images/*')].each do |image|
-          m.file File.join('images',File.basename(image)), File.join('public','images','admin',File.basename(image))
+          m.file File.join('images',File.basename(image)), File.join('public','images','qadmin',File.basename(image))
         end
       end
       

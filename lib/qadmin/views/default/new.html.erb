@@ -4,8 +4,7 @@
 
 <%= error_messages_for model_instance_name %>
 
-<%- instance = qadmin_configuration.parent ? [qadmin_configuration.parent, @model_instance] : @model_instance -%>
-<% form_for(instance, :html => {:multipart => qadmin_configuration.multipart_forms}) do |f| %>
+<% form_for(@form_instance, :html => {:multipart => qadmin_configuration.multipart_forms}) do |f| %>
   <%= render :partial => 'form', :locals => {:f => f, model_instance_name.to_sym => @model_instance} %>
   <p><%= f.submit "Create" %></p>
 <% end %>

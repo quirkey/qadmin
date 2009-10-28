@@ -1,6 +1,13 @@
 def edit
   logger.debug 'Qadmin: Default /edit'
   @model_instance = @<%= config.on_edit.model_instance_name %> = <%= config.on_edit.model_name %>.find(params[:id])
+  @form_instance = if qadmin_configuration.parent
+    [qadmin_configuration.parent, @model_instance]
+  elsif qadmin_configuration.namespace
+    [qadmin_configuration.namespace, @model_instance]
+  else
+    @model_instance
+  end 
   respond_to do |format|
     format.html { render_template_for_section('edit.html') }
     format.xml  { redirect_to <%= config.on_edit.model_instance_name %>_path(@<%= config.on_edit.model_instance_name %>) }

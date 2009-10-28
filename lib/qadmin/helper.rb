@@ -13,14 +13,14 @@ module Qadmin
       general_link_attributes = {:controller => controller}.merge(parent_link_attributes)
 
       control_links = {
-        :index      => lambda { link_to(image_tag('admin/icon_list.png') + " Back to List", general_link_attributes.merge(:action => 'index')) },
-        :new        => lambda { link_to(image_tag('admin/icon_new.png') + " New", general_link_attributes.merge(:action => 'new')) },
-        :edit       => lambda { link_to(image_tag('admin/icon_edit.png') + " Edit", general_link_attributes.merge({:action => 'edit', :id => obj.id})) },
-        :show       => lambda { link_to(image_tag('admin/icon_show.png') + " View", general_link_attributes.merge({:action => 'show', :id => obj.id})) },
-        :destroy    => lambda { link_to(image_tag('admin/icon_destroy.png') + " Delete", general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete) },
-        :ports      => lambda { link_to(image_tag('admin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports')) },
-        :export     => lambda { link_to(image_tag('admin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export')) },
-        :preview    => lambda { link_to(image_tag('admin/icon_preview.png') + " Preview", general_link_attributes.merge({:action => 'preview', :id => obj.id})) }
+        :index      => lambda { link_to(image_tag('qadmin/icon_list.png') + " Back to List", general_link_attributes.merge(:action => 'index')) },
+        :new        => lambda { link_to(image_tag('qadmin/icon_new.png') + " New", general_link_attributes.merge(:action => 'new')) },
+        :edit       => lambda { link_to(image_tag('qadmin/icon_edit.png') + " Edit", general_link_attributes.merge({:action => 'edit', :id => obj.id})) },
+        :show       => lambda { link_to(image_tag('qadmin/icon_show.png') + " View", general_link_attributes.merge({:action => 'show', :id => obj.id})) },
+        :destroy    => lambda { link_to(image_tag('qadmin/icon_destroy.png') + " Delete", general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete) },
+        :ports      => lambda { link_to(image_tag('qadmin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports')) },
+        :export     => lambda { link_to(image_tag('qadmin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export')) },
+        :preview    => lambda { link_to(image_tag('qadmin/icon_preview.png') + " Preview", general_link_attributes.merge({:action => 'preview', :id => obj.id})) }
       }
 
       control_sets = {
@@ -60,7 +60,7 @@ module Qadmin
       logger.debug 'parser:' + query_parser.inspect
       sorting_this = query_parser.sort(attribute_name)
       logger.debug "sorting #{attribute_name}:" + sorting_this.inspect
-      link_text << " #{image_tag("admin/icon_#{sorting_this.direction.downcase}.gif")}" if sorting_this
+      link_text << " #{image_tag("qadmin/icon_#{sorting_this.direction.downcase}.gif")}" if sorting_this
       query_parser.clear_default_sort!
       query_parser.set_sort(attribute_name, sorting_this ? sorting_this.next_direction : 'desc')
       link_to link_text, self.params.dup.merge(query_param => query_parser.to_query_hash, :anchor => (options[:id] || self.qadmin_configuration.model_collection_name)), :class => 'sortable_column_header'
@@ -137,7 +137,7 @@ module Qadmin
         end
         row_actions.each do |action|
           http_method = (action.to_sym == :destroy) ? :delete : :get
-          html << %{<td>#{link_to(image_tag("admin/icon_#{action}.png"), {:controller => controller, :action => action, :id => instance.id}, :method => http_method)}</td>}
+          html << %{<td>#{link_to(image_tag("qadmin/icon_#{action}.png"), {:controller => controller, :action => action, :id => instance.id}, :method => http_method)}</td>}
         end
         html << '</tr>'
       end
