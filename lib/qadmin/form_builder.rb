@@ -9,6 +9,15 @@ module Qadmin
         </p>
       }
     end
+    
+    def labeled_text_area(method, options = {})
+      label_text = options.delete(:label) || method.to_s.humanize
+      %{<p>
+          <label>#{label_text}</label>
+          #{text_area(method, options)}
+        </p>
+      }
+    end
    
     def text_field_with_hint(method, options = {})
       if object.send(method).blank?

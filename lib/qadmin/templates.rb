@@ -38,7 +38,7 @@ module Qadmin
     end
 
     def current_section_name(options = {})
-      options[:section_name] ? options[:section_name] : (@section ? @section.name : controller_name)
+      options[:section_name] ? options[:section_name] : (@section ? @section.name : controller_path)
     end
     
     def template_exists?(template_path)
