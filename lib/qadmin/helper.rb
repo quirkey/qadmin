@@ -127,7 +127,7 @@ module Qadmin
             handler.call(self, raw_value, instance, config)
           else
             if i == 0
-              link_to(raw_value, send("#{model_instance_name}_path", instance))
+              link_to(raw_value, send("#{qadmin_configuration.path_prefix}_path", instance))
             else
               h(raw_value)
             end

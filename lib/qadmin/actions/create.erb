@@ -4,7 +4,7 @@ def create
   respond_to do |format|
     if @<%= config.on_create.model_instance_name %>.save
       flash[:message] = '<%= config.on_create.model_human_name %> was successfully created.'
-      format.html { redirect_to(<%= config.on_create.model_instance_name %>_path(@<%= config.on_create.model_instance_name %>)) }
+      format.html { redirect_to(<%= config.on_create.path_prefix %>_path(@<%= config.on_create.model_instance_name %>)) }
       format.xml  { render :xml => @<%= config.on_create.model_instance_name %>, :status => :created, :location => @<%= config.on_create.model_instance_name %> }
     else
       format.html { render_template_for_section('new.html') }

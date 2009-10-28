@@ -3,6 +3,8 @@ module Qadmin
     
     class Base < ::HashWithIndifferentAccess
       
+      attr_accessor :base
+      
       def with_indifferent_access
         self
       end
@@ -12,7 +14,8 @@ module Qadmin
         coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
         module_eval <<-EOT
           def #{name}
-            (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) || #{options[:default].inspect}
+            (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) || 
+              (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{options[:default].inspect})
           end
 
           def #{name}=(value)
@@ -31,19 +34,45 @@ module Qadmin
       hash_accessor :model_instance_name
       hash_accessor :model_collection_name
       hash_accessor :model_human_name
-      hash_accessor :namespace, :default => nil
+      hash_accessor :namespace, :default => false
       hash_accessor :parent, :default => false
       hash_accessor :default_scope, :default => false
       
       def initialize(options = {})
         super
+        @base = options.delete(:base)
         extract_model_from_options(options)
       end
 
       def model_klass
         self.model_name.constantize
       end
-
+      
+      def path_prefix(plural = false)
+        name = plural ? model_collection_name : model_instance_name
+        if namespace
+          "#{namespace}_#{name}"
+        else
+          name
+        end
+      end
+      
+      def form_instance_for(instance)
+        if parent
+          [parent, instance]
+        elsif namespace
+          [namespace, instance]
+        else
+          instance
+        end 
+      end
+      
+      def model_column_names
+        model_klass.column_names
+      rescue
+        []
+      end
+      
       protected
       def extract_model_from_options(options = {})
         self.controller_klass      = options[:controller_klass]
@@ -52,12 +81,6 @@ module Qadmin
         self.model_instance_name   = options[:model_instance_name] || model_name.underscore
         self.model_collection_name = options[:model_collection_name] || model_instance_name.pluralize    
         self.model_human_name      = options[:model_human_name] || model_instance_name.humanize
-      end
-
-      def model_column_names
-        model_klass.column_names
-      rescue
-        []
       end
     end
 
@@ -79,6 +102,7 @@ module Qadmin
           super
           self.columns = model_column_names
         end
+        
       end
 
       class Show < Action
@@ -94,7 +118,7 @@ module Qadmin
       end
 
       class Create < Action
-
+        
       end
 
       class Update < Action
@@ -128,10 +152,10 @@ module Qadmin
       def initialize(options = {})
         super
         ACTIONS.each do |action|
-          self["on_#{action}"] = "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.dup)
+          self["on_#{action}"] = "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.dup.merge(:base => self))
         end
       end
-      
+            
     end
 
   end

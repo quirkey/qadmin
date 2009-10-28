@@ -3,12 +3,12 @@ require File.dirname(__FILE__) + '/test_helper.rb'
 class TestQadminConfiguration < Test::Unit::TestCase
 
   context "Configuring a Resource" do
-    context "initializing" do
-      setup do
-        class ItemsController < MockController; end
-        @configuration = Qadmin::Configuration::Resource.new(:controller_klass => ItemsController)
-      end
-      
+    setup do
+      class ItemsController < MockController; end
+      @configuration = Qadmin::Configuration::Resource.new(:controller_klass => ItemsController)
+    end
+    
+    context "initializing" do      
       should "extrapolate the model klass names" do
         assert_equal "Item", @configuration.model_name
         assert_equal "Item", @configuration.model_human_name
@@ -21,7 +21,20 @@ class TestQadminConfiguration < Test::Unit::TestCase
         end
       end
       
-    end    
+    end
+    
+    context "path_prefix" do
+      should "include namespace if set" do
+        @configuration.namespace = :admin
+        assert_equal 'admin_item', @configuration.path_prefix
+        assert_equal 'admin_item', @configuration.on_create.path_prefix
+      end
+      
+      should "not include nil namespace" do
+        assert_equal 'item', @configuration.path_prefix
+        assert_equal 'item', @configuration.on_create.path_prefix
+      end
+    end
   end
 
 end

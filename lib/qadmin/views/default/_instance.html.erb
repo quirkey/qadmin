@@ -1,0 +1,8 @@
+<div id="<%= dom_id(instance) %>">
+	<div class="fields_group">
+	  <% qadmin_configuration.on_show.model_column_names.each do |attribute| -%>
+  	<h5><%= attribute.to_s.humanize %>:</h5>
+  	<%= h instance.send(attribute) %>
+  	<% end -%>
+	</div>
+</div>
