@@ -1,5 +1,14 @@
 module Qadmin
   class FormBuilder < ::ActionView::Helpers::FormBuilder
+    
+    def labeled_text_field(method, options = {})
+      label_text = options.delete(:label) || method.to_s.humanize
+      %{<p>
+          <label>#{label_text}</label>
+          #{text_field(method, options)}
+        </p>
+      }
+    end
    
     def text_field_with_hint(method, options = {})
       if object.send(method).blank?
