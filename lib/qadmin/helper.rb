@@ -20,7 +20,8 @@ module Qadmin
         :destroy    => lambda { link_to(image_tag('qadmin/icon_destroy.png') + " Delete", general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete) },
         :ports      => lambda { link_to(image_tag('qadmin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports')) },
         :export     => lambda { link_to(image_tag('qadmin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export')) },
-        :preview    => lambda { link_to(image_tag('qadmin/icon_preview.png') + " Preview", general_link_attributes.merge({:action => 'preview', :id => obj.id})) }
+        :preview    => lambda { link_to(image_tag('qadmin/icon_preview.png') + " Preview", general_link_attributes.merge({:action => 'preview', :id => obj.id})) },
+        :sort       => lambda { link_to(image_tag('qadmin/icon_sort.png') + " Sort", general_link_attributes.merge({:action => 'sort'})) }
       }
 
       control_sets = {
