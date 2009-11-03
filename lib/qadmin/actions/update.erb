@@ -4,7 +4,7 @@ def update
 
   respond_to do |format|
     if @<%= config.on_update.model_instance_name %>.update_attributes(params[:<%= config.on_update.model_instance_name %>])
-      flash[:message] = '<%= config.on_update.model_instance_name %> was successfully updated.'
+      flash[:message] = '<%= config.on_update.model_human_name %> was successfully updated.'
       format.html { redirect_to(<%= config.on_update.path_prefix %>_path(@<%= config.on_update.model_instance_name %>)) }
       format.xml  { head :ok }
     else

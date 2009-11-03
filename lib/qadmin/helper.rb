@@ -54,8 +54,12 @@ module Qadmin
     
     def sortable_column_header(attribute_name, text = nil, options = {})
       link_text = text || self.qadmin_configuration.on_index.column_headers[attribute_name] || attribute_name.to_s.humanize
-      return link_text unless qadmin_configuration.model_klass.can_query?
+      return link_text unless qadmin_configuration.model_klass.can_query?      
       query_parser = model_restful_query_parser(options)
+      if qadmin_configuration.model_klass.respond_to?(:reflections) and
+        association = qadmin_configuration.model_klass.reflections[attribute_name.to_sym]
+        attribute_name = association.association_foreign_key
+      end
       query_param = options[:query_param] || :query
       logger.debug 'params:' +  self.params[query_param].inspect
       logger.debug 'parser:' + query_parser.inspect
@@ -177,9 +181,22 @@ module Qadmin
         else
           name, controller = controller_pair, controller_pair
         end
-        html << yield(name,controller)
+        html << yield(name.to_s,controller)
       end
       html
+    end
+    
+    def like_current_page?(options)
+      case options
+      when Hash
+        url_string = Regexp.new(CGI.escapeHTML(url_for(options)))
+      when String
+        url_string = Regexp.new(options)
+      when Regexp
+        url_string = options
+      end
+      request = @controller.request
+      request.request_uri =~ url_string
     end
     
     def fieldset(legend = nil, options = {}, &block)
