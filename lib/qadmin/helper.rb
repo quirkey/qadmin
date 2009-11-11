@@ -87,6 +87,8 @@ module Qadmin
           auto_link(h(v))
         },
         :boolean =>  lambda {|h, v, i, c| yes?(v) },
+        :false_class => lambda {|h, v, i, c| 'No' },
+        :true_class => lambda {|h, v, i, c| 'Yes' },
         :text    =>  lambda {|h, v, i, c| 
           h.truncate(v, :length => 30, :omission => "... #{h.link_to('More', h.send("#{c.model_instance_name}_path", i))}") 
          },
