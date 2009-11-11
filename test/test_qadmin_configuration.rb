@@ -4,15 +4,15 @@ class TestQadminConfiguration < Test::Unit::TestCase
 
   context "Configuring a Resource" do
     setup do
-      class ItemsController < MockController; end
-      @configuration = Qadmin::Configuration::Resource.new(:controller_klass => ItemsController)
+      @configuration = Qadmin::Configuration::Resource.new(:controller_klass => ThingsController)
     end
     
     context "initializing" do      
       should "extrapolate the model klass names" do
-        assert_equal "Item", @configuration.model_name
-        assert_equal "Item", @configuration.model_human_name
-        assert_equal "items", @configuration.model_collection_name
+        assert_nil @configuration.namespace
+        assert_equal "Thing", @configuration.model_name
+        assert_equal "Thing", @configuration.model_human_name
+        assert_equal "things", @configuration.model_collection_name
       end
       
       should "create special config objects for each action" do
@@ -21,18 +21,26 @@ class TestQadminConfiguration < Test::Unit::TestCase
         end
       end
       
+      should "extract the namespace from a namespaced controller" do
+        @configuration = Qadmin::Configuration::Resource.new(:controller_klass => Admin::ItemsController)
+        assert_equal :admin, @configuration.namespace
+        assert_equal "Item", @configuration.model_name
+        assert_equal "Item", @configuration.model_human_name
+        assert_equal "items", @configuration.model_collection_name
+      end
+      
     end
     
     context "path_prefix" do
       should "include namespace if set" do
         @configuration.namespace = :admin
-        assert_equal 'admin_item', @configuration.path_prefix
-        assert_equal 'admin_item', @configuration.on_create.path_prefix
+        assert_equal 'admin_thing', @configuration.path_prefix
+        assert_equal 'admin_thing', @configuration.on_create.path_prefix
       end
       
       should "not include nil namespace" do
-        assert_equal 'item', @configuration.path_prefix
-        assert_equal 'item', @configuration.on_create.path_prefix
+        assert_equal 'thing', @configuration.path_prefix
+        assert_equal 'thing', @configuration.on_create.path_prefix
       end
     end
   end

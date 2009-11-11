@@ -83,6 +83,9 @@ module Qadmin
         self.model_instance_name   = options[:model_instance_name] || model_name.underscore
         self.model_collection_name = options[:model_collection_name] || model_instance_name.pluralize    
         self.model_human_name      = options[:model_human_name] || model_instance_name.humanize
+        
+        possible_namespace = controller_klass.to_s.underscore.split('/')[0]
+        self.namespace = options[:namespace] || (possible_namespace =~ /controller/) ? nil : possible_namespace.to_sym
       end
     end
 

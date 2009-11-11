@@ -82,3 +82,8 @@ class MockController
   extend Qadmin::Controller::Macros
 end
 
+module Admin
+  class ItemsController < MockController; end
+end
+
+class ThingsController < MockController; end
