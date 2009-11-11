@@ -13,6 +13,23 @@ module Qadmin
         end
       EOT
     end
+    
+    def paperclip_file_field(method, options = {})
+      html = %{<p>}
+      label_text = options.delete(:label) || method.to_s.humanize
+      if object.send("#{method}?")
+        html << %{
+          #{label(method, label_text)}
+          <em>View existing #{label_text}:</em>
+          <a href="#{object.send(method).url}" target="_blank">#{object.send("#{method}_file_name")}</a>
+          <br />
+        }
+      end
+      html << %{
+        #{file_field(method, options)}
+      </p>}
+      html
+    end
            
     def text_field_with_hint(method, options = {})
       if object.send(method).blank?
