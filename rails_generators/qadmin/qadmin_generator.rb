@@ -10,7 +10,7 @@ class QadminGenerator < Rails::Generator::NamedBase
   alias_method  :controller_file_name,  :controller_singular_name
   alias_method  :controller_table_name, :controller_plural_name
 
-  attr_accessor :after_scaffold
+  attr_accessor :after_scaffold, :test_framework
 
   def initialize(runtime_args, runtime_options = {})
     super
@@ -56,7 +56,9 @@ class QadminGenerator < Rails::Generator::NamedBase
         m.template('controller.rb', File.join('app','controllers', controller_class_path, "#{controller_file_name}_controller.rb"))
       end
       
-      m.template('functional_test.rb', File.join('test','functional', controller_class_path, "#{controller_file_name}_controller_test.rb"))
+      if test_framework
+        m.template('functional_test.rb', File.join('test','functional', controller_class_path, "#{controller_file_name}_controller_test.rb"))
+      end
 
       if !after_scaffold
         m.route_resources controller_file_name
@@ -102,10 +104,14 @@ class QadminGenerator < Rails::Generator::NamedBase
   end
 
   def add_options!(opts)
+    opts.separator ''
+    opts.separator 'Options:'
     opts.on('--after-scaffold', "For use after generating a scaffold, generates the _form and the functional test") {|o| options[:after_scaffold] = o }
+    opts.on('--no-test', "Don't generate any tests or specs") {|o| options[:no_test] = true}
   end
 
   def extract_options
     self.after_scaffold = options[:after_scaffold]
+    self.test_framework = options[:no_test] ? false : 'shoulda'
   end
 end
