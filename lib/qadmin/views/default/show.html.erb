@@ -2,10 +2,12 @@
 
 <%= admin_controls model_instance_name, :for => :show, :object => @model_instance, :controls => qadmin_configuration.on_show.controls, :parent => instance_variable_get("@#{qadmin_configuration.on_show.parent}") %>
 
-<%- if controller.send(:template_exists?, "_#{model_instance_name}") -%>
-  <%= render :partial => model_instance_name, :object => @model_instance %>
-<%- else -%>
-  <%= render :partial => 'default/instance', :object => @model_instance %>
-<%- end -%>
-
+  <%= 
+    begin
+      render model_instance_name, :object => @model_instance 
+    rescue ActionView::MissingTemplate => e
+      logger.warn e
+      render 'default/instance', :object => @model_instance 
+    end
+  %>
 <%= admin_controls model_instance_name, :for => :show, :object => @model_instance, :controls => qadmin_configuration.on_show.controls, :parent => instance_variable_get("@#{qadmin_configuration.on_show.parent}") %>

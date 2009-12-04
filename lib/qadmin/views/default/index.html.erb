@@ -2,7 +2,15 @@
 
 <%= admin_controls model_instance_name, :for => :index, :ports => qadmin_configuration.ports, :controls => qadmin_configuration.on_index.controls, :parent => instance_variable_get("@#{qadmin_configuration.on_index.parent}") %>
 
-<%= will_paginate(@model_collection) %>
+<!-- <div class="page_controls"> -->
+  <!-- <div class="page_controls per_page">
+    <% form_tag nil, :method => :get do %>
+      <%= select_tag "per_page", options_for_select([5, 10, 25, 50, 100]) %>
+      <%= submit_tag 'go', :name => nil %>
+    <% end %>
+  </div> -->
+  <%= will_paginate(@model_collection) %>
+<!-- </div> -->
 <%= admin_table(@model_collection) %>
 <%= will_paginate(@model_collection) %>
 

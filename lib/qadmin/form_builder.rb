@@ -17,9 +17,9 @@ module Qadmin
     def paperclip_file_field(method, options = {})
       html = %{<p>}
       label_text = options.delete(:label) || method.to_s.humanize
+      html << label(method, label_text)
       if object.send("#{method}?")
         html << %{
-          #{label(method, label_text)}
           <em>View existing #{label_text}:</em>
           <a href="#{object.send(method).url}" target="_blank">#{object.send("#{method}_file_name")}</a>
           <br />

@@ -63,6 +63,7 @@ module Qadmin
       query_param = options[:query_param] || :query
       logger.debug 'params:' +  self.params[query_param].inspect
       logger.debug 'parser:' + query_parser.inspect
+      attribute_name = "#{qadmin_configuration.model_klass.table_name}.#{attribute_name}"
       sorting_this = query_parser.sort(attribute_name)
       logger.debug "sorting #{attribute_name}:" + sorting_this.inspect
       link_text << " #{image_tag("qadmin/icon_#{sorting_this.direction.downcase}.gif")}" if sorting_this
@@ -208,6 +209,31 @@ module Qadmin
         html << capture(&block)
         html
       end)
+    end
+    
+    def labeled_show_column(object, method, options = {})
+      html = %{<p>}
+      html << label(object, method, options[:label] || nil)
+      show_value = options.has_key?(:value) ? options[:value] : object.send(method) 
+      show_value = '<em>blank</em>' if show_value.blank?
+      html << %{<span class="show_value">#{show_value}</span>}
+      html << %{</p>}
+      html
+    end
+    
+    def labeled_show_paperclip_attachment(object, method, options = {})
+      value = if object.send("#{method}?")
+        # has attachment
+        if object.send("#{method}_content_type") =~ /image/
+          size = number_to_human_size(object.send("#{method}_file_size"))
+          image_tag(object.send(method).url, {:title => "Size: #{size}"}.merge(options[:img_options] || {}))
+        else
+          link_to(object.send("#{method}_file_name"), object.send(method).url)
+        end
+      else
+        nil
+      end
+      labeled_show_column(object, method, options.merge(:value => value))
     end
   end
 end
