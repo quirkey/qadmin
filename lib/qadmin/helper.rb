@@ -36,7 +36,7 @@ module Qadmin
       control_set = (options[:controls] || []).dup
       control_set.unshift(control_sets[options[:for]]) if options[:for]
       control_set << :ports if options[:ports]
-      controls = [control_set].flatten.collect {|c| control_links(options[:control_links])[c] }.compact
+      controls = [control_set].flatten.collect {|control| control_links(options[:control_links])[control] }.compact
 
       html = ""
       html << %{<ul class="admin_controls">}
@@ -79,7 +79,7 @@ module Qadmin
       qadmin_configuration.model_klass.restful_query_parser(params[query_param], options)
     end
 
-    def row_action_links(more_links={})
+    def row_control_links(more_links={})
       {
         :destroy    => lambda { link_to(image_tag("qadmin/icon_destroy.png"), general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm 'Are you sure?', :method => :delete)}},
         :edit       => lambda { link_to(image_tag('qadmin/icon_edit.png'),    general_link_attributes.merge({:action => 'edit',    :id => obj.id})) },
@@ -92,13 +92,13 @@ module Qadmin
       controller  = prams[:controller]   || options[:controller] || config.controller_name
       attributes  = options[:attributes] || config.columns
 
-      row_action_sets = {
+      row_control_sets = {
         :index => [:show,:edit,:destroy]
       }
 
-      row_actions = options[:row_actions] || config.row_actions
-      row_actions.unshift(row_action_sets[options[:for]]) if options[:for]
-      row_controls = [row_actions].flatten.collect{|a| row_action_links(options[:row_links])[a]}.compact
+      row_control_set = options[:row_actions] || config.row_actions
+      row_control_set.unshift(row_control_sets[options[:for]]) if options[:for]
+      row_controls = [row_control_set].flatten.collect{|c| row_control_links(options[:row_control_links])[row_control] }.compact
 
       parent_link_attributes = parent ? {parent.class.to_s.foreign_key => parent.id} : {}
       general_link_attributes = {:controller => controller}.merge(parent_link_attributes)
@@ -142,7 +142,7 @@ module Qadmin
         html << sortable_column_header(attribute)
         html << '</th>'
       end
-      row_actions.each do |action|
+      row_control_set.each do |action|
         html << %{<th>#{action.to_s.humanize}</th>}
       end
       html << '</tr></thead><tbody>'
@@ -163,9 +163,9 @@ module Qadmin
           css = (config.column_css[attribute] ? config.column_css[attribute] : (i == 0 ? 'first_col' : ''))
           html << %{<td class="#{css}">#{value}</td>}
         end
-        row_controls.each do |control|
-          control_html = control.respond_to?(:call) ? control.call : action
-          html << td(control_html)
+        row_control_links.each do |row_control|
+          row_control_html = row_control.respond_to?(:call) ? row_control.call : action
+          html << td(row_control_html)
         end
         html << '</tr>'
       end
