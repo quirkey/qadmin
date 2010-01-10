@@ -81,7 +81,7 @@ module Qadmin
 
     def row_control_links(more_links={})
       {
-        :destroy    => lambda { link_to(image_tag("qadmin/icon_destroy.png"), general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete)}},
+        :destroy    => lambda { link_to(image_tag("qadmin/icon_destroy.png"), general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete)},
         :edit       => lambda { link_to(image_tag('qadmin/icon_edit.png'),    general_link_attributes.merge({:action => 'edit',    :id => obj.id})) },
         :show       => lambda { link_to(image_tag('qadmin/icon_show.png'),    general_link_attributes.merge({:action => 'show',    :id => obj.id})) },
       }.merge(more_links)
