@@ -89,7 +89,7 @@ module Qadmin
 
     def admin_table(collection, options = {})
       config = self.qadmin_configuration.on_index
-      controller  = prams[:controller]   || options[:controller] || config.controller_name
+      controller  = params[:controller]  || options[:controller] || config.controller_name
       attributes  = options[:attributes] || config.columns
 
       row_control_sets = {
