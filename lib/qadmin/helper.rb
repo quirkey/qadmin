@@ -165,7 +165,7 @@ module Qadmin
           html << %{<td class="#{css}">#{value}</td>}
         end
         row_control_links.each do |row_control|
-          row_control_html = row_control.respond_to?(:call) ? row_control.call : row_control
+          row_control_html = row_control.respond_to?(:call) ? row_control.call(instance) : row_control
           html << td(row_control_html)
         end
         html << '</tr>'
