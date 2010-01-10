@@ -81,9 +81,9 @@ module Qadmin
 
     def row_control_links(more_links={})
       {
-        :destroy    => lambda { link_to(image_tag("qadmin/icon_destroy.png"), general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete)},
-        :edit       => lambda { link_to(image_tag('qadmin/icon_edit.png'),    general_link_attributes.merge({:action => 'edit',    :id => obj.id})) },
-        :show       => lambda { link_to(image_tag('qadmin/icon_show.png'),    general_link_attributes.merge({:action => 'show',    :id => obj.id})) },
+        :destroy    => lambda { link_to(image_tag("qadmin/icon_destroy.png"), general_link_attributes.merge({:action => 'destroy', :id => instance.id}), :confirm => 'Are you sure?', :method => :delete)},
+        :edit       => lambda { link_to(image_tag('qadmin/icon_edit.png'),    general_link_attributes.merge({:action => 'edit',    :id => instance.id})) },
+        :show       => lambda { link_to(image_tag('qadmin/icon_show.png'),    general_link_attributes.merge({:action => 'show',    :id => instance.id})) },
       }.merge(more_links)
     end
 
@@ -91,6 +91,7 @@ module Qadmin
       config = self.qadmin_configuration.on_index
       controller  = params[:controller]  || options[:controller] || config.controller_name
       attributes  = options[:attributes] || config.columns
+      parent      = options[:parent] || false
 
       row_control_sets = {
         :index => [:show,:edit,:destroy]
@@ -98,7 +99,7 @@ module Qadmin
 
       row_control_set = options[:row_controls] || config.row_controls
       row_control_set.unshift(row_control_sets[options[:for]]) if options[:for]
-      row_controls = [row_control_set].flatten.collect{|c| row_control_links(options[:row_control_links])[row_control] }.compact
+      row_controls = [row_control_set].flatten.collect{|c| row_control_links(options[:row_control_links])[c] }.compact
 
       parent_link_attributes = parent ? {parent.class.to_s.foreign_key => parent.id} : {}
       general_link_attributes = {:controller => controller}.merge(parent_link_attributes)
@@ -164,7 +165,7 @@ module Qadmin
           html << %{<td class="#{css}">#{value}</td>}
         end
         row_control_links.each do |row_control|
-          row_control_html = row_control.respond_to?(:call) ? row_control.call : action
+          row_control_html = row_control.respond_to?(:call) ? row_control.call : row_control
           html << td(row_control_html)
         end
         html << '</tr>'
