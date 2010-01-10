@@ -96,7 +96,7 @@ module Qadmin
         :index => [:show,:edit,:destroy]
       }
 
-      row_control_set = options[:row_actions] || config.row_actions
+      row_control_set = options[:row_controls] || config.row_controls
       row_control_set.unshift(row_control_sets[options[:for]]) if options[:for]
       row_controls = [row_control_set].flatten.collect{|c| row_control_links(options[:row_control_links])[row_control] }.compact
 
