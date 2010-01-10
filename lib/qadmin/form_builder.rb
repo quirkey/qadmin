@@ -1,7 +1,7 @@
 module Qadmin
   class FormBuilder < ::ActionView::Helpers::FormBuilder
         
-    %w{text_field text_area check_box}.each do |field|
+    %w{text_field text_area check_box select}.each do |field|
       module_eval <<-EOT
         def labeled_#{field}(method, options = {})
           label_text = options.delete(:label) || method.to_s.humanize

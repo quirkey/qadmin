@@ -91,7 +91,7 @@ module Qadmin
         :false_class => lambda {|h, v, i, c| 'No' },
         :true_class => lambda {|h, v, i, c| 'Yes' },
         :text    =>  lambda {|h, v, i, c| 
-          h.truncate(v, :length => 30, :omission => "... #{h.link_to('More', h.send("#{c.model_instance_name}_path", i))}") 
+          h.truncate(v, :length => 30, :omission => "... #{h.link_to('More', h.send("#{qadmin_configuration.path_prefix}_path", i))}") 
          },
         :reflection => lambda {|h, v, i, c| h.link_to(v.to_s, v) },
         :hash => lambda {|h, v, i, c| v.inspect }, 
@@ -203,12 +203,10 @@ module Qadmin
     end
     
     def fieldset(legend = nil, options = {}, &block)
-      concat(content_tag(:fieldset, options) do
-        html = ''
-        html << content_tag(:legend, legend) if legend
-        html << capture(&block)
-        html
-      end)
+      html = ''
+      html << content_tag(:legend, legend) if legend
+      html << capture(&block)
+      concat content_tag(:fieldset, html, options)
     end
     
     def labeled_show_column(object, method, options = {})
