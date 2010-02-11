@@ -17,7 +17,7 @@ class TestQadminConfiguration < Test::Unit::TestCase
       
       should "create special config objects for each action" do
         @configuration.available_actions.each do |action|
-          assert_equal "Qadmin::Configuration::Actions::#{action.to_s.classify}", @configuration["on_#{action}"].class.to_s
+          assert_equal "Qadmin::Configuration::Actions::#{action.to_s.classify}", @configuration.send("on_#{action}").class.to_s
         end
       end
       

@@ -140,24 +140,17 @@ module Qadmin
       
       ACTIONS = [:index, :show, :new, :create, :edit, :update, :destroy].freeze
       
-      hash_accessor :available_actions, :default => ACTIONS
+      hash_accessor :available_actions, :default => ACTIONS.dup
       hash_accessor :ports, :default => false
       
       hash_accessor :multipart_forms, :default => false
       hash_accessor :controls, :default => []
       
-      hash_accessor :on_index
-      hash_accessor :on_show
-      hash_accessor :on_new
-      hash_accessor :on_create
-      hash_accessor :on_edit
-      hash_accessor :on_update
-      hash_accessor :on_destroy
+      ACTIONS.each do |action|
+        hash_accessor "on_#{action}"
       
-      def initialize(options = {})
-        super
-        ACTIONS.each do |action|
-          self["on_#{action}"] = "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.dup.merge(:base => self))
+        define_method("on_#{action}") do
+          self["on_#{action}"] ||= "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.dup.merge(:base => self))
         end
       end
             
