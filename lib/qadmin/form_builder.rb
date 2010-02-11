@@ -3,11 +3,13 @@ module Qadmin
         
     %w{text_field text_area check_box select}.each do |field|
       module_eval <<-EOT
-        def labeled_#{field}(method, options = {})
+        def labeled_#{field}(method, *args)
+          options = args.last.is_a?(Hash) ? args.pop : {}
           label_text = options.delete(:label) || method.to_s.humanize
+          args << options
           %{<p>
               \#{label(method, label_text)}
-              \#{#{field}(method, options)}
+              \#{#{field}(method, *args)}
             </p>
           }
         end

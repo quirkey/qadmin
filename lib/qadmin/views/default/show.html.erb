@@ -5,7 +5,7 @@
   <%= 
     begin
       render model_instance_name, :object => @model_instance 
-    rescue ActionView::MissingTemplate => e
+    rescue ActionView::MissingTemplate, Errno::ENOENT => e
       logger.warn e
       render 'default/instance', :object => @model_instance 
     end
