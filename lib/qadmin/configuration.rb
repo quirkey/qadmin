@@ -100,7 +100,7 @@ module Qadmin
         hash_accessor :columns, :default => []
         hash_accessor :column_headers, :default => {}
         hash_accessor :column_css, :default => {}
-        hash_accessor :row_actions, :default => [:show, :edit, :destroy]
+        hash_accessor :row_controls, :default => [:show, :edit, :destroy]
         hash_accessor :attribute_handlers, :default => {}
         
         def initialize(options = {})
