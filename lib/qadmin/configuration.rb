@@ -75,6 +75,10 @@ module Qadmin
         []
       end
       
+      def inspect
+        "#<#{self.class} #{super}>"
+      end
+      
       protected
       def extract_model_from_options(options = {})
         self.controller_klass      = options[:controller_klass]
@@ -149,9 +153,13 @@ module Qadmin
       ACTIONS.each do |action|
         hash_accessor "on_#{action}"
       
-        define_method("on_#{action}") do
-          self["on_#{action}"] ||= "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.dup.merge(:base => self))
-        end
+        module_eval <<-EOV
+          def on_#{action}
+            value = self["on_#{action}"] ||= "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.dup.merge(:base => self))
+            yield value if block_given?
+            value
+          end
+        EOV
       end
             
     end

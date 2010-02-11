@@ -1,18 +1,18 @@
 module Qadmin
   module Helper
 
-    def control_links(more_links={})
+    def control_links(more_links = {})
       {
-        :index      => lambda { link_to(image_tag('qadmin/icon_list.png') + " Back to List", general_link_attributes.merge(:action => 'index')) },
-        :new        => lambda { link_to(image_tag('qadmin/icon_new.png') + " New", general_link_attributes.merge(:action => 'new')) },
-        :edit       => lambda { link_to(image_tag('qadmin/icon_edit.png') + " Edit", general_link_attributes.merge({:action => 'edit', :id => obj.id})) },
-        :show       => lambda { link_to(image_tag('qadmin/icon_show.png') + " View", general_link_attributes.merge({:action => 'show', :id => obj.id})) },
-        :destroy    => lambda { link_to(image_tag('qadmin/icon_destroy.png') + " Delete", general_link_attributes.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete) },
-        :ports      => lambda { link_to(image_tag('qadmin/icon_export.png') + " Import/Export", general_link_attributes.merge(:action => 'ports')) },
-        :export     => lambda { link_to(image_tag('qadmin/icon_export.png') + " Export", general_link_attributes.merge(:action => 'export')) },
-        :preview    => lambda { link_to(image_tag('qadmin/icon_preview.png') + " Preview", general_link_attributes.merge({:action => 'preview', :id => obj.id})) },
-        :sort       => lambda { link_to(image_tag('qadmin/icon_sort.png') + " Sort", general_link_attributes.merge({:action => 'sort'})) }
-      }.merge(more_links)
+        :index      => lambda {|params| link_to(image_tag('qadmin/icon_list.png') + " Back to List", params.merge(:action => 'index')) },
+        :new        => lambda {|params| link_to(image_tag('qadmin/icon_new.png') + " New", params.merge(:action => 'new')) },
+        :edit       => lambda {|params| link_to(image_tag('qadmin/icon_edit.png') + " Edit", params.merge({:action => 'edit', :id => obj.id})) },
+        :show       => lambda {|params| link_to(image_tag('qadmin/icon_show.png') + " View", params.merge({:action => 'show', :id => obj.id})) },
+        :destroy    => lambda {|params| link_to(image_tag('qadmin/icon_destroy.png') + " Delete", params.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete) },
+        :ports      => lambda {|params| link_to(image_tag('qadmin/icon_export.png') + " Import/Export", params.merge(:action => 'ports')) },
+        :export     => lambda {|params| link_to(image_tag('qadmin/icon_export.png') + " Export", params.merge(:action => 'export')) },
+        :preview    => lambda {|params| link_to(image_tag('qadmin/icon_preview.png') + " Preview", params.merge({:action => 'preview', :id => obj.id})) },
+        :sort       => lambda {|params| link_to(image_tag('qadmin/icon_sort.png') + " Sort", params.merge({:action => 'sort'})) }
+      }.merge(more_links || {})
     end
 
     def admin_controls(name, options = {}, &block)
@@ -23,8 +23,8 @@ module Qadmin
       obj            = options[:object] || assumed_object || nil
       parent         = options[:parent] || false
 
-      parent_link_attributes = parent ? {parent.class.to_s.foreign_key => parent.id} : {}
-      general_link_attributes = {:controller => controller}.merge(parent_link_attributes)
+      parent_link_params = parent ? {parent.class.to_s.foreign_key => parent.id} : {}
+      general_link_params = {:controller => controller}.merge(parent_link_params)
 
       control_sets = {
         :index => [:new],
@@ -43,7 +43,7 @@ module Qadmin
       html = ""
       html << %{<ul class="admin_controls">}
       controls.each do |control|
-        control_html = control.respond_to?(:call) ? control.call : control
+        control_html = control.respond_to?(:call) ? control.call(params) : control
         html << li(control_html)
       end
       if block_given?
@@ -81,19 +81,24 @@ module Qadmin
       qadmin_configuration.model_klass.restful_query_parser(params[query_param], options)
     end
 
-    def row_control_links(more_links={})
+    def row_control_links(more_links = {})
       {
         :destroy    => lambda { |obj| link_to(image_tag("qadmin/icon_destroy.png"), {:action => 'destroy', :id => obj.id}, :confirm => 'Are you sure?', :method => :delete)},
         :edit       => lambda { |obj| link_to(image_tag('qadmin/icon_edit.png'),    {:action => 'edit',    :id => obj.id}) },
         :show       => lambda { |obj| link_to(image_tag('qadmin/icon_show.png'),    {:action => 'show',    :id => obj.id}) },
-      }.merge(more_links)
+        :preview    => lambda { |obj| link_to(image_tag('qadmin/icon_preview.png'),    {:action => 'preview', :id => obj.id}) }
+      }.merge(more_links || {})
     end
 
     def admin_table(collection, options = {})
       config = self.qadmin_configuration.on_index
+
       controller  = params[:controller]  || options[:controller] || config.controller_name
       attributes  = options[:attributes] || config.columns
-
+      
+      logger.debug "columns: #{attributes.inspect}"
+      
+      
       row_control_sets = {
         :index => [:show,:edit,:destroy]
       }
