@@ -1,6 +1,6 @@
 module Qadmin
   module Controller
-    ACTION_TEMPLATE_PATH = File.join(File.dirname(__FILE__), 'actions')
+    ACTION_TEMPLATE_PATH = File.join(File.dirname(__FILE__), 'actions').freeze
 
     def self.admin_action_template(action_name)
       if @qadmin_template && @qadmin_template[action_name]
@@ -55,10 +55,6 @@ module Qadmin
         }
         action_code = helper_methods << action_code << additional_methods
         self.class_eval(ERB.new(action_code).result(binding))
-      end
-
-      def config
-        self.qadmin_configuration
       end
 
     end
