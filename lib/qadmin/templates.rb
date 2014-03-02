@@ -12,7 +12,8 @@ module Qadmin
     protected
     def render_template_for_section(action = nil, options = {})
       action ||= action_name
-      render(template_for_section(action), options).html_safe
+      rendered = render(template_for_section(action), options)
+      rendered.is_a?(Array) ? rendered.collect {|r| r.html_safe } : r.html_safe
     end
 
     def template_for_section(template_name, file_name = nil, options = {})
@@ -43,7 +44,12 @@ module Qadmin
 
     def template_exists?(template_path)
       logger.debug "Checking for template: #{template_path}"
-      self.view_paths.find_template(template_path)
+      # In Rails 4, template exists, exists
+      if defined?(super)
+        super
+      else
+        self.view_paths.find_template(template_path)
+      end
     rescue ActionView::MissingTemplate
       logger.debug "Template not found: #{template_path}"
       false
