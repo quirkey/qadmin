@@ -29,6 +29,7 @@ module Qadmin
 
       def define_admin_actions(actions, options = {})
         action_code = actions.collect {|a| Qadmin::Controller.admin_action_template(a) }.join("\n")
+        config = self.qadmin_configuration
         helper_methods = %{
           delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => :qadmin_configuration
           helper_method :qadmin_configuration, :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions, :parent_instance
@@ -54,7 +55,8 @@ module Qadmin
           end
         }
         action_code = helper_methods << action_code << additional_methods
-        self.class_eval(ERB.new(action_code).result(binding))
+        rendered = Erubis::Eruby.new(action_code).result(binding())
+        self.class_eval(rendered, __FILE__, 57)
       end
 
     end
