@@ -35,6 +35,14 @@ module Qadmin
           helper_method :qadmin_configuration, :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions, :parent_instance
         }
         additional_methods = %{
+          def #{config.model_instance_name}_params
+            if params.respond_to?(:permit)
+              params.require(:#{config.model_instance_name}).permit!
+            else
+              params[:#{config.model_instance_name}]
+            end
+          end
+
           def add_form
             @origin_div = params[:from]
             @num = params[:num]

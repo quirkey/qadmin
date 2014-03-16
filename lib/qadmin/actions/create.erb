@@ -1,6 +1,6 @@
 def create
   logger.debug 'Qadmin: Default /create'
-  @model_instance = @<%= config.on_create.model_instance_name %> = <%= config.on_create.model_name %>.new(params[:<%= config.on_create.model_instance_name %>])
+  @model_instance = @<%= config.on_create.model_instance_name %> = <%= config.on_create.model_name %>.new(<%= config.on_create.model_instance_name %>_params)
   respond_to do |format|
     if @<%= config.on_create.model_instance_name %>.save
       flash[:message] = '<%= config.on_create.model_human_name %> was successfully created.'

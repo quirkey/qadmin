@@ -7,7 +7,7 @@ module Qadmin
         :new        => lambda {|params, obj| link_to(image_tag('qadmin/icon_new.png') + " New", params.merge(:action => 'new')) },
         :edit       => lambda {|params, obj| link_to(image_tag('qadmin/icon_edit.png') + " Edit", params.merge({:action => 'edit', :id => obj.id})) },
         :show       => lambda {|params, obj| link_to(image_tag('qadmin/icon_show.png') + " View", params.merge({:action => 'show', :id => obj.id})) },
-        :destroy    => lambda {|params, obj| link_to(image_tag('qadmin/icon_destroy.png') + " Delete", params.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete) },
+        :destroy    => lambda {|params, obj| link_to(image_tag('qadmin/icon_destroy.png') + " Delete", params.merge({:action => 'destroy', :id => obj.id}), :data => {:confirm => 'Are you sure?'}, :method => :delete) },
         :ports      => lambda {|params, obj| link_to(image_tag('qadmin/icon_export.png') + " Import/Export", params.merge(:action => 'ports')) },
         :export     => lambda {|params, obj| link_to(image_tag('qadmin/icon_export.png') + " Export", params.merge(:action => 'export')) },
         :sort       => lambda {|params, obj| link_to(image_tag('qadmin/icon_sort.png') + " Sort", params.merge({:action => 'sort'})) }
@@ -91,7 +91,7 @@ module Qadmin
 
     def row_control_links(more_links = {})
       {
-        :destroy    => lambda { |params, obj| link_to(image_tag("qadmin/icon_destroy.png"), params.merge({:action => 'destroy', :id => obj.id}), :confirm => 'Are you sure?', :method => :delete)},
+        :destroy    => lambda { |params, obj| link_to(image_tag("qadmin/icon_destroy.png"), params.merge({:action => 'destroy', :id => obj.id}), :data => {:confirm => 'Are you sure?'}, :method => :delete)},
         :edit       => lambda { |params, obj| link_to(image_tag('qadmin/icon_edit.png'), params.merge({:action => 'edit',    :id => obj.id})) },
         :show       => lambda { |params, obj| link_to(image_tag('qadmin/icon_show.png'), params.merge({:action => 'show',    :id => obj.id})) },
       }.merge(more_links || {})
