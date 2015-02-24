@@ -3,7 +3,7 @@ def update
   @model_instance = @<%= config.on_update.model_instance_name %> = <%= config.on_update.model_name %>.find(params[:id])
 
   respond_to do |format|
-    if @<%= config.on_update.model_instance_name %>.update_attributes(params[:<%= config.on_update.model_instance_name %>])
+    if @<%= config.on_update.model_instance_name %>.update_attributes(<%= config.on_update.model_instance_name %>_params)
       flash[:message] = '<%= config.on_update.model_human_name %> was successfully updated.'
       format.html { redirect_to(<%= config.on_update.path_prefix %>_path(@<%= config.on_update.model_instance_name %>)) }
       format.xml  { head :ok }
