@@ -100,17 +100,20 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2"])
       s.add_runtime_dependency(%q<will_paginate>, [">= 2.3.7"])
       s.add_runtime_dependency(%q<restful_query>, [">= 0.2.0"])
+      s.add_development_dependency(%q<rake>, ["~>10.4", ">= 10.4.2"])
       s.add_development_dependency(%q<shoulda>, [">= 1.2.0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.3.2"])
-      s.add_dependency(%q<will_paginate>, [">= 2.3.7"])
+      s.add_dependency(%q<rake>, ["~>10.4", ">= 10.4.2"])
       s.add_dependency(%q<restful_query>, [">= 0.2.0"])
       s.add_dependency(%q<shoulda>, [">= 1.2.0"])
+      s.add_dependency(%q<will_paginate>, [">= 2.3.7"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.3.2"])
-    s.add_dependency(%q<will_paginate>, [">= 2.3.7"])
+    s.add_dependency(%q<rake>, ["~>10.4", ">= 10.4.2"])
     s.add_dependency(%q<restful_query>, [">= 0.2.0"])
     s.add_dependency(%q<shoulda>, [">= 1.2.0"])
+    s.add_dependency(%q<will_paginate>, [">= 2.3.7"])
   end
 end
