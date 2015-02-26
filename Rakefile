@@ -34,7 +34,7 @@ end
 Rake::TestTask.new do |t|
   should_test_generator = ENV["TEST_GENERATOR"] == "true"
   t.libs << "test"
-  files = FileList['test/test*.rb'].delete_if { |f| !should_test_generator && f == "test/test_qadmin_generator.rb" }
+  files = FileList["test/**/*_test.rb"].delete_if { |f| !should_test_generator && f == "test/qadmin_generator_test.rb" }
   t.test_files = files
   t.verbose = true
 end
