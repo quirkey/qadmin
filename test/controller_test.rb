@@ -1,6 +1,6 @@
 require "helper"
 
-class TestQadminController < Minitest::Test
+class Qadmin::ControllerTest < Minitest::Test
 
   protected
   def crud_actions
