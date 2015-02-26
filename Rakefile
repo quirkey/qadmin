@@ -18,6 +18,8 @@ begin
     s.add_runtime_dependency(%q<iconv>, [">= 1.0"])
     s.add_runtime_dependency(%q<restful_query>, [">= 0.2.0"])
     s.add_runtime_dependency(%q<will_paginate>, [">= 2.3.7", "< 3"])
+    s.add_development_dependency(%q<appraisal>, ["~>1.0", ">= 1.0.2"])
+    s.add_development_dependency(%q<minitest>, ["~> 5.5", ">= 5.5.0"])
     s.add_development_dependency(%q<mocha>, ["~> 1.1", ">= 1.1.0"])
     s.add_development_dependency(%q<rake>, ["~>10.4", ">= 10.4.2"])
     s.add_development_dependency(%q<rails>, [">= 2.3.2", "< 3"])
@@ -32,7 +34,7 @@ end
 Rake::TestTask.new do |t|
   should_test_generator = ENV["TEST_GENERATOR"] == "true"
   t.libs << "test"
-  files = FileList["test/**/*_test.rb"].delete_if { |f| !should_test_generator && f == "test/qadmin_generator_test.rb" }
+  files = FileList["test/**/*_test.rb"].delete_if { |f| !should_test_generator && f == "test/generator_test.rb" }
   t.test_files = files
   t.verbose = true
 end

@@ -1,6 +1,6 @@
 require "helper"
 
-class TestQadminConfiguration < Test::Unit::TestCase
+class Qadmin::ConfigurationTest < Minitest::Test
 
   context "Configuring a Resource" do
     setup do
