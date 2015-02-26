@@ -14,15 +14,16 @@ module Qadmin
     module Macros
 
       def qadmin(options = {})
-        self.cattr_accessor :qadmin_configuration
+        send(:extend, Forwardable)
+        send(:cattr_accessor, :qadmin_configuration)
+        send(:def_delegators, :qadmin_configuration, :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name)
         self.qadmin_configuration = Qadmin::Configuration::Resource.new({:controller_klass => self}.merge(options))
-        self.delegate(:model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => :qadmin_configuration)
         yield(self.qadmin_configuration) if block_given?
-        include Qadmin::Controller::Helpers
-        include Qadmin::Templates
-        include Qadmin::Overlay
+        send(:include, Qadmin::Controller::Helpers)
+        send(:include, Qadmin::Templates)
+        send(:include, Qadmin::Overlay)
         self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
-        define_admin_actions(qadmin_configuration.available_actions, options)
+        define_admin_actions(self.qadmin_configuration.available_actions, options)
       end
 
       private
@@ -31,7 +32,9 @@ module Qadmin
         action_code = actions.collect {|a| Qadmin::Controller.admin_action_template(a) }.join("\n")
         config = self.qadmin_configuration
         helper_methods = %{
-          delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => :qadmin_configuration
+          extend Forwardable
+
+          def_delegators :qadmin_configuration, :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name
           helper_method :qadmin_configuration, :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions, :parent_instance
         }
         additional_methods = %{
