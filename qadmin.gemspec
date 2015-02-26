@@ -97,23 +97,35 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2"])
-      s.add_runtime_dependency(%q<will_paginate>, [">= 2.3.7"])
+      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2", "< 3"])
+      s.add_runtime_dependency(%q<iconv>, [">= 1.0"])
+      s.add_runtime_dependency(%q<will_paginate>, [">= 2.3.7", "< 3"])
       s.add_runtime_dependency(%q<restful_query>, [">= 0.2.0"])
+      s.add_development_dependency(%q<mocha>, ["~> 1.1", ">= 1.1.0"])
       s.add_development_dependency(%q<rake>, ["~>10.4", ">= 10.4.2"])
+      s.add_development_dependency(%q<rails>, [">= 2.3.2", "< 3"])
+      s.add_development_dependency(%q<rubigen>, [">= 1.5.7"])
       s.add_development_dependency(%q<shoulda>, [">= 1.2.0"])
     else
-      s.add_dependency(%q<activesupport>, [">= 2.3.2"])
+      s.add_dependency(%q<activesupport>, [">= 2.3.2", "< 3"])
+      s.add_dependency(%q<iconv>, [">= 1.0"])
+      s.add_dependency(%q<mocha>, ["~> 1.1", ">= 1.1.0"])
       s.add_dependency(%q<rake>, ["~>10.4", ">= 10.4.2"])
+      s.add_dependency(%q<rails>, [">= 2.3.2", "< 3"])
       s.add_dependency(%q<restful_query>, [">= 0.2.0"])
+      s.add_dependency(%q<rubigen>, [">= 1.5.7"])
       s.add_dependency(%q<shoulda>, [">= 1.2.0"])
-      s.add_dependency(%q<will_paginate>, [">= 2.3.7"])
+      s.add_dependency(%q<will_paginate>, [">= 2.3.7", "< 3"])
     end
   else
-    s.add_dependency(%q<activesupport>, [">= 2.3.2"])
+    s.add_dependency(%q<activesupport>, [">= 2.3.2", "< 3"])
+    s.add_dependency(%q<iconv>, [">= 1.0"])
+    s.add_dependency(%q<mocha>, ["~> 1.1", ">= 1.1.0"])
     s.add_dependency(%q<rake>, ["~>10.4", ">= 10.4.2"])
+    s.add_dependency(%q<rails>, [">= 2.3.2", "< 3"])
     s.add_dependency(%q<restful_query>, [">= 0.2.0"])
+    s.add_dependency(%q<rubigen>, [">= 1.5.7"])
     s.add_dependency(%q<shoulda>, [">= 1.2.0"])
-    s.add_dependency(%q<will_paginate>, [">= 2.3.7"])
+    s.add_dependency(%q<will_paginate>, [">= 2.3.7", "< 3"])
   end
 end
