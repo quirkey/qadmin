@@ -69,14 +69,14 @@ module Qadmin
 
     def sortable_column_header(attribute_name, text = nil, options = {})
       link_text = text || self.qadmin_configuration.on_index.column_headers[attribute_name] || attribute_name.to_s.humanize
-      return link_text unless qadmin_configuration.model_klass.can_query?
+      return link_text unless qadmin_configuration.model_class.can_query?
       query_parser = model_restful_query_parser(options)
-      if qadmin_configuration.model_klass.respond_to?(:reflections) and
-        association = qadmin_configuration.model_klass.reflections[attribute_name.to_sym]
+      if qadmin_configuration.model_class.respond_to?(:reflections) and
+        association = qadmin_configuration.model_class.reflections[attribute_name.to_sym]
         attribute_name = association.association_foreign_key
       end
       query_param = options[:query_param] || :query
-      attribute_name = "#{qadmin_configuration.model_klass.table_name}.#{attribute_name}"
+      attribute_name = "#{qadmin_configuration.model_class.table_name}.#{attribute_name}"
       sorting_this = query_parser.sort(attribute_name)
       link_text << " #{image_tag("qadmin/icon_#{sorting_this.direction.downcase}.gif")}" if sorting_this
       query_parser.clear_default_sort!
@@ -86,7 +86,7 @@ module Qadmin
 
     def model_restful_query_parser(options = {})
       query_param = options[:query_param] || :query
-      qadmin_configuration.model_klass.restful_query_parser(params[query_param], options)
+      qadmin_configuration.model_class.restful_query_parser(params[query_param], options)
     end
 
     def row_control_links(more_links = {})
@@ -138,13 +138,13 @@ module Qadmin
       model_column_types = HashWithIndifferentAccess.new
 
       attributes.each do |attribute_name|
-        if column = config.model_klass.columns.detect {|c| c.name.to_s == attribute_name.to_s }
-          if serialized_klass = config.model_klass.serialized_attributes[attribute_name]
-            column = serialized_klass.to_s.downcase.to_sym
+        if column = config.model_class.columns.detect {|c| c.name.to_s == attribute_name.to_s }
+          if serialized_class = config.model_class.serialized_attributes[attribute_name]
+            column = serialized_class.to_s.downcase.to_sym
           else
             column = column.type
           end
-        elsif !column && reflection = config.model_klass.reflections[attribute_name] && respond_to?("#{attribute_name}_path")
+        elsif !column && reflection = config.model_class.reflections[attribute_name] && respond_to?("#{attribute_name}_path")
           column = :reflection
         end
         model_column_types[attribute_name] = column if column
