@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'stringio'
-require 'test/unit'
+require 'minitest/autorun'
 require 'mocha'
 require 'shoulda'
 
@@ -12,15 +12,15 @@ module ActiveRecord
   class Base
     class << self
       attr_accessor :pluralize_table_names
-      
+
       def protected_attributes
         []
       end
-      
+
       def column_names
         ['id'] #content_columns.collect {|c| c.name }
       end
-      
+
     end
     self.pluralize_table_names = true
   end
@@ -39,7 +39,7 @@ class MockColumn
   def human_name
     name.to_s.humanize
   end
-  
+
   def default
     nil
   end
@@ -63,7 +63,7 @@ class Item < ActiveRecord::Base
         MockColumn.new(name, type)
       end
     end
-    
+
     def column_names
       [] #content_columns.collect {|c| c.name }
     end
@@ -74,11 +74,11 @@ class MockController
   class << self
     def append_view_path(paths)
     end
-    
+
     def helper_method(*args)
     end
   end
-  
+
   extend Qadmin::Controller::Macros
 end
 
