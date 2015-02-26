@@ -16,8 +16,8 @@ module Qadmin
       def qadmin(options = {})
         send(:extend, Forwardable)
         send(:cattr_accessor, :qadmin_configuration)
-        send(:def_delegators, :qadmin_configuration, :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name)
-        self.qadmin_configuration = Qadmin::Configuration::Resource.new({:controller_klass => self}.merge(options))
+        send(:def_delegators, :qadmin_configuration, :model_name, :model_class, :model_collection_name, :model_instance_name, :model_human_name)
+        self.qadmin_configuration = Qadmin::Configuration::Resource.new(options.merge(:controller_class => self))
         yield(self.qadmin_configuration) if block_given?
         send(:include, Qadmin::Controller::Helpers)
         send(:include, Qadmin::Templates)
@@ -34,7 +34,7 @@ module Qadmin
         helper_methods = %{
           extend Forwardable
 
-          def_delegators :qadmin_configuration, :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name
+          def_delegators :qadmin_configuration, :model_name, :model_class, :model_collection_name, :model_instance_name, :model_human_name
           helper_method :qadmin_configuration, :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions, :parent_instance
         }
         additional_methods = %{
