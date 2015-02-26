@@ -1,5 +1,5 @@
 begin
-  require File.dirname(__FILE__) + '/test_helper'
+  require "helper"
 rescue LoadError
   require 'test/unit'
 end
