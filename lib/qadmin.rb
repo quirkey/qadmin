@@ -4,7 +4,8 @@ unless defined?(ActiveSupport)
   require 'active_support'
 end
 
-require 'erb'
+require "erubis"
+require 'forwardable'
 
 module Qadmin
   VERSION = '0.3.0'
