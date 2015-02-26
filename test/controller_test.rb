@@ -1,6 +1,6 @@
 require "helper"
 
-class TestQadminController < Test::Unit::TestCase
+class Qadmin::ControllerTest < Minitest::Test
 
   protected
   def crud_actions
@@ -59,13 +59,15 @@ class TestQadminController < Test::Unit::TestCase
           context "with two instances in different controllers" do
             setup do
               class ::NewExclude < ActiveRecord::Base; end
-              class NewExcludeController < MockController
+              class ::NewExcludeController < MockController
                 qadmin do |config|
                   config.available_actions = config.available_actions - [:show, :new]
                 end
               end
               @exclude_controller = NewExcludeController.new
-              class NewOnlyController < MockController
+              class ::NewOnly
+              end
+              class ::NewOnlyController < MockController
                 qadmin :model_name => 'Item', :available_actions => [:index, :show]
               end
               @only_controller = NewOnlyController.new

@@ -1,31 +1,51 @@
 module Qadmin
   module Controller
+    ACTION_TEMPLATE_PATH = File.join(File.dirname(__FILE__), 'actions').freeze
 
-    module Macros      
-      
-      def qadmin(options = {})
-        self.cattr_accessor :qadmin_configuration
-        self.qadmin_configuration = Qadmin::Configuration::Resource.new({:controller_klass => self}.merge(options))
-        self.delegate(:model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => :qadmin_configuration)
-        yield(self.qadmin_configuration) if block_given?
-        include Qadmin::Controller::Helpers
-        include Qadmin::Templates
-        include Qadmin::Overlay
-        self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
-        define_admin_actions(qadmin_configuration.available_actions, options)
+    def self.admin_action_template(action_name)
+      if @qadmin_template && @qadmin_template[action_name]
+        @qadmin_template[action_name]
+      else
+        @qadmin_template ||= {}
+        @qadmin_template[action_name] ||= File.read(File.join(ACTION_TEMPLATE_PATH, "#{action_name}.erb"))
       end
-      
+    end
+
+    module Macros
+
+      def qadmin(options = {})
+        send(:extend, Forwardable)
+        send(:cattr_accessor, :qadmin_configuration)
+        send(:def_delegators, :qadmin_configuration, :model_name, :model_class, :model_collection_name, :model_instance_name, :model_human_name)
+        self.qadmin_configuration = Qadmin::Configuration::Resource.new(options.merge(:controller_class => self))
+        yield(self.qadmin_configuration) if block_given?
+        send(:include, Qadmin::Controller::Helpers)
+        send(:include, Qadmin::Templates)
+        send(:include, Qadmin::Overlay)
+        self.append_view_path(File.join(File.dirname(__FILE__), 'views'))
+        define_admin_actions(self.qadmin_configuration.available_actions, options)
+      end
+
       private
-      
+
       def define_admin_actions(actions, options = {})
-        action_template_path = File.join(File.dirname(__FILE__), 'actions')
-        raw_action_code = actions.collect {|a| File.read(File.join(action_template_path, "#{a}.erb")) }.join("\n")
-        action_code = ERB.new(raw_action_code).result(binding)
+        action_code = actions.collect {|a| Qadmin::Controller.admin_action_template(a) }.join("\n")
+        config = self.qadmin_configuration
         helper_methods = %{
-          delegate :model_name, :model_klass, :model_collection_name, :model_instance_name, :model_human_name, :to => :qadmin_configuration
-          helper_method :qadmin_configuration, :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions
+          extend Forwardable
+
+          def_delegators :qadmin_configuration, :model_name, :model_class, :model_collection_name, :model_instance_name, :model_human_name
+          helper_method :qadmin_configuration, :model_name, :model_instance_name, :model_collection_name, :model_human_name, :available_actions, :parent_instance
         }
         additional_methods = %{
+          def #{config.model_instance_name}_params
+            if params.respond_to?(:permit)
+              params.require(:#{config.model_instance_name}).permit!
+            else
+              params[:#{config.model_instance_name}]
+            end
+          end
+
           def add_form
             @origin_div = params[:from]
             @num = params[:num]
@@ -39,22 +59,25 @@ module Qadmin
               }
             end
           end
+
+          private
+          def parent_instance
+            instance_variable_get("@\#{qadmin_configuration.parent}")
+          end
         }
         action_code = helper_methods << action_code << additional_methods
-        self.class_eval(action_code)
+        rendered = Erubis::Eruby.new(action_code).result(binding())
+        self.class_eval(rendered, __FILE__, 57)
       end
-      
-      def config
-        self.qadmin_configuration
-      end
+
     end
 
     module Helpers
-      
+
       def qadmin_configuration
         self.class.qadmin_configuration
       end
-      
+
     end
 
   end

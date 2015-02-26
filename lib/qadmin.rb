@@ -1,16 +1,14 @@
-$:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
-
 require 'iconv'
 
 unless defined?(ActiveSupport)
   require 'active_support'
 end
 
-require 'erb'
+require "erubis"
+require 'forwardable'
 
 module Qadmin
-  VERSION = '0.2.3'
+  VERSION = '0.3.0'
 end
 
 %w{
