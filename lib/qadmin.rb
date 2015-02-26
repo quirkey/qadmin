@@ -1,3 +1,9 @@
+require 'iconv'
+
+unless defined?(ActiveSupport)
+  require 'active_support'
+end
+
 require 'erb'
 
 module Qadmin
