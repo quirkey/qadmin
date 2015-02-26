@@ -17,7 +17,7 @@ begin
     s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2"])
     s.add_runtime_dependency(%q<will_paginate>, [">= 2.3.7"])
     s.add_runtime_dependency(%q<restful_query>, [">= 0.2.0"])
-    s.add_development_dependency(%q<Shoulda>, [">= 1.2.0"])
+    s.add_development_dependency(%q<shoulda>, [">= 1.2.0"])
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
