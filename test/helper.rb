@@ -6,27 +6,7 @@ require 'shoulda'
 
 require File.dirname(__FILE__) + '/../lib/qadmin'
 
-
-# mock AR::BASE
-module ActiveRecord
-  class Base
-    class << self
-      attr_accessor :pluralize_table_names
-
-      def protected_attributes
-        []
-      end
-
-      def column_names
-        ['id'] #content_columns.collect {|c| c.name }
-      end
-
-    end
-    self.pluralize_table_names = true
-  end
-end
-
-
+require "active_record"
 
 class MockColumn
   attr_accessor :name, :type
@@ -43,6 +23,25 @@ class MockColumn
   def default
     nil
   end
+end
+
+class BasicModel < ActiveRecord::Base
+end
+
+ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+
+ActiveRecord::Schema.define do
+  self.verbose = false
+
+  create_table :basic_models, :force => true do |t|
+    t.string :key
+    t.string :name
+    t.integer :age
+    t.datetime :dob
+
+    t.timestamps
+  end
+
 end
 
 class Item < ActiveRecord::Base
@@ -86,4 +85,4 @@ module Admin
   class ItemsController < MockController; end
 end
 
-class ThingsController < MockController; end
+class BasicModelsController < MockController; end

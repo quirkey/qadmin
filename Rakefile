@@ -26,6 +26,7 @@ begin
     s.add_development_dependency(%q<rails>, [">= 2.3.2", "< 3"])
     s.add_development_dependency(%q<rubigen>, [">= 1.5.7"])
     s.add_development_dependency(%q<shoulda>, [">= 1.2.0"])
+    s.add_development_dependency(%q<sqlite3>, ["~> 1.3", ">= 1.3.10"])
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
