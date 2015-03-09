@@ -35,6 +35,17 @@ class Qadmin::ConfigurationTest < Minitest::Test
 
       end
 
+      context "#clean_self" do
+
+        should "return hash of configuration properties" do
+          hash = @configuration.clean_self
+          %w{controller_klass controller_name model_name model_instance_name model_collection_name model_human_name namespace}.each do |method|
+            assert hash.key?(method)
+          end
+        end
+
+      end
+
       context "#path_prefix" do
 
         should "include namespace if set" do
@@ -47,7 +58,7 @@ class Qadmin::ConfigurationTest < Minitest::Test
           assert_equal 'thing', @configuration.path_prefix
           assert_equal 'thing', @configuration.on_create.path_prefix
         end
-        
+
       end
     end
   end
