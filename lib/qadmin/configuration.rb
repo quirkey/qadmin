@@ -94,8 +94,6 @@ module Qadmin
 
       def model_column_names
         @columns ||= model_klass.column_names
-      rescue
-        []
       end
 
       def inspect
