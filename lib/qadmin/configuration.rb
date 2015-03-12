@@ -168,19 +168,26 @@ module Qadmin
       ACTIONS.each do |action|
         hash_accessor "on_#{action}"
 
-        module_eval <<-EOV
-          def on_#{action}
-            value = self["on_#{action}"] ||= "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.clean_self.merge(:base => self))
-            yield value if block_given?
-            value
-          end
-        EOV
+        define_method("on_#{action}") do
+          value = self["on_#{action}"] || define_action(action)
+          yield(value) if block_given?
+          value
+        end
+
       end
 
       # We need to provide just the "own" properties for the other actions to inherit
       # so that its not a crazy self referential mess
       def clean_self
         reject { |k, v| k.match(/^on_/) }
+      end
+
+      private
+
+      def define_action(action)
+        properties = clean_self.merge(:base => self)
+        action_class = "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize
+        self["on_#{action}"] = action_class.new(properties)
       end
 
     end
