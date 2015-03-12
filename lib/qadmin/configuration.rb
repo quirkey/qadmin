@@ -176,13 +176,13 @@ module Qadmin
 
       end
 
+      private
+
       # We need to provide just the "own" properties for the other actions to inherit
       # so that its not a crazy self referential mess
       def properties
         reject { |k, v| k.match(/^on_/) }
       end
-
-      private
 
       def define_action(action)
         action_namespace = "Qadmin::Configuration::Actions"
