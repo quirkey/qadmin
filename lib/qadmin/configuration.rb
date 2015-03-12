@@ -119,7 +119,7 @@ module Qadmin
 
         def initialize(options = {})
           super
-          self.columns = model_column_names
+          @columns = model_column_names
         end
 
       end
@@ -162,7 +162,7 @@ module Qadmin
 
       def initialize(options = {})
         super
-        self.update(Qadmin::Configuration.extract_model_from_options(options))
+        update(Qadmin::Configuration.extract_model_from_options(options))
       end
 
       ACTIONS.each do |action|
@@ -180,9 +180,7 @@ module Qadmin
       # We need to provide just the "own" properties for the other actions to inherit
       # so that its not a crazy self referential mess
       def clean_self
-        c = {}
-        self.each {|k, v| c[k] = v if k !~ /^on_/ }
-        c
+        reject { |k, v| k.match(/^on_/) }
       end
 
     end
