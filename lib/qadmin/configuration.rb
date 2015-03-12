@@ -100,7 +100,6 @@ module Qadmin
         "#<#{self.class} #{super}>"
       end
 
-      protected
     end
 
     module Actions
