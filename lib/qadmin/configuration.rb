@@ -185,7 +185,8 @@ module Qadmin
       private
 
       def define_action(action)
-        action_class = "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize
+        action_namespace = "Qadmin::Configuration::Actions"
+        action_class = "#{action_namespace}::#{action.to_s.classify}".constantize
         action_properties = properties.merge(:base => self)
         self["on_#{action}"] = action_class.new(action_properties)
       end
