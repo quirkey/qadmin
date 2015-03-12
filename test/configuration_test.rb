@@ -46,6 +46,16 @@ class Qadmin::ConfigurationTest < Minitest::Test
 
       end
 
+      context "#model_column_names" do
+
+        should "delegate model column names" do
+          refute_nil @configuration.model_column_names
+          refute_empty @configuration.model_column_names
+          assert_equal BasicModel.column_names, @configuration.model_column_names
+        end
+
+      end
+
       context "#path_prefix" do
 
         should "include namespace if set" do
