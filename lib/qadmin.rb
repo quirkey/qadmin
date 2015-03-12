@@ -1,21 +1,19 @@
-require 'iconv'
+require "iconv"
 
 unless defined?(ActiveSupport)
-  require 'active_support'
+  require "active_support"
 end
 
 require "erubis"
-require 'forwardable'
+require "forwardable"
 
 module Qadmin
-  VERSION = '0.3.0'
+  VERSION = "0.3.0"
 end
 
-%w{
-  configuration
-  helper
-  overlay
-  page_titles
-  templates
-  controller
-}.each {|lib| require "qadmin/#{lib}" }
+require "qadmin/configuration"
+require "qadmin/helper"
+require "qadmin/overlay"
+require "qadmin/page_titles"
+require "qadmin/templates"
+require "qadmin/controller"
