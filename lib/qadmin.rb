@@ -1,19 +1,21 @@
-require "iconv"
+# qadmin
 
-unless defined?(ActiveSupport)
-  require "active_support"
-end
-
+# libs
 require "erubis"
 require "forwardable"
+require "iconv"
+require "active_support" unless defined?(ActiveSupport)
 
-module Qadmin
-  VERSION = "0.3.0"
-end
-
-require "qadmin/configuration"
+# modules
+require "qadmin/controller"
 require "qadmin/helper"
 require "qadmin/overlay"
 require "qadmin/page_titles"
 require "qadmin/templates"
-require "qadmin/controller"
+
+# classes
+require "qadmin/configuration"
+
+module Qadmin
+  VERSION = "0.3.0"
+end
