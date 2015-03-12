@@ -7,16 +7,16 @@ class Qadmin::ConfigurationTest < Minitest::Test
     context "Resource" do
 
       setup do
-        @configuration = Qadmin::Configuration::Resource.new(:controller_klass => ThingsController)
+        @configuration = Qadmin::Configuration::Resource.new(:controller_klass => BasicModelsController)
       end
 
       context "#initialize" do
 
         should "extrapolate the model klass names" do
           assert_nil @configuration.namespace
-          assert_equal "Thing", @configuration.model_name
-          assert_equal "Thing", @configuration.model_human_name
-          assert_equal "things", @configuration.model_collection_name
+          assert_equal "BasicModel", @configuration.model_name
+          assert_equal "Basic model", @configuration.model_human_name
+          assert_equal "basic_models", @configuration.model_collection_name
         end
 
         should "create special config objects for each action" do
@@ -50,13 +50,13 @@ class Qadmin::ConfigurationTest < Minitest::Test
 
         should "include namespace if set" do
           @configuration.namespace = :admin
-          assert_equal 'admin_thing', @configuration.path_prefix
-          assert_equal 'admin_thing', @configuration.on_create.path_prefix
+          assert_equal 'admin_basic_model', @configuration.path_prefix
+          assert_equal 'admin_basic_model', @configuration.on_create.path_prefix
         end
 
         should "not include nil namespace" do
-          assert_equal 'thing', @configuration.path_prefix
-          assert_equal 'thing', @configuration.on_create.path_prefix
+          assert_equal 'basic_model', @configuration.path_prefix
+          assert_equal 'basic_model', @configuration.on_create.path_prefix
         end
 
       end

@@ -2,39 +2,24 @@ require "helper"
 
 class Qadmin::ControllerTest < Minitest::Test
 
-  protected
-  def crud_actions
-    [:index, :show, :new, :create, :edit, :update, :destroy]
-  end
-
-  def assert_defines_actions(*actions)
-    [actions].flatten.each do |action|
-      assert @controller.respond_to?(action), "Should define ##{action}"
-    end
-  end
-
-  def assert_does_not_define_actions(*actions)
-    [actions].flatten.each do |action|
-      assert !@controller.respond_to?(action), "Should not define ##{action}"
-    end
-  end
-  public
+  CRUD_ACTIONS = [:index, :show, :new, :create, :edit, :update, :destroy]
 
   context "QadminController" do
     context "Macros" do
       context "#qadmin" do
 
         context "with no options" do
+
+          class ::BasicModelsController < MockController
+            qadmin
+          end
+
           setup do
-            class ::NoOption < ActiveRecord::Base; end
-            class NoOptionsController < MockController
-              qadmin
-            end
-            @controller = NoOptionsController.new
+            @controller = ::BasicModelsController.new
           end
 
           should "define all CRUD actions" do
-            assert_defines_actions(crud_actions)
+            assert_defines_actions(@controller, CRUD_ACTIONS)
           end
 
           should "set qadmin configuration" do
@@ -42,55 +27,67 @@ class Qadmin::ControllerTest < Minitest::Test
           end
 
           should "set model_name from controller name" do
-            assert_equal 'NoOption', @controller.send(:model_name)
+            assert_equal 'BasicModel', @controller.send(:model_name)
           end
 
           should "set model_instance_name to underscored version" do
-            assert_equal 'no_option', @controller.send(:model_instance_name)
+            assert_equal 'basic_model', @controller.send(:model_instance_name)
           end
 
           should "set human_name to model.humanize" do
-            assert_equal 'No option', @controller.send(:model_human_name)
+            assert_equal 'Basic model', @controller.send(:model_human_name)
           end
         end
 
         context "with hashed options" do
 
           context "with two instances in different controllers" do
+
+            class ::ComplexModelsController < MockController
+              qadmin do |config|
+                config.available_actions = [:index, :create, :edit, :update, :destroy]
+              end
+            end
+
+            class ::ItemsController < MockController
+              qadmin :model_name => 'Item', :available_actions => [:index, :show]
+            end
+
             setup do
-              class ::NewExclude < ActiveRecord::Base; end
-              class NewExcludeController < MockController
-                qadmin do |config|
-                  config.available_actions = config.available_actions - [:show, :new]
-                end
-              end
-              @exclude_controller = NewExcludeController.new
-              class NewOnlyController < MockController
-                qadmin :model_name => 'Item', :available_actions => [:index, :show]
-              end
-              @only_controller = NewOnlyController.new
+              @exclude_controller = ::ComplexModelsController.new
+              @only_controller = ::ItemsController.new
             end
 
             should "not include actions for :exclude" do
-              @controller = @exclude_controller
-              assert_does_not_define_actions(:show, :new)
-              assert_defines_actions(crud_actions - [:show, :new])
+              assert_does_not_define_actions(@exclude_controller, [:show, :new])
+              assert_defines_actions(@exclude_controller, [:index, :create, :edit, :update, :destroy])
             end
 
             should "include actions for :only" do
-              @controller = @only_controller
-              assert_does_not_define_actions(crud_actions - [:index, :show])
-              assert_defines_actions([:index, :show])
+              assert_does_not_define_actions(@only_controller, [:create, :edit, :update, :destroy])
+              assert_defines_actions(@only_controller, [:index, :show])
             end
 
             should "set model name independently" do
               assert_equal 'Item', @only_controller.send(:model_name)
-              assert_equal 'NewExclude', @exclude_controller.send(:model_name)
+              assert_equal 'ComplexModel', @exclude_controller.send(:model_name)
             end
           end
         end
-
       end
     end
   end
+
+  def assert_defines_actions(controller, actions)
+    actions.each do |action|
+      assert controller.respond_to?(action), "Should define ##{action}"
+    end
+  end
+
+  def assert_does_not_define_actions(controller, actions)
+    actions.each do |action|
+      refute controller.respond_to?(action), "Should not define ##{action}"
+    end
+  end
+
 end
