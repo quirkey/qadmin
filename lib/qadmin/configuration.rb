@@ -178,16 +178,16 @@ module Qadmin
 
       # We need to provide just the "own" properties for the other actions to inherit
       # so that its not a crazy self referential mess
-      def clean_self
+      def properties
         reject { |k, v| k.match(/^on_/) }
       end
 
       private
 
       def define_action(action)
-        properties = clean_self.merge(:base => self)
         action_class = "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize
-        self["on_#{action}"] = action_class.new(properties)
+        action_properties = properties.merge(:base => self)
+        self["on_#{action}"] = action_class.new(action_properties)
       end
 
     end

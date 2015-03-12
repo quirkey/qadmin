@@ -35,10 +35,10 @@ class Qadmin::ConfigurationTest < Minitest::Test
 
       end
 
-      context "#clean_self" do
+      context "#properties" do
 
         should "return hash of configuration properties" do
-          hash = @configuration.clean_self
+          hash = @configuration.properties
           keys = %w{controller_klass controller_name model_name model_instance_name model_collection_name model_human_name namespace}
           assert_equal keys.sort, hash.keys.sort
         end
