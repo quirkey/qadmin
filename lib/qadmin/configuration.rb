@@ -8,8 +8,8 @@ module Qadmin
     def self.extract_model_from_options(options = {})
       output = {}
       output[:controller_klass]      = options[:controller_klass]
-      output[:controller_name]       = options[:controller_name] || output[:controller_klass].to_s.demodulize.gsub(/Controller/,'').underscore
-      output[:model_name]            = options[:model_name] || output[:controller_klass].to_s.demodulize.gsub(/Controller/,'').singularize
+      output[:controller_name]       = options[:controller_name] || Util.model_name_from_controller(output[:controller_klass]).pluralize.underscore
+      output[:model_name]            = options[:model_name] ||  Util.model_name_from_controller(output[:controller_klass])
       output[:model_instance_name]   = options[:model_instance_name] || output[:model_name].underscore
       output[:model_collection_name] = options[:model_collection_name] || output[:model_instance_name].pluralize
       output[:model_human_name]      = options[:model_human_name] || output[:model_instance_name].humanize

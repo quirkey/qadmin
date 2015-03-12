@@ -12,6 +12,7 @@ require "qadmin/helper"
 require "qadmin/overlay"
 require "qadmin/page_titles"
 require "qadmin/templates"
+require "qadmin/util"
 
 # classes
 require "qadmin/configuration"
