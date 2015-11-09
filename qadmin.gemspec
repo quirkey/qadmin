@@ -34,8 +34,8 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2"])
       s.add_runtime_dependency(%q<erubis>, ["~> 2.7", ">= 2.7.0"])
       s.add_runtime_dependency 'iconv', '~> 1.0'
-      s.add_runtime_dependency 'will_paginate', '~> 2.3', '>= 2.3.7'
       s.add_runtime_dependency 'restful_query', '~> 0.2', '>= 0.2.0'
+      s.add_runtime_dependency 'will_paginate', '>= 2.3.7'
       s.add_development_dependency(%q<appraisal>, ["~>1.0", ">= 1.0.2"])
       s.add_development_dependency(%q<minitest>, ["~> 5.5", ">= 5.5.0"])
       s.add_development_dependency(%q<mocha>, ["~> 1.1", ">= 1.1.0"])
@@ -57,7 +57,7 @@ Gem::Specification.new do |s|
       s.add_dependency 'rubigen', '~> 1.5', '>= 1.5.7'
       s.add_dependency 'shoulda', '~> 1.2', '>= 1.2.0'
       s.add_dependency(%q<sqlite3>, ["~> 1.3", ">= 1.3.10"])
-      s.add_dependency 'will_paginate', '~> 2.3', '>= 2.3.7'
+      s.add_dependency 'will_paginate', '>= 2.3.7'
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.3.2", "< 3"])
@@ -72,6 +72,6 @@ Gem::Specification.new do |s|
     s.add_dependency 'rubigen', '~> 1.5', '>= 1.5.7'
     s.add_dependency 'shoulda', '~> 1.2', '>= 1.2.0'
     s.add_dependency(%q<sqlite3>, ["~> 1.3", ">= 1.3.10"])
-    s.add_dependency 'will_paginate', '~> 2.3', '>= 2.3.7'
+    s.add_dependency 'will_paginate', '>= 2.3.7'
   end
 end
