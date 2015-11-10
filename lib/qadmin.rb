@@ -18,5 +18,5 @@ require "qadmin/util"
 require "qadmin/configuration"
 
 module Qadmin
-  VERSION = "1.0.1.pp"
+  VERSION = "1.0.2.pp"
 end
