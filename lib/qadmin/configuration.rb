@@ -9,7 +9,7 @@ module Qadmin
       output = {}
       output[:controller_klass]      = options[:controller_klass]
       output[:controller_name]       = options[:controller_name] || Util.model_name_from_controller(output[:controller_klass]).pluralize.underscore
-      output[:model]                 = options[:model_class].name unless options[:model_class].nil?
+      output[:model_name]            = options[:model_class].name unless options[:model_class].nil?
       output[:model_name]            ||= options[:model_name] ||  Util.model_name_from_controller(output[:controller_klass])
       output[:model_instance_name]   = options[:model_instance_name] || output[:model_name].underscore
       output[:model_collection_name] = options[:model_collection_name] || output[:model_instance_name].pluralize
