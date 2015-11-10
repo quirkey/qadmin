@@ -94,7 +94,7 @@ module Qadmin
       end
 
       def model_column_names
-        @columns ||= model_klass.column_names
+        @columns ||= model_klass.respond_to?(:column_names) ? model_klass.column_names : []
       end
 
       def inspect
