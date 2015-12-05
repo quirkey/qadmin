@@ -1,7 +1,7 @@
 require "generator_helper"
 require "rails_generator"
 
-class TestQadminGenerator < Test::Unit::TestCase
+class Qadmin::GeneratorTest < Minitest::Test
   include RubiGen::GeneratorTestHelper
 
   def setup
