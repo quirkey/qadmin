@@ -251,7 +251,7 @@ module Qadmin
       when Regexp
         url_string = options
       end
-      request = @controller.request
+      request = controller.request
       request.url =~ url_string
     end
 
