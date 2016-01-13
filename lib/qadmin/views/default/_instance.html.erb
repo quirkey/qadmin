@@ -1,7 +1,7 @@
-<div id="<%= dom_id(instance) %>">
+<div id="<%= dom_id(@model_instance) %>">
 	<div class="fields_group">
 	  <% qadmin_configuration.on_show.model_column_names.each do |attribute| -%>
-    <%= labeled_show_column(instance, attribute) %>
+    <%= labeled_show_column(@model_instance, attribute) %>
     <% end %>
 	</div>
 </div>
