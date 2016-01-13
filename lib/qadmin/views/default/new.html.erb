@@ -4,7 +4,7 @@
 
 <% if @model_instance.errors.any? %>
   <ul>
-    <% @model_instance.errors.full_messages.each do |msg| %>
+    <% @model_instance.errors.full_messages.each do |message| %>
       <li><%=message %></li>
     <% end %>
   </ul>
