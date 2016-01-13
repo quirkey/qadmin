@@ -252,7 +252,7 @@ module Qadmin
         url_string = options
       end
       request = @controller.request
-      request.request_uri =~ url_string
+      request.url =~ url_string
     end
 
     def fieldset(legend = nil, options = {}, &block)
