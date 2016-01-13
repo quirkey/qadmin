@@ -13,7 +13,7 @@ module Qadmin
     def render_template_for_section(action = nil, options = {})
       action ||= action_name
       rendered = render(template_for_section(action), options)
-      rendered.is_a?(Array) ? rendered.collect {|r| r.html_safe } : r.html_safe
+      rendered.respond_to?(:map) ? rendered.map(&:html_safe) : rendered.html_safe
     end
 
     def template_for_section(template_name, file_name = nil, options = {})
