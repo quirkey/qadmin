@@ -2,6 +2,14 @@
 
 <%= admin_controls model_instance_name, :for => :edit %>
 
+<% if @model_instance.errors.any? %>
+  <ul>
+    <% @model_instance.errors.full_messages.each do |msg| %>
+      <li><%=message %></li>
+    <% end %>
+  </ul>
+<% end %>
+
 <%= error_messages_for model_instance_name %>
 
 <% form_for(qadmin_configuration.form_instance_for(@model_instance), :html => {:multipart => qadmin_configuration.multipart_forms}) do |f| %>
