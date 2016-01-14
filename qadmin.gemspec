@@ -4,7 +4,7 @@
 # -*- encoding: utf-8 -*-
 # stub: qadmin 0.2.3 ruby lib
 $LOAD_PATH.unshift "lib"
-require "qadmin"
+require "qadmin/version"
 
 Gem::Specification.new do |s|
   s.name = "qadmin"
