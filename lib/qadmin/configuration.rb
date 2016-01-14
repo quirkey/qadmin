@@ -1,6 +1,3 @@
-#require 'active_support/hash_with_indifferent_access'
-#require 'active_support/core_ext/string/inflections'
-
 module Qadmin
   module Configuration
 
@@ -20,16 +17,12 @@ module Qadmin
       output
     end
 
-    class Base < Hash
+    class Base < ::HashWithIndifferentAccess
 
       attr_accessor :base
 
-      def [](key)
-        super(key.to_s)
-      end
-
-      def []=(key, value)
-        super(key.to_s, value)
+      def with_indifferent_access
+        self
       end
 
       def self.hash_accessor(name, options = {})
