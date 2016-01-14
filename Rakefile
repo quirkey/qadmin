@@ -18,7 +18,7 @@ begin
     s.add_runtime_dependency(%q<erubis>, ["~> 2.7", ">= 2.7.0"])
     s.add_runtime_dependency(%q<iconv>, [">= 1.0"])
     s.add_runtime_dependency(%q<restful_query>, [">= 0.2.0"])
-    s.add_runtime_dependency(%q<will_paginate>, [">= 2.3.7", "< 3"])
+    s.add_runtime_dependency(%q<will_paginate>, [">= 2.3.7"])
     s.add_development_dependency(%q<appraisal>, ["~>1.0", ">= 1.0.2"])
     s.add_development_dependency(%q<minitest>, ["~> 5.5", ">= 5.5.0"])
     s.add_development_dependency(%q<mocha>, ["~> 1.1", ">= 1.1.0"])
