@@ -12,7 +12,8 @@ module Qadmin
     protected
     def render_template_for_section(action = nil, options = {})
       action ||= action_name
-      render(template_for_section(action), options).html_safe
+      rendered = render(template_for_section(action), options)
+      rendered.respond_to?(:map) ? rendered.map(&:html_safe) : rendered.html_safe
     end
 
     def template_for_section(template_name, file_name = nil, options = {})
