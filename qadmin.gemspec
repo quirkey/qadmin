@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
     "lib/qadmin/railtie.rb",
     "lib/qadmin/templates.rb",
     "lib/qadmin/util.rb",
+    "lib/qadmin/version.rb",
     "lib/qadmin/views/default/_instance.html.erb",
     "lib/qadmin/views/default/_pagination.html.erb",
     "lib/qadmin/views/default/edit.html.erb",
