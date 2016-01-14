@@ -1,5 +1,5 @@
-require 'qadmin'
-require 'qadmin/form_builder'
+require "qadmin"
+require "qadmin/form_builder"
 
 ActionController::Base.send(:extend, Qadmin::Controller::Macros)
 ActionView::Base.send(:include, Qadmin::Helper)

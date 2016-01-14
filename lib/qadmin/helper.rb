@@ -73,12 +73,12 @@ module Qadmin
       query_parser = model_restful_query_parser(options)
       if qadmin_configuration.model_klass.respond_to?(:reflections) and
         association = qadmin_configuration.model_klass.reflections[attribute_name.to_sym]
-        attribute_name = association.association_foreign_key
+        attribute_name = association.association_foreign_key unless association.macro == :composed_of
       end
       query_param = options[:query_param] || :query
       attribute_name = "#{qadmin_configuration.model_klass.table_name}.#{attribute_name}"
       sorting_this = query_parser.sort(attribute_name)
-      link_text << " #{image_tag("qadmin/icon_#{sorting_this.direction.downcase}.gif")}" if sorting_this
+      link_text += " #{image_tag("qadmin/icon_#{sorting_this.direction.downcase}.gif")}" if sorting_this
       query_parser.clear_default_sort!
       query_parser.set_sort(attribute_name, sorting_this ? sorting_this.next_direction : 'desc')
       link_to link_text.html_safe, self.params.dup.merge(query_param => query_parser.to_query_hash, :anchor => (options[:id] || self.qadmin_configuration.model_collection_name)), :class => 'sortable_column_header'
