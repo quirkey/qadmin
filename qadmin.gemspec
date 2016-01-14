@@ -91,7 +91,6 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<qadmin>, [">= 0"])
       s.add_development_dependency(%q<appraisal>, [">= 1.0.2", "~> 1.0"])
       s.add_development_dependency(%q<minitest>, [">= 5.5.0", "~> 5.5"])
       s.add_development_dependency(%q<mocha>, [">= 1.1.0", "~> 1.1"])
@@ -114,7 +113,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<shoulda>, [">= 1.2.0"])
       s.add_development_dependency(%q<sqlite3>, [">= 1.3.10", "~> 1.3"])
     else
-      s.add_dependency(%q<qadmin>, [">= 0"])
       s.add_dependency(%q<appraisal>, [">= 1.0.2", "~> 1.0"])
       s.add_dependency(%q<minitest>, [">= 5.5.0", "~> 5.5"])
       s.add_dependency(%q<mocha>, [">= 1.1.0", "~> 1.1"])
@@ -138,7 +136,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<sqlite3>, [">= 1.3.10", "~> 1.3"])
     end
   else
-    s.add_dependency(%q<qadmin>, [">= 0"])
     s.add_dependency(%q<appraisal>, [">= 1.0.2", "~> 1.0"])
     s.add_dependency(%q<minitest>, [">= 5.5.0", "~> 5.5"])
     s.add_dependency(%q<mocha>, [">= 1.1.0", "~> 1.1"])
