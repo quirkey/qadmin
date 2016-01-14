@@ -3,10 +3,12 @@
 # Instead, edit Jeweler::Tasks in Rakefile, and run 'rake gemspec'
 # -*- encoding: utf-8 -*-
 # stub: qadmin 0.2.3 ruby lib
+$LOAD_PATH.unshift "lib"
+require "qadmin"
 
 Gem::Specification.new do |s|
   s.name = "qadmin"
-  s.version = "1.0.10.pp"
+  s.version = Qadmin::VERSION
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]

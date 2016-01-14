@@ -5,7 +5,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = %q{qadmin}
-    s.version = "0.2.3"
+    s.version = Qadmin::VERSION
     s.authors = ["Aaron Quint"]
     s.date = %q{2009-04-07}
     s.description = %q{An [almost] one command solution for adding admin interfaces/resources to a Rails app.}
