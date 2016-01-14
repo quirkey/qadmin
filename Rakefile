@@ -14,7 +14,7 @@ begin
     s.post_install_message = %q{PostInstall.txt}
     s.rubyforge_project = %q{quirkey}
     s.summary = %q{An [almost] one command solution for adding admin interfaces/resources to a Rails app.}
-    s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2", "< 3"])
+    s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2"])
     s.add_runtime_dependency(%q<erubis>, ["~> 2.7", ">= 2.7.0"])
     s.add_runtime_dependency(%q<iconv>, [">= 1.0"])
     s.add_runtime_dependency(%q<restful_query>, [">= 0.2.0"])
@@ -23,7 +23,7 @@ begin
     s.add_development_dependency(%q<minitest>, ["~> 5.5", ">= 5.5.0"])
     s.add_development_dependency(%q<mocha>, ["~> 1.1", ">= 1.1.0"])
     s.add_development_dependency(%q<rake>, ["~>10.4", ">= 10.4.2"])
-    s.add_development_dependency(%q<rails>, [">= 2.3.2", "< 3"])
+    s.add_development_dependency(%q<rails>, [">= 2.3.2"])
     s.add_development_dependency(%q<rubigen>, [">= 1.5.7"])
     s.add_development_dependency(%q<shoulda>, [">= 1.2.0"])
     s.add_development_dependency(%q<sqlite3>, ["~> 1.3", ">= 1.3.10"])
