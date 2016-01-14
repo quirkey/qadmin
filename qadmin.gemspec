@@ -91,14 +91,6 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<appraisal>, [">= 1.0.2", "~> 1.0"])
-      s.add_development_dependency(%q<minitest>, [">= 5.5.0", "~> 5.5"])
-      s.add_development_dependency(%q<mocha>, [">= 1.1.0", "~> 1.1"])
-      s.add_development_dependency(%q<rake>, [">= 10.4.2", "~> 10.4"])
-      s.add_development_dependency(%q<rails>, ["< 3", ">= 2.3.2"])
-      s.add_development_dependency(%q<rubigen>, [">= 1.5.7", "~> 1.5"])
-      s.add_development_dependency(%q<shoulda>, [">= 1.2.0", "~> 1.2"])
-      s.add_development_dependency(%q<sqlite3>, [">= 1.3.10", "~> 1.3"])
       s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2"])
       s.add_runtime_dependency(%q<erubis>, [">= 2.7.0", "~> 2.7"])
       s.add_runtime_dependency(%q<iconv>, [">= 1.0.3"])
@@ -113,14 +105,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<shoulda>, [">= 1.2.0"])
       s.add_development_dependency(%q<sqlite3>, [">= 1.3.10", "~> 1.3"])
     else
-      s.add_dependency(%q<appraisal>, [">= 1.0.2", "~> 1.0"])
-      s.add_dependency(%q<minitest>, [">= 5.5.0", "~> 5.5"])
-      s.add_dependency(%q<mocha>, [">= 1.1.0", "~> 1.1"])
-      s.add_dependency(%q<rake>, [">= 10.4.2", "~> 10.4"])
-      s.add_dependency(%q<rails>, [">= 2.3.2"])
-      s.add_dependency(%q<rubigen>, [">= 1.5.7", "~> 1.5"])
-      s.add_dependency(%q<shoulda>, [">= 1.2.0", "~> 1.2"])
-      s.add_dependency(%q<sqlite3>, [">= 1.3.10", "~> 1.3"])
       s.add_dependency(%q<activesupport>, [">= 2.3.2"])
       s.add_dependency(%q<erubis>, [">= 2.7.0", "~> 2.7"])
       s.add_dependency(%q<iconv>, [">= 1.0.3"])
@@ -136,14 +120,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<sqlite3>, [">= 1.3.10", "~> 1.3"])
     end
   else
-    s.add_dependency(%q<appraisal>, [">= 1.0.2", "~> 1.0"])
-    s.add_dependency(%q<minitest>, [">= 5.5.0", "~> 5.5"])
-    s.add_dependency(%q<mocha>, [">= 1.1.0", "~> 1.1"])
-    s.add_dependency(%q<rake>, [">= 10.4.2", "~> 10.4"])
-    s.add_dependency(%q<rails>, [">= 2.3.2"])
-    s.add_dependency(%q<rubigen>, [">= 1.5.7", "~> 1.5"])
-    s.add_dependency(%q<shoulda>, [">= 1.2.0", "~> 1.2"])
-    s.add_dependency(%q<sqlite3>, [">= 1.3.10", "~> 1.3"])
     s.add_dependency(%q<activesupport>, ["< 3", ">= 2.3.2"])
     s.add_dependency(%q<erubis>, [">= 2.7.0", "~> 2.7"])
     s.add_dependency(%q<iconv>, [">= 1.0.3"])
