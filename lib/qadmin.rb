@@ -3,7 +3,6 @@
 # libs
 require "erubis"
 require "forwardable"
-#require "iconv"
 require "active_support" unless defined?(ActiveSupport)
 
 # modules
