@@ -16,7 +16,7 @@ begin
     s.summary = %q{An [almost] one command solution for adding admin interfaces/resources to a Rails app.}
     s.add_runtime_dependency(%q<activesupport>, [">= 2.3.2"])
     s.add_runtime_dependency(%q<erubis>, ["~> 2.7", ">= 2.7.0"])
-    s.add_runtime_dependency(%q<iconv>, [">= 1.0"])
+    s.add_runtime_dependency(%q<iconv>, [">= 1.0.3"])
     s.add_runtime_dependency(%q<restful_query>, [">= 0.2.0"])
     s.add_runtime_dependency(%q<will_paginate>, [">= 2.3.7"])
     s.add_development_dependency(%q<appraisal>, ["~>1.0", ">= 1.0.2"])
