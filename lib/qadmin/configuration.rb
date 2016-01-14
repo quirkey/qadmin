@@ -20,12 +20,16 @@ module Qadmin
       output
     end
 
-    class Base < ::HashWithIndifferentAccess
+    class Base < Hash
 
       attr_accessor :base
 
-      def with_indifferent_access
-        self
+      def [](key)
+        super(key.to_s)
+      end
+
+      def []=(key, value)
+        super(key.to_s, value)
       end
 
       def self.hash_accessor(name, options = {})
