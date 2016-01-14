@@ -12,10 +12,10 @@ require "qadmin/overlay"
 require "qadmin/page_titles"
 require "qadmin/templates"
 require "qadmin/util"
+require "qadmin/version"
 
 # classes
 require "qadmin/configuration"
 
 module Qadmin
-  VERSION = "1.0.11.pp"
 end
