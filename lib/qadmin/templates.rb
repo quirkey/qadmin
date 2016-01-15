@@ -48,7 +48,12 @@ module Qadmin
       else
         begin
           logger.debug "Checking for template: #{template_path}"
-          self.view_paths.find_template(template_path)
+          paths = self.view_paths
+          if paths.respond_to?(:find_template)
+            paths.find_template(template_path)
+          else
+            paths.find(template_path)
+          end
         rescue ActionView::MissingTemplate
           logger.debug "Template not found: #{template_path}"
           false
