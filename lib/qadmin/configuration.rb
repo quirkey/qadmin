@@ -169,14 +169,8 @@ module Qadmin
 
         module_eval <<-EOV
           def on_#{action}
-            value = if self["on_#{action}"].nil?
-              action_class = "::Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize
-              action_properties = properties.merge(:base => self)
-              action_class.new(action_properties)
-            else
-              self["on_#{action}"]
-            end
-            yield(value) if block_given?
+            value = self["on_#{action}"] ||= "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.clean_self.merge(:base => self))
+            yield value if block_given?
             value
           end
         EOV
