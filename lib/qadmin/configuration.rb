@@ -167,12 +167,13 @@ module Qadmin
       ACTIONS.each do |action|
         hash_accessor "on_#{action}"
 
-        define_method("on_#{action}") do
-          value = self["on_#{action}"] ||= define_action(action)
-          yield(value) if block_given?
-          value
-        end
-
+        module_eval <<-EOV
+          def on_#{action}
+            value = self["on_#{action}"] ||= define_action(action)
+            yield(value) if block_given?
+            value
+          end
+        EOV
       end
 
       private
