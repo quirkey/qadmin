@@ -180,10 +180,12 @@ module Qadmin
 
       # We need to provide just the "own" properties for the other actions to inherit
       # so that its not a crazy self referential mess
-      def properties
-        reject { |k, v| k.match(/^on_/) }
+      def clean_self
+        c = {}
+        self.each {|k, v| c[k] = v if k !~ /^on_/ }
+        c
       end
-
+      
     end
 
   end
