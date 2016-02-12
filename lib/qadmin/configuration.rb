@@ -169,7 +169,13 @@ module Qadmin
 
         module_eval <<-EOV
           def on_#{action}
-            value = self["on_#{action}"] ||= define_action(action)
+            value = if self["on_#{action}"].nil?
+              action_class = "::Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize
+              action_properties = properties.merge(:base => self)
+              action_class.new(action_properties)
+            else
+              self["on_#{action}"]
+            end
             yield(value) if block_given?
             value
           end
@@ -182,13 +188,6 @@ module Qadmin
       # so that its not a crazy self referential mess
       def properties
         reject { |k, v| k.match(/^on_/) }
-      end
-
-      def define_action(action)
-        action_namespace = "Qadmin::Configuration::Actions"
-        action_class = "#{action_namespace}::#{action.to_s.classify}".constantize
-        action_properties = properties.merge(:base => self)
-        action_class.new(action_properties)
       end
 
     end
