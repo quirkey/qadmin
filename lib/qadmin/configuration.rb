@@ -176,8 +176,6 @@ module Qadmin
         EOV
       end
 
-      private
-
       # We need to provide just the "own" properties for the other actions to inherit
       # so that its not a crazy self referential mess
       def clean_self
@@ -185,7 +183,7 @@ module Qadmin
         self.each {|k, v| c[k] = v if k !~ /^on_/ }
         c
       end
-      
+
     end
 
   end
