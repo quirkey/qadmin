@@ -2,7 +2,7 @@ module Qadmin
   module Helper
 
     def control_links(custom_links = {})
-      merged_links = {
+      links = {
         :index      => lambda {|params, obj| link_to(image_tag('qadmin/icon_list.png') + " Back to List", params.merge(:action => 'index')) },
         :new        => lambda {|params, obj| link_to(image_tag('qadmin/icon_new.png') + " New", params.merge(:action => 'new')) },
         :edit       => lambda {|params, obj| link_to(image_tag('qadmin/icon_edit.png') + " Edit", params.merge({:action => 'edit', :id => obj.id})) },
@@ -11,8 +11,9 @@ module Qadmin
         :ports      => lambda {|params, obj| link_to(image_tag('qadmin/icon_export.png') + " Import/Export", params.merge(:action => 'ports')) },
         :export     => lambda {|params, obj| link_to(image_tag('qadmin/icon_export.png') + " Export", params.merge(:action => 'export')) },
         :sort       => lambda {|params, obj| link_to(image_tag('qadmin/icon_sort.png') + " Sort", params.merge({:action => 'sort'})) }
-      }.merge(custom_links)
-      HashWithIndifferentAccess.new(merged_links)
+      }
+      links.merge!(custom_links || {})
+      HashWithIndifferentAccess.new(links)
     end
 
     def admin_controls(name, options = {}, &block)
