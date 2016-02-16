@@ -30,9 +30,9 @@ module Qadmin
         coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
         module_eval <<-EOT
           def #{name}
-            value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
+            value = if (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
                       (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{options[:default].inspect})
-            yield value if block_given?
+            yield(value) if block_given?
             value
           end
 
@@ -170,7 +170,7 @@ module Qadmin
         module_eval <<-EOV
           def on_#{action}
             value = self["on_#{action}"] ||= "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.clean_self.merge(:base => self))
-            yield value if block_given?
+            yield(value) if block_given?
             value
           end
         EOV

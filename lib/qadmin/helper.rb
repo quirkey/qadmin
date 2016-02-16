@@ -1,17 +1,20 @@
 module Qadmin
   module Helper
 
-    def control_links(more_links = {})
-      {
-        :index      => lambda {|params, obj| link_to(image_tag('qadmin/icon_list.png') + " Back to List", params.merge(:action => 'index')) },
-        :new        => lambda {|params, obj| link_to(image_tag('qadmin/icon_new.png') + " New", params.merge(:action => 'new')) },
-        :edit       => lambda {|params, obj| link_to(image_tag('qadmin/icon_edit.png') + " Edit", params.merge({:action => 'edit', :id => obj.id})) },
-        :show       => lambda {|params, obj| link_to(image_tag('qadmin/icon_show.png') + " View", params.merge({:action => 'show', :id => obj.id})) },
-        :destroy    => lambda {|params, obj| link_to(image_tag('qadmin/icon_destroy.png') + " Delete", params.merge({:action => 'destroy', :id => obj.id}), :data => {:confirm => 'Are you sure?'}, :method => :delete) },
-        :ports      => lambda {|params, obj| link_to(image_tag('qadmin/icon_export.png') + " Import/Export", params.merge(:action => 'ports')) },
-        :export     => lambda {|params, obj| link_to(image_tag('qadmin/icon_export.png') + " Export", params.merge(:action => 'export')) },
-        :sort       => lambda {|params, obj| link_to(image_tag('qadmin/icon_sort.png') + " Sort", params.merge({:action => 'sort'})) }
-      }.merge((more_links || {}).symbolize_keys)
+    CONTROL_LINKS = {
+      :index      => lambda {|params, obj| link_to(image_tag('qadmin/icon_list.png') + " Back to List", params.merge(:action => 'index')) },
+      :new        => lambda {|params, obj| link_to(image_tag('qadmin/icon_new.png') + " New", params.merge(:action => 'new')) },
+      :edit       => lambda {|params, obj| link_to(image_tag('qadmin/icon_edit.png') + " Edit", params.merge({:action => 'edit', :id => obj.id})) },
+      :show       => lambda {|params, obj| link_to(image_tag('qadmin/icon_show.png') + " View", params.merge({:action => 'show', :id => obj.id})) },
+      :destroy    => lambda {|params, obj| link_to(image_tag('qadmin/icon_destroy.png') + " Delete", params.merge({:action => 'destroy', :id => obj.id}), :data => {:confirm => 'Are you sure?'}, :method => :delete) },
+      :ports      => lambda {|params, obj| link_to(image_tag('qadmin/icon_export.png') + " Import/Export", params.merge(:action => 'ports')) },
+      :export     => lambda {|params, obj| link_to(image_tag('qadmin/icon_export.png') + " Export", params.merge(:action => 'export')) },
+      :sort       => lambda {|params, obj| link_to(image_tag('qadmin/icon_sort.png') + " Sort", params.merge({:action => 'sort'})) }
+    }.freeze
+
+    def control_links(custom_links = {})
+      merged_links = CONTROL_LINKS.merge(custom_links)
+      HashWithIndifferentAccess.new(merged_links)
     end
 
     def admin_controls(name, options = {}, &block)
@@ -33,7 +36,8 @@ module Qadmin
       general_link_params = {:controller => controller}.merge(parent_link_params)
 
       control_set = (options[:controls] || []).dup
-      controls = [control_set].flatten.collect {|control| control_links(options[:control_links])[control.to_sym] }.compact
+      links = control_links(options[:control_links])
+      controls = [control_set].flatten.map { |control| links[control.to_sym] }.compact
 
       html = ""
       return html if !controls || controls.empty?
