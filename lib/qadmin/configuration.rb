@@ -30,7 +30,7 @@ module Qadmin
         coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
         module_eval <<-EOT
           def #{name}
-            value = if (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
+            value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
                       (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{options[:default].inspect})
             yield(value) if block_given?
             value
