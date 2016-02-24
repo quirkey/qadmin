@@ -1,3 +1,3 @@
 module Qadmin
-  VERSION = "1.0.22.pp"
+  VERSION = "1.0.23.pp"
 end
