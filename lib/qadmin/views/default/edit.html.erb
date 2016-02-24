@@ -10,7 +10,7 @@
   </ul>
 <% end %>
 
-<% form_for(qadmin_configuration.form_instance_for(@model_instance), :html => {:multipart => qadmin_configuration.multipart_forms}) do |f| %>
+<%= form_for(qadmin_configuration.form_instance_for(@model_instance), :html => {:multipart => qadmin_configuration.multipart_forms}) do |f| %>
   <%= render :partial => 'form', :locals => {:f => f, model_instance_name.to_sym => @model_instance} %>
   <p><%= f.submit "Update" %></p>
 <% end %>
