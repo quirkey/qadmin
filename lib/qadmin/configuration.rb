@@ -65,7 +65,7 @@ module Qadmin
 
       def initialize(options = {})
         super
-        populate_accessors
+        populate_accessors if self.class.hash_accessors
         @base = options.delete(:base)
       end
 
