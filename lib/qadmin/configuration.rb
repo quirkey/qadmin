@@ -23,7 +23,8 @@ module Qadmin
 
       def hash_accessor(name, options = {})
         @hash_accessors ||= []
-        @hash_accessors << name unless @hash_accessors.include?(name)
+        @hash_accessors[self.name] ||= []
+        @hash_accessors[self.name] << name unless @hash_accessors[self.name].include?(name)
         options[:default] ||= nil
         coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
         module_eval <<-EOT
@@ -111,7 +112,7 @@ module Qadmin
       end
 
       def populate_accessors
-        self.class.hash_accessors.select { |a| a !~ /^on_/ }.each do |accessor|
+        self.class.hash_accessors[self.class.name].select { |a| a !~ /^on_/ }.each do |accessor|
           send(accessor)
         end
       end
