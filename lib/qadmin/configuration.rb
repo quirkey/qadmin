@@ -116,7 +116,6 @@ module Qadmin
 
       def populate_base(options = {})
         populate_accessors if self.class.hash_accessors
-        @base = options.delete(:base)
       end
 
       def populate_accessors
@@ -237,8 +236,9 @@ module Qadmin
             key = "on_#{action}"
             if self[key].nil?
               action_class_name = "Qadmin::Configuration::Actions::#{action.to_s.classify}"
-              properties = self.clean_self.merge(:base => self)
+              properties = self.clean_self
               self[key] = action_class_name.constantize.new(properties)
+              self[key].base = self
             end
             yield(self[key]) if block_given?
             self[key]
