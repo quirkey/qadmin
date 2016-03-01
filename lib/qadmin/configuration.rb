@@ -106,6 +106,7 @@ module Qadmin
       def populate_accessors
         accessors = self.class.instance_variable_get("@hash_accessors")
         accessors.each do |accessor|
+          p accessor
           send(accessor)
         end
       end
