@@ -17,40 +17,62 @@ module Qadmin
       output
     end
 
-    module HashAccessors
+    module HashAccessible
 
-      attr_accessor :hash_accessors
+      def self.included(base)
+        base.send(:extend, ClassMethods)
+        base.send(:include, InstanceMethods)
+      end
 
-      def hash_accessor(name, options = {})
-        @hash_accessors ||= {}
-        @hash_accessors[self.name] ||= []
-        @hash_accessors[self.name] << name unless @hash_accessors[self.name].include?(name)
-        options[:default] ||= nil
-        coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
-        default_value = options[:default].inspect
-        module_eval <<-EOT
-          def #{name}
-            value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
-                      (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{default_value})
-            yield(value) if block_given?
-            value
+      module ClassMethods
+
+        attr_accessor :hash_accessors
+
+        def hash_accessor(name, options = {})
+          @hash_accessors ||= {}
+          @hash_accessors[self.name] ||= []
+          @hash_accessors[self.name] << name unless @hash_accessors[self.name].include?(name)
+          options[:default] ||= nil
+          coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
+          default_value = options[:default].inspect
+          module_eval <<-EOT
+            def #{name}
+              value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
+                        (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{default_value})
+              yield(value) if block_given?
+              value
+            end
+
+            def #{name}=(value)
+              self[:#{name}] = value
+            end
+
+            def #{name}?
+              !!self[:#{name}]
+            end
+
+            private
+
+            def initialize_#{name}
+              self.#{name} = #{default_value}
+            end
+
+          EOT
+        end
+
+      end
+
+      module InstanceMethods
+
+        private
+
+        def populate_accessors
+          self.class.hash_accessors[self.class.name].each do |accessor|
+            initializer = "initialize_#{accessor}"
+            send(initializer)
           end
+        end
 
-          def #{name}=(value)
-            self[:#{name}] = value
-          end
-
-          def #{name}?
-            !!self[:#{name}]
-          end
-
-          private
-
-          def initialize_#{name}
-            self.#{name} = #{default_value}
-          end
-
-        EOT
       end
 
     end
@@ -62,7 +84,7 @@ module Qadmin
       end
 
       def self.included(base)
-        base.send(:extend, HashAccessors)
+        base.send(:include, Accessible)
         base.send(:attr_accessor, :base)
         base.send(:hash_accessor, :controller_klass)
         base.send(:hash_accessor, :controller_name)
@@ -118,13 +140,6 @@ module Qadmin
         populate_accessors if self.class.hash_accessors
       end
 
-      def populate_accessors
-        self.class.hash_accessors[self.class.name].each do |accessor|
-          initializer = "initialize_#{accessor}"
-          send(initializer)
-        end
-      end
-
     end
 
     module Actions
@@ -163,7 +178,6 @@ module Qadmin
 
         def initialize(options = {})
           super
-          populate_base(options)
           @columns = model_column_names
         end
 
@@ -171,41 +185,26 @@ module Qadmin
 
       class Show < ActionHash
 
-        include Action
-
         hash_accessor :controls, :default => [:index, :new, :edit, :destroy]
       end
 
       class New < ActionHash
-
-        include Action
 
         hash_accessor :controls, :default => [:index]
       end
 
       class Edit < ActionHash
 
-        include Action
-
         hash_accessor :controls, :default => [:index, :new, :show, :destroy]
       end
 
       class Create < ActionHash
-
-        include Action
-
       end
 
       class Update < ActionHash
-
-        include Action
-
       end
 
       class Destroy < ActionHash
-
-        include Action
-
       end
 
     end
