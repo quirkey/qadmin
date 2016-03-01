@@ -26,6 +26,7 @@ module Qadmin
       end
 
       def self.hash_accessor(name, options = {})
+        p self.name
         @hash_accessors ||= []
         @hash_accessors << name
         options[:default] ||= nil
