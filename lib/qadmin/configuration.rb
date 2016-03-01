@@ -26,9 +26,8 @@ module Qadmin
       end
 
       def self.hash_accessor(name, options = {})
-        p self.name
         @hash_accessors ||= []
-        @hash_accessors << name
+        @hash_accessors << name unless @hash_accessors.include?(name)
         options[:default] ||= nil
         coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
         module_eval <<-EOT
@@ -106,8 +105,7 @@ module Qadmin
 
       def populate_accessors
         accessors = self.class.instance_variable_get("@hash_accessors")
-        accessors.each do |accessor|
-          p accessor
+        accessors.select { |a| a !~ /^on_/ }.each do |accessor|
           send(accessor)
         end
       end
