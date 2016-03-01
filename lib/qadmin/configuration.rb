@@ -146,7 +146,7 @@ module Qadmin
 
         def initialize(options = {})
           super
-          populate_base
+          populate_base(options)
         end
 
       end
@@ -164,7 +164,7 @@ module Qadmin
 
         def initialize(options = {})
           super
-          populate_base
+          populate_base(options)
           @columns = model_column_names
         end
 
@@ -225,8 +225,8 @@ module Qadmin
 
       def initialize(options = {})
         super
-        update(Qadmin::Configuration.extract_model_from_options(options))
         populate_base(options)
+        update(Qadmin::Configuration.extract_model_from_options(options))
       end
 
       ACTIONS.each do |action|
