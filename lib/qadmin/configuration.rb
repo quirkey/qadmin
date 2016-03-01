@@ -113,7 +113,6 @@ module Qadmin
 
       def populate_accessors
         self.class.hash_accessors[self.class.name].each do |accessor|
-          p send(accessor) if accessor.to_s == "controls" && respond_to?(accessor)
           send(accessor) if respond_to?(accessor)
         end
       end
