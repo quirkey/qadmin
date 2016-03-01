@@ -112,8 +112,8 @@ module Qadmin
       end
 
       def populate_accessors
-        p self.class.name
         self.class.hash_accessors[self.class.name].select { |a| a !~ /^on_/ }.each do |accessor|
+          p accessor
           send(accessor)
         end
       end
