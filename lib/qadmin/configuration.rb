@@ -157,6 +157,7 @@ module Qadmin
 
         def initialize(options = {})
           super
+          populate_base
           @columns = model_column_names
         end
 
