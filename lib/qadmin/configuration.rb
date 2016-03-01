@@ -112,9 +112,9 @@ module Qadmin
       end
 
       def populate_accessors
-        self.class.hash_accessors[self.class.name].select { |a| a !~ /^on_/ }.each do |accessor|
-          p accessor
-          send(accessor)
+        self.class.hash_accessors[self.class.name].each do |accessor|
+          p "**" if accessor.to_s == "attribute_handlers"
+          send(accessor) if respond_to?(accessor)
         end
       end
 
