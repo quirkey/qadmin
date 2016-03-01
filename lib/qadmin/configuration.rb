@@ -216,8 +216,8 @@ module Qadmin
 
       def initialize(options = {})
         super
-        populate_base(options)
         update(Qadmin::Configuration.extract_model_from_options(options))
+        populate_base(options)
       end
 
       ACTIONS.each do |action|
