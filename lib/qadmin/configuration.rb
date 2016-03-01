@@ -47,7 +47,7 @@ module Qadmin
 
           def initialize_#{name}
             has_property = base && base.respond_to?(:#{name})
-            self[:#{name}] = has_property ? base.send(:#{name}) : #{default_value})
+            self[:#{name}] = has_property ? base.send(:#{name}) : #{default_value}
           end
 
         EOT
