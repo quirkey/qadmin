@@ -112,6 +112,7 @@ module Qadmin
       end
 
       def populate_accessors
+        p self.class.name
         self.class.hash_accessors[self.class.name].select { |a| a !~ /^on_/ }.each do |accessor|
           send(accessor)
         end
@@ -156,7 +157,6 @@ module Qadmin
         def initialize(options = {})
           super
           populate_base
-          p self.class.hash_accessors
           @columns = model_column_names
         end
 
