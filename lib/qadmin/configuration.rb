@@ -169,9 +169,15 @@ module Qadmin
 
         module_eval <<-EOV
           def on_#{action}
-            value = self["on_#{action}"] ||= "Qadmin::Configuration::Actions::#{action.to_s.classify}".constantize.new(self.clean_self.merge(:base => self))
-            yield(value) if block_given?
-            value
+            key = "on_#{action}"
+            if self[key].nil?
+              action_class_name = "Qadmin::Configuration::Actions::#{action.to_s.classify}"
+              properties = self.clean_self.merge(:base => self)
+              p action_class_name
+              self[key] = action_class_name.constantize.new(properties)
+            end
+            yield(self[key]) if block_given?
+            self[key]
           end
         EOV
       end
@@ -181,7 +187,6 @@ module Qadmin
       def clean_self
         c = {}
         self.each {|k, v| c[k] = v if k !~ /^on_/ }
-        p c
         c
       end
 
