@@ -172,8 +172,7 @@ module Qadmin
             key = "on_#{action}"
             if self[key].nil?
               action_class_name = "Qadmin::Configuration::Actions::#{action.to_s.classify}"
-              properties = self.clean_self.merge(:base => self)
-              p action_class_name
+              properties = self.dup.clean_self.merge(:base => self)
               self[key] = action_class_name.constantize.new(properties)
             end
             yield(self[key]) if block_given?
