@@ -59,8 +59,8 @@ module Qadmin
       hash_accessor :default_scope, :default => false
 
       def initialize(options = {})
-        populate_accessors
         super
+        populate_accessors
         @base = options.delete(:base)
       end
 
@@ -109,7 +109,7 @@ module Qadmin
           send(accessor)
         end
       end
-      
+
     end
 
     module Actions
