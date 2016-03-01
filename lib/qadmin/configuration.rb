@@ -25,28 +25,35 @@ module Qadmin
         self
       end
 
-      def self.hash_accessor(name, options = {})
-        @hash_accessors ||= []
-        @hash_accessors << name unless @hash_accessors.include?(name)
-        options[:default] ||= nil
-        coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
-        module_eval <<-EOT
-          def #{name}
-            value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
-                      (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{options[:default].inspect})
-            yield(value) if block_given?
-            value
-          end
+      class << self
 
-          def #{name}=(value)
-            self[:#{name}] = value
-          end
+        attr_accessor :hash_accessors
 
-          def #{name}?
-            !!self[:#{name}]
-          end
-        EOT
+        def hash_accessor(name, options = {})
+          @hash_accessors ||= []
+          @hash_accessors << name unless @hash_accessors.include?(name)
+          options[:default] ||= nil
+          coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
+          module_eval <<-EOT
+            def #{name}
+              value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
+                        (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{options[:default].inspect})
+              yield(value) if block_given?
+              value
+            end
+
+            def #{name}=(value)
+              self[:#{name}] = value
+            end
+
+            def #{name}?
+              !!self[:#{name}]
+            end
+          EOT
+        end
       end
+
+    end
 
       hash_accessor :controller_klass
       hash_accessor :controller_name
@@ -104,8 +111,7 @@ module Qadmin
       private
 
       def populate_accessors
-        accessors = self.class.instance_variable_get("@hash_accessors")
-        accessors.select { |a| a !~ /^on_/ }.each do |accessor|
+        self.class.hash_accessors.select { |a| a !~ /^on_/ }.each do |accessor|
           send(accessor)
         end
       end
