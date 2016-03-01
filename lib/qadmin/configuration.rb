@@ -66,12 +66,6 @@ module Qadmin
         base.send(:hash_accessor, :default_scope, :default => false)
       end
 
-      def initialize(options = {})
-        super
-        populate_accessors if self.class.hash_accessors
-        @base = options.delete(:base)
-      end
-
       def model_klass
         @model_klass ||= self.model_name.constantize
       end
@@ -111,6 +105,11 @@ module Qadmin
 
       private
 
+      def populate_base(options = {})
+        populate_accessors if self.class.hash_accessors
+        @base = options.delete(:base)
+      end
+
       def populate_accessors
         self.class.hash_accessors.select { |a| a !~ /^on_/ }.each do |accessor|
           send(accessor)
@@ -134,7 +133,18 @@ module Qadmin
 
       end
 
-      class Index < ::HashWithIndifferentAccess
+      class ActionHash < ::HashWithIndifferentAccess
+
+        include Action
+
+        def initialize(options = {})
+          super
+          populate_base
+        end
+
+      end
+
+      class Index < ActionHash
 
         include Action
 
@@ -152,40 +162,40 @@ module Qadmin
 
       end
 
-      class Show < ::HashWithIndifferentAccess
+      class Show < ActionHash
 
         include Action
 
         hash_accessor :controls, :default => [:index, :new, :edit, :destroy]
       end
 
-      class New < ::HashWithIndifferentAccess
+      class New < ActionHash
 
         include Action
 
         hash_accessor :controls, :default => [:index]
       end
 
-      class Edit < ::HashWithIndifferentAccess
+      class Edit < ActionHash
 
         include Action
 
         hash_accessor :controls, :default => [:index, :new, :show, :destroy]
       end
 
-      class Create < ::HashWithIndifferentAccess
+      class Create < ActionHash
 
         include Action
 
       end
 
-      class Update < ::HashWithIndifferentAccess
+      class Update < ActionHash
 
         include Action
 
       end
 
-      class Destroy < ::HashWithIndifferentAccess
+      class Destroy < ActionHash
 
         include Action
 
