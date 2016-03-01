@@ -68,7 +68,7 @@ module Qadmin
       end
 
       def model_klass
-        @model_klass ||= self.model_name.constantize
+        @model_klass ||= (self.model_name.constantize rescue nil)
       end
 
       def path_prefix(plural = false)
