@@ -181,6 +181,7 @@ module Qadmin
       def clean_self
         c = {}
         self.each {|k, v| c[k] = v if k !~ /^on_/ }
+        p c
         c
       end
 
