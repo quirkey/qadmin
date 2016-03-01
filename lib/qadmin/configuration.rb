@@ -57,14 +57,14 @@ module Qadmin
       def self.included(base)
         base.send(:attr_accessor, :base)
         base.send(:hash_accessor, :controller_klass)
-        base.send(:hash_accessor :controller_name)
-        base.send(:hash_accessor :model_name)
-        base.send(:hash_accessor :model_instance_name)
-        base.send(:hash_accessor :model_collection_name)
-        base.send(:hash_accessor :model_human_name)
-        base.send(:hash_accessor :namespace, :default => false)
-        base.send(:hash_accessor :parent, :default => false)
-        base.send(:hash_accessor :default_scope, :default => false)
+        base.send(:hash_accessor, :controller_name)
+        base.send(:hash_accessor, :model_name)
+        base.send(:hash_accessor, :model_instance_name)
+        base.send(:hash_accessor, :model_collection_name)
+        base.send(:hash_accessor, :model_human_name)
+        base.send(:hash_accessor, :namespace, :default => false)
+        base.send(:hash_accessor, :parent, :default => false)
+        base.send(:hash_accessor, :default_scope, :default => false)
       end
 
       def initialize(options = {})
@@ -127,14 +127,14 @@ module Qadmin
         extend HashAccessors
 
         def self.included(base)
-          base.send(:hash_accessor :multipart_forms, :default => false)
-          base.send(:hash_accessor :controls, :default => [])
-          base.send(:hash_accessor :control_links, :default => {})
+          base.send(:hash_accessor, :multipart_forms, :default => false)
+          base.send(:hash_accessor, :controls, :default => [])
+          base.send(:hash_accessor, :control_links, :default => {})
         end
 
       end
 
-      class Index < Action
+      class Index
 
         include Qadmin::Configuration::Base
         include Action
