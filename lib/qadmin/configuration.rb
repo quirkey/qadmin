@@ -22,7 +22,7 @@ module Qadmin
       attr_accessor :hash_accessors
 
       def hash_accessor(name, options = {})
-        @hash_accessors ||= []
+        @hash_accessors ||= {}
         @hash_accessors[self.name] ||= []
         @hash_accessors[self.name] << name unless @hash_accessors[self.name].include?(name)
         options[:default] ||= nil
