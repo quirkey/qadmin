@@ -17,51 +17,55 @@ module Qadmin
       output
     end
 
-    class Base < ::HashWithIndifferentAccess
+    module HashAccessors
 
-      attr_accessor :base
+      attr_accessor :hash_accessors
+
+      def hash_accessor(name, options = {})
+        @hash_accessors ||= []
+        @hash_accessors << name unless @hash_accessors.include?(name)
+        options[:default] ||= nil
+        coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
+        module_eval <<-EOT
+          def #{name}
+            value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
+                      (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{options[:default].inspect})
+            yield(value) if block_given?
+            value
+          end
+
+          def #{name}=(value)
+            self[:#{name}] = value
+          end
+
+          def #{name}?
+            !!self[:#{name}]
+          end
+        EOT
+      end
+
+    end
+
+    module Base
+
+      extend HashAccessors
 
       def with_indifferent_access
         self
       end
 
-      class << self
-
-        attr_accessor :hash_accessors
-
-        def hash_accessor(name, options = {})
-          @hash_accessors ||= []
-          @hash_accessors << name unless @hash_accessors.include?(name)
-          options[:default] ||= nil
-          coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
-          module_eval <<-EOT
-            def #{name}
-              value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
-                        (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{options[:default].inspect})
-              yield(value) if block_given?
-              value
-            end
-
-            def #{name}=(value)
-              self[:#{name}] = value
-            end
-
-            def #{name}?
-              !!self[:#{name}]
-            end
-          EOT
-        end
+      def self.included(base)
+        base.send(:attr_accessor, :base)
+        base.send(:hash_accessor, :controller_klass)
+        base.send(:hash_accessor :controller_name)
+        base.send(:hash_accessor :model_name)
+        base.send(:hash_accessor :model_instance_name)
+        base.send(:hash_accessor :model_collection_name)
+        base.send(:hash_accessor :model_human_name)
+        base.send(:hash_accessor :namespace, :default => false)
+        base.send(:hash_accessor :parent, :default => false)
+        base.send(:hash_accessor :default_scope, :default => false)
       end
-
-      hash_accessor :controller_klass
-      hash_accessor :controller_name
-      hash_accessor :model_name
-      hash_accessor :model_instance_name
-      hash_accessor :model_collection_name
-      hash_accessor :model_human_name
-      hash_accessor :namespace, :default => false
-      hash_accessor :parent, :default => false
-      hash_accessor :default_scope, :default => false
 
       def initialize(options = {})
         super
@@ -117,13 +121,25 @@ module Qadmin
     end
 
     module Actions
-      class Action < Qadmin::Configuration::Base
-        hash_accessor :multipart_forms, :default => false
-        hash_accessor :controls, :default => []
-        hash_accessor :control_links, :default => {}
+      module Action
+
+        include Qadmin::Configuration::Base
+        extend HashAccessors
+
+        def self.included(base)
+          base.send(:hash_accessor :multipart_forms, :default => false)
+          base.send(:hash_accessor :controls, :default => [])
+          base.send(:hash_accessor :control_links, :default => {})
+        end
+
       end
 
       class Index < Action
+
+        include Qadmin::Configuration::Base
+        include Action
+        extend HashAccessors
+
         hash_accessor :columns, :default => []
         hash_accessor :column_headers, :default => {}
         hash_accessor :column_css, :default => {}
@@ -138,33 +154,57 @@ module Qadmin
 
       end
 
-      class Show < Action
+      class Show
+
+        include Qadmin::Configuration::Base
+        include Action
+        extend HashAccessors
+
         hash_accessor :controls, :default => [:index, :new, :edit, :destroy]
       end
 
-      class New < Action
+      class New
+        include Qadmin::Configuration::Base
+        include Action
+        extend HashAccessors
+
         hash_accessor :controls, :default => [:index]
       end
 
-      class Edit < Action
+      class Edit
+        include Qadmin::Configuration::Base
+        include Action
+        extend HashAccessors
+
         hash_accessor :controls, :default => [:index, :new, :show, :destroy]
       end
 
-      class Create < Action
+      class Create
+        include Qadmin::Configuration::Base
+        include Action
+        extend HashAccessors
 
       end
 
-      class Update < Action
+      class Update
+        include Qadmin::Configuration::Base
+        include Action
+        extend HashAccessors
 
       end
 
-      class Destroy < Action
+      class Destroy
+        include Qadmin::Configuration::Base
+        include Action
+        extend HashAccessors
 
       end
 
     end
 
-    class Resource < Base
+    class Resource
+      include Qadmin::Configuration::Base
+      extend HashAccessors
 
       ACTIONS = [:index, :show, :new, :create, :edit, :update, :destroy].freeze
 
