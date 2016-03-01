@@ -26,6 +26,8 @@ module Qadmin
       end
 
       def self.hash_accessor(name, options = {})
+        @hash_accessors ||= []
+        @hash_accessors << name
         options[:default] ||= nil
         coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
         module_eval <<-EOT
@@ -57,6 +59,7 @@ module Qadmin
       hash_accessor :default_scope, :default => false
 
       def initialize(options = {})
+        populate_accessors
         super
         @base = options.delete(:base)
       end
@@ -98,6 +101,15 @@ module Qadmin
         "#<#{self.class} #{super}>"
       end
 
+      private
+
+      def populate_accessors
+        accessors = self.class.instance_variable_get("@hash_accessors")
+        accessors.each do |accessor|
+          send(accessor)
+        end
+      end
+      
     end
 
     module Actions
@@ -172,7 +184,7 @@ module Qadmin
             key = "on_#{action}"
             if self[key].nil?
               action_class_name = "Qadmin::Configuration::Actions::#{action.to_s.classify}"
-              properties = self.dup.merge(:base => self)
+              properties = self.clean_self.merge(:base => self)
               self[key] = action_class_name.constantize.new(properties)
             end
             yield(self[key]) if block_given?
