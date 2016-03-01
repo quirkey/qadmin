@@ -84,7 +84,7 @@ module Qadmin
       end
 
       def self.included(base)
-        base.send(:include, Accessible)
+        base.send(:include, HashAccessible)
         base.send(:attr_accessor, :base)
         base.send(:hash_accessor, :controller_klass)
         base.send(:hash_accessor, :controller_name)
