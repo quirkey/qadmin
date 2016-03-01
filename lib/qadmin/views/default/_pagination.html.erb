@@ -1,7 +1,7 @@
 <div class="page_controls">
   <div class="page_form">
   <strong><%= collection.total_entries %> Total</strong>
-  <%= form_tag request.path, :method => :get do %>
+  <% form_tag request.path, :method => :get do %>
     <div><label>Page:</label><%= text_field_tag "page", params[:page] || 1, :size => 4, :autocomplete => 'off' %></div>
     &nbsp;
     <div><label>Per Page:</label><%= select_tag "per_page", options_for_select(%w{5 10 25 50 100}, "#{params[:per_page] || 25}") %></div>
