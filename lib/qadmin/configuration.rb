@@ -124,6 +124,7 @@ module Qadmin
         include Qadmin::Configuration::Base
 
         def self.included(base)
+          p base.name
           base.send(:include, Qadmin::Configuration::Base)
           base.send(:extend, HashAccessors)
           base.send(:hash_accessor, :multipart_forms, :default => false)
@@ -135,7 +136,7 @@ module Qadmin
 
       class ActionHash < ::HashWithIndifferentAccess
 
-        include Action
+        #include Action
 
         def initialize(options = {})
           super
