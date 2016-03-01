@@ -30,7 +30,8 @@ module Qadmin
         default_value = options[:default].inspect
         module_eval <<-EOT
           def #{name}
-            value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) || initialize_#{name}
+            value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
+                      (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{default_value})
             yield(value) if block_given?
             value
           end
@@ -46,8 +47,7 @@ module Qadmin
           private
 
           def initialize_#{name}
-            has_property = base && base.respond_to?(:#{name})
-            self[:#{name}] = has_property ? base.send(:#{name}) : #{default_value}
+            self[:#{name}] = #{default_value}
           end
 
         EOT
@@ -121,7 +121,8 @@ module Qadmin
 
       def populate_accessors
         self.class.hash_accessors[self.class.name].each do |accessor|
-          send("initialize_#{accessor}") if respond_to?(accessor)
+          initializer = "initialize_#{accessor}"
+          send(initializer) if respond_to?(initializer)
         end
       end
 
