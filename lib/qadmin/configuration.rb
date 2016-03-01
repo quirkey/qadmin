@@ -98,7 +98,8 @@ module Qadmin
       end
 
       def model_klass
-        @model_klass ||= (self.model_name.constantize rescue nil)
+        populate_model_class if @model_klass.nil?
+        @model_klass
       end
 
       def path_prefix(plural = false)
@@ -138,6 +139,14 @@ module Qadmin
 
       def populate_base(options = {})
         populate_accessors if self.class.hash_accessors
+      end
+
+      def populate_model_class
+        @model_klass = begin
+          self.model_name.constantize
+        rescue NameError
+          nil
+        end
       end
 
     end
