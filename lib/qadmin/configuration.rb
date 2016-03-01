@@ -53,8 +53,6 @@ module Qadmin
         end
       end
 
-    end
-
       hash_accessor :controller_klass
       hash_accessor :controller_name
       hash_accessor :model_name
