@@ -47,7 +47,7 @@ module Qadmin
           private
 
           def initialize_#{name}
-            self[:#{name}] = #{default_value}
+            self.#{name} = #{default_value}
           end
 
         EOT
@@ -121,7 +121,7 @@ module Qadmin
       def populate_accessors
         self.class.hash_accessors[self.class.name].each do |accessor|
           initializer = "initialize_#{accessor}"
-          send(initializer) if respond_to?(initializer)
+          send(initializer)
         end
       end
 
