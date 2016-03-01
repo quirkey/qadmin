@@ -36,7 +36,6 @@ module Qadmin
 
       control_set = (options[:controls] || []).dup
       links = control_links(options[:control_links])
-      p links
       controls = [control_set].flatten.map { |control| links[control.to_sym] }.compact
 
       html = ""
