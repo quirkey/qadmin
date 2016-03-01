@@ -27,10 +27,10 @@ module Qadmin
         @hash_accessors[self.name] << name unless @hash_accessors[self.name].include?(name)
         options[:default] ||= nil
         coerce = options[:coerce] ? ".#{options[:coerce]}" : ""
+        default_value = options[:default].inspect
         module_eval <<-EOT
           def #{name}
-            value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) ||
-                      (base && base.respond_to?(:#{name}) ? base.send(:#{name}) : #{options[:default].inspect})
+            value = (self[:#{name}] ? self[:#{name}]#{coerce} : self[:#{name}]) || initialize_#{name}
             yield(value) if block_given?
             value
           end
@@ -42,6 +42,14 @@ module Qadmin
           def #{name}?
             !!self[:#{name}]
           end
+
+          private
+
+          def initialize_#{name}
+            has_property = base && base.respond_to?(:#{name})
+            self[:#{name}] = has_property ? base.send(:#{name}) : #{default_value})
+          end
+
         EOT
       end
 
@@ -113,7 +121,7 @@ module Qadmin
 
       def populate_accessors
         self.class.hash_accessors[self.class.name].each do |accessor|
-          send(accessor) if respond_to?(accessor)
+          send("initialize_#{accessor}") if respond_to?(accessor)
         end
       end
 
