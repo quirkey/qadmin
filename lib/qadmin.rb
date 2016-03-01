@@ -1,23 +1,21 @@
-$:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
+# qadmin
 
-require 'iconv'
+# libs
+require "erubis"
+require "forwardable"
+require "active_support" unless defined?(ActiveSupport)
 
-unless defined?(ActiveSupport)
-  require 'active_support'
-end
+# modules
+require "qadmin/controller"
+require "qadmin/helper"
+require "qadmin/overlay"
+require "qadmin/page_titles"
+require "qadmin/templates"
+require "qadmin/util"
+require "qadmin/version"
 
-require 'erb'
+# classes
+require "qadmin/configuration"
 
 module Qadmin
-  VERSION = '0.2.3'
 end
-
-%w{
-  configuration
-  helper
-  overlay
-  page_titles
-  templates
-  controller
-}.each {|lib| require "qadmin/#{lib}" }

@@ -2,17 +2,18 @@ module Qadmin
   module Templates
 
     def self.included(klass)
-      if klass.respond_to?(:helper_method) 
+      if klass.respond_to?(:helper_method)
         klass.module_eval do
           helper_method :template_for_section, :partial_for_section
         end
       end
     end
 
-    protected        
+    protected
     def render_template_for_section(action = nil, options = {})
       action ||= action_name
-      render template_for_section(action), options
+      rendered = render(template_for_section(action), options)
+      rendered.respond_to?(:map) ? rendered.map(&:html_safe) : rendered.html_safe
     end
 
     def template_for_section(template_name, file_name = nil, options = {})
@@ -40,13 +41,24 @@ module Qadmin
     def current_section_name(options = {})
       options[:section_name] ? options[:section_name] : (@section ? @section.name : controller_path)
     end
-    
+
     def template_exists?(template_path)
-      logger.info "Checking for template: #{template_path}"
-      self.view_paths.find_template(template_path)
-    rescue ActionView::MissingTemplate
-      logger.info "Template not found: #{template_path}"
-      false
+      if defined?(super)
+        super
+      else
+        begin
+          logger.debug "Checking for template: #{template_path}"
+          paths = self.view_paths
+          if paths.respond_to?(:find_template)
+            paths.find_template(template_path)
+          else
+            paths.find(template_path)
+          end
+        rescue ActionView::MissingTemplate
+          logger.debug "Template not found: #{template_path}"
+          false
+        end
+      end
     end
 
   end

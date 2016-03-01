@@ -1,13 +1,14 @@
 <h2><%= model_human_name.pluralize %>: <%= @model_instance.to_s %></h2>
 
-<%= admin_controls model_instance_name, :for => :show, :object => @model_instance, :controls => qadmin_configuration.on_show.controls, :parent => instance_variable_get("@#{qadmin_configuration.on_show.parent}") %>
+<%= admin_controls model_instance_name, :for => :show %>
 
-  <%= 
+  <%=
     begin
-      render model_instance_name, :object => @model_instance 
+      render model_instance_name, :object => @model_instance
     rescue ActionView::MissingTemplate, Errno::ENOENT => e
       logger.warn e
-      render 'default/instance', :object => @model_instance 
+      render 'default/instance', :object => @model_instance
     end
   %>
-<%= admin_controls model_instance_name, :for => :show, :object => @model_instance, :controls => qadmin_configuration.on_show.controls, :parent => instance_variable_get("@#{qadmin_configuration.on_show.parent}") %>
+
+<%= admin_controls model_instance_name, :for => :show %>

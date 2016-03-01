@@ -1,17 +1,9 @@
-<h2><%= model_human_name.pluralize %></h2>
+<h2><%= qadmin_configuration.parent ? "#{parent_instance}: " : '' %><%= model_human_name.pluralize %></h2>
 
-<%= admin_controls model_instance_name, :for => :index, :ports => qadmin_configuration.ports, :controls => qadmin_configuration.on_index.controls, :parent => instance_variable_get("@#{qadmin_configuration.on_index.parent}") %>
+<%= admin_controls model_instance_name, :for => :index %>
 
-<!-- <div class="page_controls"> -->
-  <!-- <div class="page_controls per_page">
-    <% form_tag nil, :method => :get do %>
-      <%= select_tag "per_page", options_for_select([5, 10, 25, 50, 100]) %>
-      <%= submit_tag 'go', :name => nil %>
-    <% end %>
-  </div> -->
-  <%= will_paginate(@model_collection) %>
-<!-- </div> -->
-<%= admin_table(@model_collection, :for => :index) %>
-<%= will_paginate(@model_collection) %>
+<%= admin_pagination(@model_collection) %>
+<%= admin_table(@model_collection, :for => :index, :row_controls => qadmin_configuration.on_index.row_controls) %>
+<%= admin_pagination(@model_collection) %>
 
-<%= admin_controls model_instance_name, :for => :index, :ports => qadmin_configuration.ports, :controls => qadmin_configuration.on_index.controls, :parent => instance_variable_get("@#{qadmin_configuration.on_index.parent}") %>
+<%= admin_controls model_instance_name, :for => :index %>

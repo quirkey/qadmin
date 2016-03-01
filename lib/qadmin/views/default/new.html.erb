@@ -1,12 +1,18 @@
 <h2><%= model_human_name %>: New</h2>
 
-<%= admin_controls model_instance_name, :for => :new, :controls => qadmin_configuration.on_new.controls, :parent => instance_variable_get("@#{qadmin_configuration.on_new.parent}") %>
+<%= admin_controls model_instance_name, :for => :new %>
 
-<%= error_messages_for model_instance_name %>
+<% if @model_instance.errors.any? %>
+  <ul>
+    <% @model_instance.errors.full_messages.each do |message| %>
+      <li><%=message %></li>
+    <% end %>
+  </ul>
+<% end %>
 
 <% form_for(qadmin_configuration.form_instance_for(@model_instance), :html => {:multipart => qadmin_configuration.multipart_forms}) do |f| %>
   <%= render :partial => 'form', :locals => {:f => f, model_instance_name.to_sym => @model_instance} %>
   <p><%= f.submit "Create" %></p>
 <% end %>
 
-<%= admin_controls model_instance_name, :for => :new, :controls => qadmin_configuration.on_new.controls, :parent => instance_variable_get("@#{qadmin_configuration.on_new.parent}") %>
+<%= admin_controls model_instance_name, :for => :new %>
