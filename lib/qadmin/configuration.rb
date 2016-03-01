@@ -48,13 +48,12 @@ module Qadmin
 
     module Base
 
-      extend HashAccessors
-
       def with_indifferent_access
         self
       end
 
       def self.included(base)
+        base.send(:include, HashAccessors)
         base.send(:attr_accessor, :base)
         base.send(:hash_accessor, :controller_klass)
         base.send(:hash_accessor, :controller_name)
@@ -124,9 +123,9 @@ module Qadmin
       module Action
 
         include Qadmin::Configuration::Base
-        extend HashAccessors
 
         def self.included(base)
+          base.send(:include, HashAccessors)
           base.send(:hash_accessor, :multipart_forms, :default => false)
           base.send(:hash_accessor, :controls, :default => [])
           base.send(:hash_accessor, :control_links, :default => {})
