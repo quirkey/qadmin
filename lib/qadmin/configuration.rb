@@ -53,7 +53,7 @@ module Qadmin
       end
 
       def self.included(base)
-        base.send(:include, HashAccessors)
+        base.send(:extend, HashAccessors)
         base.send(:attr_accessor, :base)
         base.send(:hash_accessor, :controller_klass)
         base.send(:hash_accessor, :controller_name)
@@ -125,7 +125,8 @@ module Qadmin
         include Qadmin::Configuration::Base
 
         def self.included(base)
-          base.send(:include, HashAccessors)
+          base.send(:include, Qadmin::Configuration::Base)
+          base.send(:extend, HashAccessors)
           base.send(:hash_accessor, :multipart_forms, :default => false)
           base.send(:hash_accessor, :controls, :default => [])
           base.send(:hash_accessor, :control_links, :default => {})
@@ -133,11 +134,9 @@ module Qadmin
 
       end
 
-      class Index
+      class Index < ::HashWithIndifferentAccess
 
-        include Qadmin::Configuration::Base
         include Action
-        extend HashAccessors
 
         hash_accessor :columns, :default => []
         hash_accessor :column_headers, :default => {}
@@ -153,57 +152,49 @@ module Qadmin
 
       end
 
-      class Show
+      class Show < ::HashWithIndifferentAccess
 
-        include Qadmin::Configuration::Base
         include Action
-        extend HashAccessors
 
         hash_accessor :controls, :default => [:index, :new, :edit, :destroy]
       end
 
-      class New
-        include Qadmin::Configuration::Base
+      class New < ::HashWithIndifferentAccess
+
         include Action
-        extend HashAccessors
 
         hash_accessor :controls, :default => [:index]
       end
 
-      class Edit
-        include Qadmin::Configuration::Base
+      class Edit < ::HashWithIndifferentAccess
+
         include Action
-        extend HashAccessors
 
         hash_accessor :controls, :default => [:index, :new, :show, :destroy]
       end
 
-      class Create
-        include Qadmin::Configuration::Base
+      class Create < ::HashWithIndifferentAccess
+
         include Action
-        extend HashAccessors
 
       end
 
-      class Update
-        include Qadmin::Configuration::Base
+      class Update < ::HashWithIndifferentAccess
+
         include Action
-        extend HashAccessors
 
       end
 
-      class Destroy
-        include Qadmin::Configuration::Base
+      class Destroy < ::HashWithIndifferentAccess
+
         include Action
-        extend HashAccessors
 
       end
 
     end
 
-    class Resource
+    class Resource < ::HashWithIndifferentAccess
       include Qadmin::Configuration::Base
-      extend HashAccessors
 
       ACTIONS = [:index, :show, :new, :create, :edit, :update, :destroy].freeze
 
